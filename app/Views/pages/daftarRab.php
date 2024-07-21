@@ -32,7 +32,7 @@
                         <tr>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Nama</th>
+                            <th scope="col">Nama RAB</th>
                             <th scope="col">Lokasi</th>
                             <th scope="col">Tanggal</th>
                             <th scope="col">Aksi</th> <!-- Kolom Aksi -->
@@ -45,7 +45,7 @@
                             <?php foreach ($rabs as $rab) : ?>
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
-                                    <td><?= esc($rab['nama']); ?></td>
+                                    <td><?= esc($rab['nama_pekerjaan']); ?></td>
                                     <td><?= esc($rab['lokasi']); ?></td>
                                     <td><?= esc($rab['tanggal']); ?></td>
                                     <td>

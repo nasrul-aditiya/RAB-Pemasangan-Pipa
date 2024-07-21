@@ -30,6 +30,12 @@ $routes->get('/daftar-pekerjaan/edit/(:num)', 'Pages::editPekerjaan/$1');
 $routes->post('/daftar-pekerjaan/update/(:num)', 'Pages::updatePekerjaan/$1');
 $routes->get('/daftar-pekerjaan/delete/(:num)', 'Pages::deletePekerjaan/$1');
 $routes->get('/daftar-pekerjaan/detail/(:num)', 'Pages::detailPekerjaan/$1');
+$routes->get('/daftar-pekerjaan/detail/tambah/(:num)', 'Pages::tambahDetailPekerjaan/$1');
+$routes->post('/daftar-pekerjaan/detail/store', 'Pages::storeDetailPekerjaan');
+$routes->get('/daftar-pekerjaan/detail/edit/(:num)', 'Pages::editDetailPekerjaan/$1');
+$routes->post('/daftar-pekerjaan/detail/update', 'Pages::updateDetailPekerjaan');
+$routes->get('/daftar-pekerjaan/detail/delete/(:num)', 'Pages::deleteDetailPekerjaan/$1');
+
 $routes->get('/daftar-rab', 'Pages::daftarRab');
 $routes->get('/daftar-rab/tambah', 'Pages::tambahRab');
 $routes->post('/daftar-rab/store', 'Pages::storeRab');

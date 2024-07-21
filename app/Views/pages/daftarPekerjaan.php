@@ -47,7 +47,7 @@
                                     <td><?= esc($pekerjaan['nama_pekerjaan']); ?></td>
                                     <td>Rp. <?= esc(number_format($pekerjaan['total_harga'], 2, ',', '.')); ?></td>
                                     <td>
-                                        <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-primary">Detail</a>
+                                        <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-file"></i></a>
                                         <a href="/daftar-pekerjaan/edit/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
                                         <a href="/daftar-pekerjaan/delete/<?= $pekerjaan['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
                                     </td>

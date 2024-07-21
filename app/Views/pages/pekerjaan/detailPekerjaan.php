@@ -11,6 +11,12 @@
                 <h5 class="card-title"><?= esc($pekerjaan['nama_pekerjaan']); ?></h5>
             </div>
             <div class="card-body">
+                <div class="row mb-3 align-items-center">
+                    <!-- Button Add -->
+                    <div class="col-md-9 text-md-start">
+                        <a href="/daftar-pekerjaan/detail/tambah/<?= $pekerjaan['id']; ?>" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                    </div>
+                </div>
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -19,6 +25,7 @@
                             <th scope="col">Harga</th>
                             <th scope="col">Volume</th>
                             <th scope="col">Total Harga</th>
+                            <th scope="col">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,6 +38,10 @@
                                     <td>Rp. <?= esc(number_format($item['price'], 2, ',', '.')); ?></td>
                                     <td><?= esc($item['volume']); ?></td>
                                     <td>Rp. <?= esc(number_format($item['total_price'], 2, ',', '.')); ?></td>
+                                    <td>
+                                        <a href="/daftar-pekerjaan/detail/edit/<?= $item['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="/daftar-pekerjaan/detail/delete/<?= $item['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>
