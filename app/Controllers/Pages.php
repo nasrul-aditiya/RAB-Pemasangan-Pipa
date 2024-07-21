@@ -11,6 +11,7 @@ use App\Models\PekerjaModel;
 use App\Models\PekerjaanModel;
 use App\Models\PekerjaanDetailModel;
 use App\Models\RabModel;
+use App\Models\RabDetailModel;
 
 class Pages extends BaseController
 {
@@ -626,7 +627,8 @@ class Pages extends BaseController
         $model = new RabModel();
 
         $data = [
-            'nama'     => $this->request->getVar('nama'),
+            'id_rab'     => $this->request->getVar('id_rab'),
+            'nama_pekerjaan'     => $this->request->getVar('nama_pekerjaan'),
             'lokasi'     => $this->request->getVar('lokasi'),
             'tanggal' => $this->request->getVar('tanggal'),
         ];
@@ -668,7 +670,8 @@ class Pages extends BaseController
 
         $model = new RabModel();
         $data = [
-            'nama' => $this->request->getPost('nama'),
+            'id_rab' => $this->request->getPost('id_rab'),
+            'nama_pekerjaan' => $this->request->getPost('nama_pekerjaan'),
             'lokasi' => $this->request->getPost('lokasi'),
             'tanggal' => $this->request->getPost('tanggal'),
         ];
@@ -694,19 +697,177 @@ class Pages extends BaseController
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan.');
         }
     }
-    public function viewRab($id)
+    public function detailRab($id)
     {
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+
+        $rabModel = new RABModel();
+        $rabDetailModel = new RabDetailModel();
+        $pekerjaanModel = new PekerjaanModel();
+        $pekerjaanDetailModel = new PekerjaanDetailModel();
+        $materialModel = new MaterialModel();
+        $pekerjaModel = new PekerjaModel();
+
+        $rab = $rabModel->find($id);
+        $rabDetails = $rabDetailModel->where('id_rab', $id)->findAll();
+
+        $pekerjaanData = [];
+        foreach ($rabDetails as $rabDetail) {
+            $pekerjaan = $pekerjaanModel->find($rabDetail['id_pekerjaan']);
+            $pekerjaanDetails = $pekerjaanDetailModel->where('id_pekerjaan', $pekerjaan['id'])->findAll();
+
+            $items = [];
+            $totalPrice = 0;
+            foreach ($pekerjaanDetails as $detail) {
+                if ($detail['jenis_item'] === 'material') {
+                    $item = $materialModel->find($detail['item_id']);
+                    $itemName = $item['nama_material'];
+                    $itemSatuan = $item['satuan'];
+                    $itemPrice = $item['harga'];
+                } else {
+                    $item = $pekerjaModel->find($detail['item_id']);
+                    $itemName = $item['nama_pekerja'];
+                    $itemSatuan = $item['satuan'];
+                    $itemPrice = $item['harga'];
+                }
+                $itemTotalPrice = $itemPrice * $detail['volume'];
+                $totalPrice += $itemTotalPrice;
+
+                $items[] = [
+                    'id' => $detail['id'], // Include the detail id for edit/delete actions
+                    'item_name' => $itemName,
+                    'satuan' => $itemSatuan,
+                    'volume' => $detail['volume'],
+                    'price' => $itemPrice,
+                    'total_price' => $itemTotalPrice,
+                ];
+            }
+
+            $pekerjaanData[] = [
+                'id' => $rabDetail['id'], // Include the rabDetail id here
+                'nama_pekerjaan' => $pekerjaan['nama_pekerjaan'],
+                'total_price' => $totalPrice,
+                'items' => $items,
+            ];
+        }
+
         $data = [
-            'id' => $id,
-            'title' => "View RAB",
+            'title' => "Detail RAB",
+            'rab' => $rab,
+            'rabDetails' => $rabDetails, // Ensure rabDetails is included in the data
+            'pekerjaanData' => $pekerjaanData,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
-        return view('pages/rab/viewRab', $data);
+
+        return view('pages/rab/detailRab', $data);
+    }
+
+
+    public function tambahDetailRab($id)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+        $rabModel = new RabModel();
+        $pekerjaanModel = new PekerjaanModel();
+
+        $rab = $rabModel->find($id);
+        $pekerjaans = $pekerjaanModel->findAll();
+
+        $data = [
+            'title' => "Tambah Detail RAB",
+            'rab' => $rab,
+            'pekerjaans' => $pekerjaans,
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
+        ];
+        return view('pages/rab/detail/tambahDetailRab', $data);
+    }
+    public function storeDetailRab()
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $pekerjaanDetailModel = new PekerjaanDetailModel();
+
+        $data = [
+            'id_rab' => $this->request->getPost('id_rab'),
+            'id_pekerjaan' => $this->request->getPost('id_rab'),
+        ];
+
+        $pekerjaanDetailModel->save($data);
+
+        return redirect()->to('/daftar-rab/detail/' . $data['id_rab']);
+    }
+    public function editDetailRab($id)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $rabDetailModel = new RabDetailModel();
+        $pekerjaanModel = new PekerjaanModel();
+
+        $detail = $rabDetailModel->find($id);
+        $pekerjaans = $pekerjaanModel->findAll();
+
+        // echo '<pre>';
+        // print_r($detail);
+        // echo '</pre>';
+        // exit;
+
+        $data = [
+            'title' => "Edit Detail Pekerjaan",
+            'detail' => $detail,
+            'pekerjaans' => $pekerjaans,
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
+        ];
+
+        return view('pages/rab/detail/editDetailRab', $data);
+    }
+
+    public function updateDetailRab()
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $rabDetailModel = new RabDetailModel();
+
+        $data = [
+            'id' => $this->request->getPost('id'),
+            'id_rab' => $this->request->getPost('id_rab'),
+            'id_pekerjaan' => $this->request->getPost('id_pekerjaan'),
+        ];
+
+        $rabDetailModel->save($data);
+
+        return redirect()->to('/daftar-rab/detail/' . $data['id_rab']);
+    }
+
+    public function deleteDetailRab($id)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $rabDetailModel = new RabDetailModel();
+        $detail = $rabDetailModel->find($id);
+
+        $rabDetailModel->delete($id);
+
+        return redirect()->to('/daftar-rab/detail/' . $detail['id_rab']);
     }
     public function kelolaPengguna()
     {

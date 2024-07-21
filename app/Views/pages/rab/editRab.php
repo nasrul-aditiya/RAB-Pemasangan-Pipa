@@ -20,16 +20,20 @@
                 <form action="/daftar-rab/update/<?= $rab['id']; ?>" method="post">
                     <?= csrf_field(); ?>
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="nama" name="nama" value="<?= esc($rab['nama']); ?>">
+                        <label for="id_rab" class="form-label">ID RAB</label>
+                        <input type="text" class="form-control" id="id_rab" name="id_rab" value="<?= esc($rab['id_rab']); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nama_pekerjaan" class="form-label">Nama RAB</label>
+                        <input type="text" class="form-control" id="nama_pekerjaan" name="nama_pekerjaan" value="<?= esc($rab['nama_pekerjaan']); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="lokasi" class="form-label">Lokasi</label>
-                        <input type="text" class="form-control" id="lokasi" name="lokasi" value="<?= esc($rab['lokasi']); ?>">
+                        <textarea class="form-control" id="lokasi" name="lokasi" rows="3"><?= esc($rab['lokasi']); ?></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="tanggal" class="form-label">Tanggal</label>
-                        <input type="text" class="form-control" id="tanggal" name="tanggal" value="<?= esc($rab['tanggal']); ?>">
+                        <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?= esc($rab['tanggal']); ?>">
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="/daftar-rab" class="btn btn-secondary">Kembali</a>

@@ -9,13 +9,13 @@ class RabModel extends Model
     protected $table = 'rab_profile';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['nama', 'lokasi', 'tanggal'];
+    protected $allowedFields = ['id_rab', 'nama_pekerjaan', 'lokasi', 'tanggal'];
 
     public function searchRabs($keyword)
     {
         if ($keyword) {
             return $this->table('rab_profile')
-                ->like('nama', $keyword)
+                ->like('nama_pekerjaan', $keyword)
                 ->findAll();
         } else {
             return $this->findAll();

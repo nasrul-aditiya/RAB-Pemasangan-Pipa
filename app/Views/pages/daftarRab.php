@@ -32,6 +32,7 @@
                         <tr>
                         <tr>
                             <th scope="col">#</th>
+                            <th scope="col">ID RAB</th>
                             <th scope="col">Nama RAB</th>
                             <th scope="col">Lokasi</th>
                             <th scope="col">Tanggal</th>
@@ -45,11 +46,12 @@
                             <?php foreach ($rabs as $rab) : ?>
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
+                                    <td><?= esc($rab['id_rab']); ?></td>
                                     <td><?= esc($rab['nama_pekerjaan']); ?></td>
                                     <td><?= esc($rab['lokasi']); ?></td>
                                     <td><?= esc($rab['tanggal']); ?></td>
                                     <td>
-                                        <a href="/daftar-rab/view/<?= $rab['id']; ?>" class="btn btn-info"><i class="fa-solid fa-file"></i></a>
+                                        <a href="/daftar-rab/detail/<?= $rab['id']; ?>" class="btn btn-info"><i class="fa-solid fa-file"></i></a>
                                         <?php if (isset($role) && $role == "Admin") : ?>
                                             <a href="/daftar-rab/edit/<?= $rab['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
                                             <a href="/daftar-rab/delete/<?= $rab['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
