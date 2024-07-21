@@ -32,7 +32,8 @@
                         <tr>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Nama</th>
+                            <th scope="col">Nama Pekerjaan</th>
+                            <th scope="col">Biaya</th>
                             <th scope="col">Aksi</th> <!-- Kolom Aksi -->
                         </tr>
                         </tr>
@@ -44,6 +45,7 @@
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc($pekerjaan['nama_pekerjaan']); ?></td>
+                                    <td>Rp. <?= esc(number_format($pekerjaan['total_harga'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-primary">Detail</a>
                                         <a href="/daftar-pekerjaan/edit/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>

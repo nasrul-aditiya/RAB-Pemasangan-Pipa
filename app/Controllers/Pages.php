@@ -298,17 +298,29 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
-        $model = new PekerjaanModel();
+        $pekerjaanModel = new PekerjaanModel();
+        $pekerjaanDetailModel = new PekerjaanDetailModel();
+        $materialModel = new MaterialModel();
+        $pekerjaModel = new PekerjaModel();
 
-        // Ambil keyword pencarian dari input form atau query string
         $keyword = $this->request->getGet('keyword');
+        $pekerjaans = $keyword ? $pekerjaanModel->searchPekerjaans($keyword) : $pekerjaanModel->findAll();
 
-        // Lakukan pencarian jika ada keyword
-        if ($keyword) {
-            $pekerjaans = $model->searchRabs($keyword);
-        } else {
-            // Jika tidak ada keyword, ambil semua data pengguna
-            $pekerjaans = $model->findAll();
+        // Hitung total harga untuk setiap pekerjaan
+        foreach ($pekerjaans as &$pekerjaan) {
+            $pekerjaanDetails = $pekerjaanDetailModel->where('id_pekerjaan', $pekerjaan['id'])->findAll();
+            $totalHarga = 0;
+            foreach ($pekerjaanDetails as $detail) {
+                if ($detail['jenis_item'] === 'material') {
+                    $item = $materialModel->find($detail['item_id']);
+                    $itemPrice = $item['harga'];
+                } else {
+                    $item = $pekerjaModel->find($detail['item_id']);
+                    $itemPrice = $item['harga'];
+                }
+                $totalHarga += $itemPrice * $detail['volume'];
+            }
+            $pekerjaan['total_harga'] = $totalHarga;
         }
 
         $data = [
@@ -425,13 +437,17 @@ class Pages extends BaseController
             if ($detail['jenis_item'] === 'material') {
                 $item = $materialModel->find($detail['item_id']);
                 $itemName = $item['nama_material'];
+                $itemPrice = $item['harga'];
             } else {
                 $item = $pekerjaModel->find($detail['item_id']);
                 $itemName = $item['nama_pekerja'];
+                $itemPrice = $item['harga'];
             }
             $items[] = [
                 'item_name' => $itemName,
                 'volume' => $detail['volume'],
+                'price' => $itemPrice,
+                'total_price' => $itemPrice * $detail['volume'],
             ];
         }
 

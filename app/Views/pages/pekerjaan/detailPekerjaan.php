@@ -15,8 +15,10 @@
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Item Name</th>
+                            <th scope="col">Nama Item</th>
+                            <th scope="col">Harga</th>
                             <th scope="col">Volume</th>
+                            <th scope="col">Total Harga</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,7 +28,9 @@
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc($item['item_name']); ?></td>
+                                    <td>Rp. <?= esc(number_format($item['price'], 2, ',', '.')); ?></td>
                                     <td><?= esc($item['volume']); ?></td>
+                                    <td>Rp. <?= esc(number_format($item['total_price'], 2, ',', '.')); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>
