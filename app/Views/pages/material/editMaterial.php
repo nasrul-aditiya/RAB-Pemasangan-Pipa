@@ -9,7 +9,7 @@
         <!-- Form Element -->
         <div class="card border-0">
             <div class="card-header">
-                <h5 class="card-title"><?= $title; ?></h5>
+                <h5 class="card-title"><?= esc($title); ?></h5>
             </div>
             <div class="card-body">
                 <?php if (session()->has('error')) : ?>
@@ -17,28 +17,35 @@
                         <?= session()->get('error'); ?>
                     </div>
                 <?php endif; ?>
-                <form action="/daftar-material/update/<?= $material['id']; ?>" method="post">
+                <form action="/daftar-material/update/<?= esc($material['id']); ?>" method="post">
                     <?= csrf_field(); ?>
                     <div class="mb-3">
-                        <label for="nama_material" class="form-label">Nama Material</label>
-                        <input type="text" class="form-control" id="nama_material" name="nama_material" value="<?= esc($material['nama_material']); ?>">
+                        <label for="nama" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="nama" name="nama" value="<?= esc($material['nama']); ?>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="kode" class="form-label">Kode</label>
+                        <input type="text" class="form-control" id="kode" name="kode" value="<?= esc($material['kode']); ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga</label>
-                        <input type="number" class="form-control" id="harga" name="harga" value="<?= esc($material['harga']); ?>">
+                        <input type="number" class="form-control" id="harga" name="harga" value="<?= esc($material['harga']); ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="satuan" class="form-label">Satuan</label>
-                        <select class="form-control" id="satuan" name="satuan">
+                        <select class="form-control" id="satuan" name="satuan" required>
                             <?php foreach ($satuan as $unit) : ?>
-                                <option value="<?= $unit['id']; ?>" <?= $material['satuan'] == $unit['id'] ? 'selected' : ''; ?>><?= $unit['nama_satuan']; ?></option>
+                                <option value="<?= esc($unit['id']); ?>" <?= $material['satuan'] == $unit['id'] ? 'selected' : ''; ?>>
+                                    <?= esc($unit['nama_satuan']); ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="koefisien" class="form-label">Koefisien</label>
-                        <input type="text" class="form-control" id="koefisien" name="koefisien" value="<?= esc($material['koefisien']); ?>">
+                        <input type="text" class="form-control" id="koefisien" name="koefisien" value="<?= esc($material['koefisien']); ?>" required>
                     </div>
+                    <input type="hidden" name="jenis" value="material">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="/daftar-material" class="btn btn-secondary">Kembali</a>
                 </form>

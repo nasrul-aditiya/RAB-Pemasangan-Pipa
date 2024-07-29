@@ -1,4 +1,4 @@
-<aside id="sidebar" class="js-sidebar">
+<aside id="sidebar" class="js-sidebar sticky-sidebar">
     <!-- Content For Sidebar -->
     <div class="h-100">
         <div class="sidebar-logo text-center">
@@ -20,7 +20,7 @@
                         <a href="\daftar-material" class="sidebar-link">Daftar Material</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="\daftar-pekerja" class="sidebar-link">Daftar Pekerja</a>
+                        <a href="\daftar-upah" class="sidebar-link">Daftar Upah</a>
                     </li>
                     <li class="sidebar-item">
                         <a href="\daftar-rab" class="sidebar-link">Daftar RAB</a>

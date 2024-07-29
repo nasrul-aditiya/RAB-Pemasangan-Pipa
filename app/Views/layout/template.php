@@ -13,6 +13,7 @@
 
 <body>
     <div class="wrapper">
+
         <?= $this->include('layout/sidebar'); ?>
         <div class="main">
             <?= $this->include('layout/navbar'); ?>

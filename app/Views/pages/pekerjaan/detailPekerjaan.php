@@ -22,9 +22,11 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nama Item</th>
+                            <th scope="col">Jenis Item</th>
+                            <th scope="col">Satuan</th>
                             <th scope="col">Harga</th>
-                            <th scope="col">Volume</th>
-                            <th scope="col">Total Harga</th>
+                            <th scope="col">Koefisien</th>
+                            <th scope="col">Jumlah Biaya</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
@@ -35,9 +37,11 @@
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc($item['item_name']); ?></td>
-                                    <td>Rp. <?= esc(number_format($item['price'], 2, ',', '.')); ?></td>
-                                    <td><?= esc($item['volume']); ?></td>
-                                    <td>Rp. <?= esc(number_format($item['total_price'], 2, ',', '.')); ?></td>
+                                    <td><?= esc(ucfirst($item['jenis'])); ?></td>
+                                    <td><?= esc($item['nama_satuan']); ?></td>
+                                    <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
+                                    <td><?= esc(number_format($item['koefisien'], 4, ',', '.')); ?></td>
+                                    <td>Rp. <?= esc(number_format($item['harga'] * $item['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-pekerjaan/detail/edit/<?= $item['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
                                         <a href="/daftar-pekerjaan/detail/delete/<?= $item['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
@@ -46,7 +50,7 @@
                             <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
-                                <td colspan="2" class="text-center">No items found</td>
+                                <td colspan="8" class="text-center">No items found</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

@@ -57,6 +57,13 @@ h4 {
 }
 
 /* Sidebar Elements Style */
+.sticky-sidebar {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 0; /* Adjust this value if you have a fixed header */
+  height: 100vh; /* Full height of the viewport */
+  overflow-y: auto; /* Allows scrolling within the sidebar */
+}
 
 .sidebar-logo {
   padding: 1.15rem;

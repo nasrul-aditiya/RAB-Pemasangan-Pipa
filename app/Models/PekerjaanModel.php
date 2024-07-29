@@ -8,30 +8,47 @@ class PekerjaanModel extends Model
 {
     protected $table = 'pekerjaan';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama_pekerjaan'];
-    public function searchPekerjaans($keyword)
+
+    protected $allowedFields = ['nama', 'jenis', 'satuan', 'volume', 'profit'];
+
+    public function getPekerjaanWithDetails($keyword = null)
     {
+        $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.volume, pekerjaan.profit, jenis_pekerjaan.nama_jenis AS jenis_pekerjaan, pekerjaan.satuan, satuan.nama_satuan')
+            ->join('jenis_pekerjaan', 'pekerjaan.jenis = jenis_pekerjaan.id')
+            ->join('satuan', 'pekerjaan.satuan = satuan.id');
+
         if ($keyword) {
-            return $this->table('pekerjaan')
-                ->like('nama_pekerjaan', $keyword)
-                ->findAll();
-        } else {
-            return $this->findAll();
+            $this->groupStart()
+                ->like('pekerjaan.nama', $keyword)
+                ->orLike('satuan.nama_satuan', $keyword)
+                ->groupEnd();
         }
-    }
-    public function getPekerjaans()
-    {
+
         return $this->findAll();
     }
 
     public function getPekerjaan($id)
     {
-        return $this->find($id);
+        return $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
+            ->join('satuan', 'pekerjaan.satuan = satuan.id')
+            ->find($id);
     }
+
     public function updatePekerjaanData($id, $data)
     {
-        // Update data pengguna berdasarkan ID
         return $this->update($id, $data);
+    }
+    public function getPekerjaanWithItems($id_rab)
+    {
+        return $this->select('pekerjaan.id AS pekerjaan_id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.volume, pekerjaan.profit, item.id AS item_id, item.nama AS item_name, item.satuan, item.harga')
+            ->join('pekerjaan_detail', 'pekerjaan_detail.pekerjaan_id = pekerjaan.id')
+            ->join('item', 'pekerjaan_detail.item_id = item.id')
+            ->where('pekerjaan_detail.id_rab', $id_rab)
+            ->findAll();
+    }
+    public function getPekerjaanById($id)
+    {
+        return $this->find($id);
     }
     public function countPekerjaansThisMonth()
     {

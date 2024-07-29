@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use IntlDateFormatter;
 use App\Models\ChartModel;
+use App\Models\ItemModel;
 use App\Models\UserModel;
 use App\Models\SatuanModel;
 use App\Models\MaterialModel;
@@ -22,16 +23,20 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $materialModel = new MaterialModel();
+        $itemModel = new ItemModel();
 
-        $materialsThisMonth = $materialModel->countMaterialsThisMonth();
-        $materialsLastMonth = $materialModel->countMaterialsLastMonth();
+        $materialsThisMonth = $itemModel->countMaterialsThisMonth();
+        $materialsLastMonth = $itemModel->countMaterialsLastMonth();
         $materialsDifference = $materialsThisMonth - $materialsLastMonth;
 
-        $pekerjaModel = new PekerjaModel();
-        $pekerjasThisMonth = $pekerjaModel->countPekerjasThisMonth();
-        $pekerjasLastMonth = $pekerjaModel->countPekerjasLastMonth();
+        $pekerjasThisMonth = $itemModel->countUpahsThisMonth();
+        $pekerjasLastMonth = $itemModel->countUpahsLastMonth();
         $pekerjasDifference = $pekerjasThisMonth - $pekerjasLastMonth;
+
+        $pekerjaanModel = new PekerjaanModel();
+        $pekerjaansThisMonth = $pekerjaanModel->countPekerjaansThisMonth();
+        $pekerjaansLastMonth = $pekerjaanModel->countPekerjaansLastMonth();
+        $pekerjaansDifference = $pekerjaansThisMonth - $pekerjaansLastMonth;
 
         $rabModel = new RabModel();
         $rabsThisMonth = $rabModel->countRabsThisMonth();
@@ -47,6 +52,8 @@ class Pages extends BaseController
             'materialsDifference' => $materialsDifference,
             'pekerjasThisMonth' => $pekerjasThisMonth,
             'pekerjasDifference' => $pekerjasDifference,
+            'pekerjaansThisMonth' => $pekerjaansThisMonth,
+            'pekerjaansDifference' => $pekerjaansDifference,
             'rabsThisMonth' => $rabsThisMonth,
             'rabsDifference' => $rabsDifference,
             'chartData' => $model->findAll()
@@ -60,10 +67,10 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $model = new MaterialModel();
+        $model = new ItemModel();
 
         $keyword = $this->request->getGet('keyword');
-        $materials = $keyword ? $model->searchMaterials($keyword) : $model->findAll();
+        $materials = $keyword ? $model->searchMaterials($keyword) : $model->getMaterials();
 
         $data = [
             'title' => "Daftar Material",
@@ -96,11 +103,13 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $model = new MaterialModel();
+        $model = new ItemModel();
         $data = [
-            'nama_material' => $this->request->getVar('nama_material'),
-            'harga' => $this->request->getVar('harga'),
+            'nama' => $this->request->getVar('nama'),
+            'jenis' => 'material',
+            'kode' => $this->request->getVar('kode'),
             'satuan' => $this->request->getVar('satuan'),
+            'harga' => $this->request->getVar('harga'),
             'koefisien' => $this->request->getVar('koefisien'),
         ];
         $model->insert($data);
@@ -115,7 +124,7 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $model = new MaterialModel();
+        $model = new ItemModel();
         $material = $model->find($id);
         $satuanModel = new SatuanModel();
 
@@ -140,15 +149,17 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $model = new MaterialModel();
+        $model = new ItemModel();
         $data = [
-            'nama_material' => $this->request->getPost('nama_material'),
+            'nama' => $this->request->getPost('nama'),
+            'kode' => $this->request->getPost('kode'),
             'harga' => $this->request->getPost('harga'),
             'satuan' => $this->request->getPost('satuan'),
             'koefisien' => $this->request->getPost('koefisien'),
+            'jenis' => 'material', // Tetap 'material'
         ];
 
-        $model->updateMaterialData($id, $data);
+        $model->update($id, $data);
 
         return redirect()->to('/daftar-material')->with('success', 'Material berhasil diperbarui.');
     }
@@ -160,7 +171,7 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $model = new MaterialModel();
+        $model = new ItemModel();
         $material = $model->find($id);
 
         if ($material) {
@@ -170,128 +181,122 @@ class Pages extends BaseController
             return redirect()->to('/daftar-material')->with('error', 'Material tidak ditemukan.');
         }
     }
-    public function daftarPekerja()
+    public function daftarUpah()
     {
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
 
-        $model = new PekerjaModel();
+        $model = new ItemModel();
 
-        // Ambil keyword pencarian dari input form atau query string
         $keyword = $this->request->getGet('keyword');
-
-        // Lakukan pencarian jika ada keyword
-        if ($keyword) {
-            $pekerjas = $model->searchPekerjas($keyword);
-        } else {
-            // Jika tidak ada keyword, ambil semua data pengguna
-            $pekerjas = $model->findAll();
-        }
+        $upah = $keyword ? $model->searchUpah($keyword) : $model->getUpah();
 
         $data = [
-            'title' => "Daftar Pekerja",
-            'pekerjas' => $pekerjas,
+            'title' => "Daftar Upah",
+            'upah' => $upah,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
-        return view('pages/daftarPekerja', $data);
+        return view('pages/daftarUpah', $data);
     }
-    public function tambahPekerja()
+    public function tambahUpah()
     {
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+
         $satuanModel = new SatuanModel();
         $data = [
-            'title' => "Tambah Pekerja",
-            'satuan' => $satuanModel->findAll()
+            'title' => "Tambah Upah",
+            'satuan' => $satuanModel->findAll(),
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
         ];
-        return view('pages/pekerja/tambahPekerja', $data);
+        return view('pages/upah/tambahUpah', $data);
     }
-    public function storePekerja()
+
+    public function storeUpah()
     {
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
 
-        $model = new PekerjaModel();
-
+        $model = new ItemModel();
         $data = [
-            'nama_pekerja'     => $this->request->getVar('nama_pekerja'),
-            'harga'     => $this->request->getVar('harga'),
-            'satuan' => $this->request->getVar('satuan'),
-            'koefisien' => $this->request->getVar('koefisien'),
-        ];
-
-        $model->insert($data);
-
-        return redirect()->to('/daftar-pekerja');
-    }
-    public function editPekerja($id)
-    {
-        $session = session();
-        if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
-        }
-
-        $model = new PekerjaModel();
-        $pekerja = $model->find($id);
-        $satuanModel = new SatuanModel();
-
-        if ($pekerja) {
-            $data = [
-                'title' => "Edit Material",
-                'pekerja' => $pekerja,
-                'nama' => $session->get('nama'),
-                'satuan' => $satuanModel->findAll(),
-                'role' => $session->get('role'),
-            ];
-            return view('pages/pekerja/editPekerja', $data);
-        } else {
-            // Handle jika material tidak ditemukan
-            return redirect()->to('/daftar-pekerja')->with('error', 'Pekerja tidak ditemukan.');
-        }
-    }
-
-    public function updatePekerja($id)
-    {
-        $session = session();
-        if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
-        }
-
-        $model = new PekerjaModel();
-        $data = [
-            'nama_pekerja' => $this->request->getPost('nama_pekerja'),
+            'nama' => $this->request->getPost('nama'),
+            'kode' => $this->request->getPost('kode'),
             'harga' => $this->request->getPost('harga'),
             'satuan' => $this->request->getPost('satuan'),
             'koefisien' => $this->request->getPost('koefisien'),
+            'jenis' => 'upah',
         ];
+        $model->insert($data);
 
-        $model->updatePekerjaData($id, $data);
-
-        return redirect()->to('/daftar-pekerja')->with('success', 'Pekerja berhasil diperbarui.');
+        return redirect()->to('/daftar-upah')->with('success', 'Upah berhasil ditambahkan.');
     }
-    public function deletePekerja($id)
+
+    public function editUpah($id)
     {
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
 
-        $model = new PekerjaModel();
-        $pekerja = $model->find($id);
+        $model = new ItemModel();
+        $upah = $model->find($id);
+        $satuanModel = new SatuanModel();
 
-        if ($pekerja) {
-            $model->delete($id);
-            return redirect()->to('/daftar-pekerja')->with('success', 'Pekerja berhasil dihapus.');
+        if ($upah) {
+            $data = [
+                'title' => "Edit Upah",
+                'upah' => $upah,
+                'satuan' => $satuanModel->findAll(),
+                'nama' => $session->get('nama'),
+                'role' => $session->get('role'),
+            ];
+            return view('pages/upah/editUpah', $data);
         } else {
-            return redirect()->to('/daftar-pekerja')->with('error', 'Pekerja tidak ditemukan.');
+            return redirect()->to('/daftar-upah')->with('error', 'Upah tidak ditemukan.');
         }
+    }
+
+    public function updateUpah($id)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $model = new ItemModel();
+        $data = [
+            'nama' => $this->request->getPost('nama'),
+            'kode' => $this->request->getPost('kode'),
+            'harga' => $this->request->getPost('harga'),
+            'satuan' => $this->request->getPost('satuan'),
+            'koefisien' => $this->request->getPost('koefisien'),
+            'jenis' => 'upah',
+        ];
+
+        $model->update($id, $data);
+
+        return redirect()->to('/daftar-upah')->with('success', 'Upah berhasil diperbarui.');
+    }
+
+    public function deleteUpah($id)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $model = new ItemModel();
+        $model->delete($id);
+
+        return redirect()->to('/daftar-upah')->with('success', 'Upah berhasil dihapus.');
     }
     public function daftarPekerjaan()
     {
@@ -299,30 +304,10 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
-        $pekerjaanModel = new PekerjaanModel();
-        $pekerjaanDetailModel = new PekerjaanDetailModel();
-        $materialModel = new MaterialModel();
-        $pekerjaModel = new PekerjaModel();
 
+        $model = new PekerjaanModel();
         $keyword = $this->request->getGet('keyword');
-        $pekerjaans = $keyword ? $pekerjaanModel->searchPekerjaans($keyword) : $pekerjaanModel->findAll();
-
-        // Hitung total harga untuk setiap pekerjaan
-        foreach ($pekerjaans as &$pekerjaan) {
-            $pekerjaanDetails = $pekerjaanDetailModel->where('id_pekerjaan', $pekerjaan['id'])->findAll();
-            $totalHarga = 0;
-            foreach ($pekerjaanDetails as $detail) {
-                if ($detail['jenis_item'] === 'material') {
-                    $item = $materialModel->find($detail['item_id']);
-                    $itemPrice = $item['harga'];
-                } else {
-                    $item = $pekerjaModel->find($detail['item_id']);
-                    $itemPrice = $item['harga'];
-                }
-                $totalHarga += $itemPrice * $detail['volume'];
-            }
-            $pekerjaan['total_harga'] = $totalHarga;
-        }
+        $pekerjaans = $model->getPekerjaanWithDetails($keyword);
 
         $data = [
             'title' => "Daftar Pekerjaan",
@@ -338,11 +323,17 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+
+        $satuanModel = new SatuanModel();
         $data = [
-            'title' => "Tambah Pekerjaan"
+            'title' => "Tambah Pekerjaan",
+            'satuans' => $satuanModel->findAll(),
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
         ];
         return view('pages/pekerjaan/tambahPekerjaan', $data);
     }
+
     public function storePekerjaan()
     {
         $session = session();
@@ -351,15 +342,19 @@ class Pages extends BaseController
         }
 
         $model = new PekerjaanModel();
-
         $data = [
-            'nama_pekerjaan'     => $this->request->getVar('nama_pekerjaan'),
+            'nama' => $this->request->getVar('nama'),
+            'jenis' => $this->request->getVar('jenis'),
+            'volume' => $this->request->getVar('volume'),
+            'satuan' => $this->request->getVar('satuan'),
+            'profit' => $this->request->getVar('profit'),
         ];
 
         $model->insert($data);
 
-        return redirect()->to('/daftar-pekerjaan');
+        return redirect()->to('/daftar-pekerjaan')->with('success', 'Pekerjaan berhasil ditambahkan.');
     }
+
     public function editPekerjaan($id)
     {
         $session = session();
@@ -369,17 +364,18 @@ class Pages extends BaseController
 
         $model = new PekerjaanModel();
         $pekerjaan = $model->find($id);
+        $satuanModel = new SatuanModel();
 
         if ($pekerjaan) {
             $data = [
                 'title' => "Edit Pekerjaan",
                 'pekerjaan' => $pekerjaan,
+                'satuans' => $satuanModel->findAll(),
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
             ];
             return view('pages/pekerjaan/editPekerjaan', $data);
         } else {
-            // Handle jika material tidak ditemukan
             return redirect()->to('/daftar-pekerjaan')->with('error', 'Pekerjaan tidak ditemukan.');
         }
     }
@@ -393,13 +389,18 @@ class Pages extends BaseController
 
         $model = new PekerjaanModel();
         $data = [
-            'nama_pekerjaan' => $this->request->getPost('nama_pekerjaan'),
+            'nama' => $this->request->getPost('nama'),
+            'jenis' => $this->request->getPost('jenis'),
+            'volume' => $this->request->getPost('volume'),
+            'satuan' => $this->request->getPost('satuan'),
+            'profit' => $this->request->getPost('profit'),
         ];
 
         $model->updatePekerjaanData($id, $data);
 
         return redirect()->to('/daftar-pekerjaan')->with('success', 'Pekerjaan berhasil diperbarui.');
     }
+
     public function deletePekerjaan($id)
     {
         $session = session();
@@ -408,9 +409,7 @@ class Pages extends BaseController
         }
 
         $model = new PekerjaanModel();
-        $pekerjaan = $model->find($id);
-
-        if ($pekerjaan) {
+        if ($model->find($id)) {
             $model->delete($id);
             return redirect()->to('/daftar-pekerjaan')->with('success', 'Pekerjaan berhasil dihapus.');
         } else {
@@ -426,43 +425,18 @@ class Pages extends BaseController
 
         $pekerjaanModel = new PekerjaanModel();
         $pekerjaanDetailModel = new PekerjaanDetailModel();
-        $materialModel = new MaterialModel();
-        $pekerjaModel = new PekerjaModel();
 
-        $pekerjaan = $pekerjaanModel->find($id);
-        $pekerjaanDetails = $pekerjaanDetailModel->where('id_pekerjaan', $id)->findAll();
-
-        // Prepare data for the view
-        $items = [];
-        foreach ($pekerjaanDetails as $detail) {
-            if ($detail['jenis_item'] === 'material') {
-                $item = $materialModel->find($detail['item_id']);
-                $itemId = $detail['id'];
-                $itemName = $item['nama_material'];
-                $itemPrice = $item['harga'];
-            } else {
-                $item = $pekerjaModel->find($detail['item_id']);
-                $itemId = $detail['id'];
-                $itemName = $item['nama_pekerja'];
-                $itemPrice = $item['harga'];
-            }
-            $items[] = [
-                'id' => $itemId,
-                'item_name' => $itemName,
-                'volume' => $detail['volume'],
-                'price' => $itemPrice,
-                'total_price' => $itemPrice * $detail['volume'],
-            ];
-        }
+        $pekerjaan = $pekerjaanModel->getPekerjaan($id);
+        $items = $pekerjaanDetailModel->getPekerjaanDetails($id);
 
         $data = [
             'title' => "Detail Pekerjaan",
             'pekerjaan' => $pekerjaan,
-            'pekerjaanDetail' => $pekerjaanDetails,
             'items' => $items,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
+        // dd($data);
 
         return view('pages/pekerjaan/detailPekerjaan', $data);
     }
@@ -472,19 +446,17 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
-        $pekerjaanModel = new PekerjaanModel();
-        $materialModel = new MaterialModel();
-        $pekerjaModel = new PekerjaModel();
 
-        $pekerjaan = $pekerjaanModel->find($id);
-        $materials = $materialModel->findAll();
-        $pekerjas = $pekerjaModel->findAll();
+        $pekerjaanModel = new PekerjaanModel();
+        $itemModel = new ItemModel();
+
+        $pekerjaan = $pekerjaanModel->getPekerjaan($id);
+        $items = $itemModel->findAll();
 
         $data = [
             'title' => "Tambah Detail Pekerjaan",
             'pekerjaan' => $pekerjaan,
-            'materials' => $materials,
-            'pekerjas' => $pekerjas,
+            'items' => $items,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
@@ -500,15 +472,14 @@ class Pages extends BaseController
         $pekerjaanDetailModel = new PekerjaanDetailModel();
 
         $data = [
-            'id_pekerjaan' => $this->request->getPost('id_pekerjaan'),
-            'jenis_item' => $this->request->getPost('jenis_item'),
+            'pekerjaan_id' => $this->request->getPost('pekerjaan_id'),
             'item_id' => $this->request->getPost('item_id'),
-            'volume' => $this->request->getPost('volume'),
+            'koefisien' => $this->request->getPost('koefisien'),
         ];
 
         $pekerjaanDetailModel->save($data);
 
-        return redirect()->to('/daftar-pekerjaan/detail/' . $data['id_pekerjaan']);
+        return redirect()->to('/daftar-pekerjaan/detail/' . $data['pekerjaan_id']);
     }
     public function editDetailPekerjaan($id)
     {
@@ -518,26 +489,29 @@ class Pages extends BaseController
         }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
-        $materialModel = new MaterialModel();
-        $pekerjaModel = new PekerjaModel();
+        $pekerjaanModel = new PekerjaanModel();
+        $itemModel = new ItemModel();
 
-        $detail = $pekerjaanDetailModel->find($id);
-        $materials = $materialModel->findAll();
-        $pekerjas = $pekerjaModel->findAll();
+        $pekerjaanDetail = $pekerjaanDetailModel->find($id);
+        if (!$pekerjaanDetail) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $pekerjaan = $pekerjaanModel->find($pekerjaanDetail['pekerjaan_id']);
+        $items = $itemModel->findAll();
 
         $data = [
             'title' => "Edit Detail Pekerjaan",
-            'detail' => $detail,
-            'materials' => $materials,
-            'pekerjas' => $pekerjas,
+            'pekerjaan' => $pekerjaan,
+            'pekerjaanDetail' => $pekerjaanDetail,
+            'items' => $items,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
-
         return view('pages/pekerjaan/detail/editDetailPekerjaan', $data);
     }
 
-    public function updateDetailPekerjaan()
+    public function updateDetailPekerjaan($id)
     {
         $session = session();
         if (!$session->get('logged_in')) {
@@ -547,16 +521,13 @@ class Pages extends BaseController
         $pekerjaanDetailModel = new PekerjaanDetailModel();
 
         $data = [
-            'id' => $this->request->getPost('id'),
-            'id_pekerjaan' => $this->request->getPost('id_pekerjaan'),
-            'jenis_item' => $this->request->getPost('jenis_item'),
             'item_id' => $this->request->getPost('item_id'),
-            'volume' => $this->request->getPost('volume'),
+            'koefisien' => $this->request->getPost('koefisien'),
         ];
 
-        $pekerjaanDetailModel->save($data);
+        $pekerjaanDetailModel->update($id, $data);
 
-        return redirect()->to('/daftar-pekerjaan/detail/' . $data['id_pekerjaan']);
+        return redirect()->to('/daftar-pekerjaan/detail/' . $this->request->getPost('pekerjaan_id'));
     }
 
     public function deleteDetailPekerjaan($id)
@@ -571,7 +542,7 @@ class Pages extends BaseController
 
         $pekerjaanDetailModel->delete($id);
 
-        return redirect()->to('/daftar-pekerjaan/detail/' . $detail['id_pekerjaan']);
+        return redirect()->to('/daftar-pekerjaan/detail/' . $detail['pekerjaan_id']);
     }
     public function daftarRab()
     {
@@ -704,64 +675,89 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $rabModel = new RABModel();
-        $rabDetailModel = new RabDetailModel();
-        $pekerjaanModel = new PekerjaanModel();
-        $pekerjaanDetailModel = new PekerjaanDetailModel();
-        $materialModel = new MaterialModel();
-        $pekerjaModel = new PekerjaModel();
+        $rabModel = new RabDetailModel();
+        $model = new RabModel();
+        $rabs = $model->find($id);
+        $rabDetails = $rabModel->getRabDetailsWithTotal($id);
+        // dd($rabDetails);
 
-        $rab = $rabModel->find($id);
-        $rabDetails = $rabDetailModel->where('id_rab', $id)->findAll();
+        // Group the results by id_rab and jenis_pekerjaan
+        $groupedRabDetails = [];
+        foreach ($rabDetails as $rab) {
+            // Ensure $rab is an array
+            if (is_array($rab)) {
+                $rabId = $rab['id_rab'];
+                $jenisPekerjaan = $rab['jenis_pekerjaan'];
+                $pekerjaanName = $rab['pekerjaan_name'];
 
-        $pekerjaanData = [];
-        foreach ($rabDetails as $rabDetail) {
-            $pekerjaan = $pekerjaanModel->find($rabDetail['id_pekerjaan']);
-            $pekerjaanDetails = $pekerjaanDetailModel->where('id_pekerjaan', $pekerjaan['id'])->findAll();
-
-            $items = [];
-            $totalPrice = 0;
-            foreach ($pekerjaanDetails as $detail) {
-                if ($detail['jenis_item'] === 'material') {
-                    $item = $materialModel->find($detail['item_id']);
-                    $itemName = $item['nama_material'];
-                    $itemSatuan = $item['satuan'];
-                    $itemPrice = $item['harga'];
-                } else {
-                    $item = $pekerjaModel->find($detail['item_id']);
-                    $itemName = $item['nama_pekerja'];
-                    $itemSatuan = $item['satuan'];
-                    $itemPrice = $item['harga'];
+                // Initialize the RAB grouping if not already set
+                if (!isset($groupedRabDetails[$rabId])) {
+                    $groupedRabDetails[$rabId] = [
+                        'id_rab' => $rab['id_rab'],
+                        'nama_pekerjaan' => $rab['nama_pekerjaan'],
+                        'lokasi' => $rab['lokasi'],
+                        'jenis_pekerjaan' => [],
+                        'jenis' => $rab['jenis_pekerjaan'],
+                        'total_biaya' => 0,
+                    ];
                 }
-                $itemTotalPrice = $itemPrice * $detail['volume'];
-                $totalPrice += $itemTotalPrice;
 
-                $items[] = [
-                    'id' => $detail['id'], // Include the detail id for edit/delete actions
-                    'item_name' => $itemName,
-                    'satuan' => $itemSatuan,
-                    'volume' => $detail['volume'],
-                    'price' => $itemPrice,
-                    'total_price' => $itemTotalPrice,
+                // Initialize the jenis_pekerjaan grouping if not already set
+                if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan])) {
+                    $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan] = [
+                        'jenis' => $jenisPekerjaan,
+                        'total_biaya_jenis' => 0,
+                        'pekerjaan' => [],
+                    ];
+                }
+
+                // Initialize the pekerjaan grouping if not already set
+                if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName])) {
+                    $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName] = [
+                        'id' => $rab['id'],
+                        'pekerjaan_name' => $pekerjaanName,
+                        'volume_pekerjaan' => $rab['volume_pekerjaan'],
+                        'items' => [],
+                        'total_biaya_pekerjaan' => 0,
+                    ];
+                }
+
+                // Calculate total biaya for each item
+                $totalBiayaItem = $rab['volume_rab'] * $rab['harga'];
+
+                // Add item details with total biaya
+                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName]['items'][] = [
+                    'item_name' => $rab['item_name'],
+                    'nama_satuan' => $rab['nama_satuan'],
+                    'harga' => $rab['harga'],
+                    'koefisien' => $rab['koefisien'],
+                    'profit' => $rab['profit'],
+                    'volume_rab' => $rab['volume_rab'],
+                    'volume_pekerjaan' => $rab['volume_pekerjaan'],
+                    'total_biaya' => $totalBiayaItem,
                 ];
+
+                // Add to total biaya for this pekerjaan
+                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName]['total_biaya_pekerjaan'] += $totalBiayaItem;
+
+                // Add to total biaya for this jenis pekerjaan
+                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['total_biaya_jenis'] += $totalBiayaItem;
+                // Add to total biaya for this RAB
+                $groupedRabDetails[$rabId]['total_biaya'] += $totalBiayaItem;
+            } else {
+                // Handle the error if $rab is not an array
+                error_log('Unexpected data structure for $rab: ' . print_r($rab, true));
             }
-
-            $pekerjaanData[] = [
-                'id' => $rabDetail['id'], // Include the rabDetail id here
-                'nama_pekerjaan' => $pekerjaan['nama_pekerjaan'],
-                'total_price' => $totalPrice,
-                'items' => $items,
-            ];
         }
-
+        // dd($groupedRabDetails);
         $data = [
             'title' => "Detail RAB",
-            'rab' => $rab,
-            'rabDetails' => $rabDetails, // Ensure rabDetails is included in the data
-            'pekerjaanData' => $pekerjaanData,
+            'rab' => $rabs,
+            'items' => $groupedRabDetails,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
+        //  dd($data);
 
         return view('pages/rab/detailRab', $data);
     }
@@ -777,6 +773,7 @@ class Pages extends BaseController
         $pekerjaanModel = new PekerjaanModel();
 
         $rab = $rabModel->find($id);
+
         $pekerjaans = $pekerjaanModel->findAll();
 
         $data = [
@@ -786,6 +783,7 @@ class Pages extends BaseController
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
+        // dd($data);
         return view('pages/rab/detail/tambahDetailRab', $data);
     }
     public function storeDetailRab()
@@ -795,16 +793,25 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $pekerjaanDetailModel = new PekerjaanDetailModel();
+        $idRab = $this->request->getPost('id_rab');
+        $idPekerjaan = $this->request->getPost('id_pekerjaan');
+        $volume = $this->request->getPost('volume');
+        $db = \Config\Database::connect();
 
-        $data = [
-            'id_rab' => $this->request->getPost('id_rab'),
-            'id_pekerjaan' => $this->request->getPost('id_rab'),
-        ];
+        $sql = "INSERT INTO rab_detail (id_rab, id_pekerjaan, volume) VALUES (?, ?, ?)";
 
-        $pekerjaanDetailModel->save($data);
+        // Eksekusi query dengan binding parameter
+        $result = $db->query($sql, [$idRab, $idPekerjaan, $volume]);
+        // dd($data);
 
-        return redirect()->to('/daftar-rab/detail/' . $data['id_rab']);
+        if ($result) {
+            // Berhasil, redirect ke halaman detail RAB
+            return redirect()->to('/daftar-rab/detail/' . $idRab)->with('success', 'Data berhasil disimpan.');
+        } else {
+            // Gagal, tampilkan pesan error
+            $error = $db->error();
+            return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $error['message']);
+        }
     }
     public function editDetailRab($id)
     {
@@ -813,10 +820,13 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
+        $rabModel = new RabModel();
         $rabDetailModel = new RabDetailModel();
         $pekerjaanModel = new PekerjaanModel();
 
-        $detail = $rabDetailModel->find($id);
+        $id_rab = $rabDetailModel->find($id);
+        $detail = $rabModel->find($id_rab['id_rab']);
+        // dd($id_rab);
         $pekerjaans = $pekerjaanModel->findAll();
 
         // echo '<pre>';
@@ -826,7 +836,8 @@ class Pages extends BaseController
 
         $data = [
             'title' => "Edit Detail Pekerjaan",
-            'detail' => $detail,
+            'detail' => $id_rab,
+            'rab' => $detail,
             'pekerjaans' => $pekerjaans,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
@@ -842,17 +853,25 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
-        $rabDetailModel = new RabDetailModel();
+        $id = $this->request->getPost('id');
+        $idRab = $this->request->getPost('id_rab');
+        $idPekerjaan = $this->request->getPost('id_pekerjaan');
+        $volume = $this->request->getPost('volume');
+        $db = \Config\Database::connect();
 
-        $data = [
-            'id' => $this->request->getPost('id'),
-            'id_rab' => $this->request->getPost('id_rab'),
-            'id_pekerjaan' => $this->request->getPost('id_pekerjaan'),
-        ];
+        $sql = "UPDATE rab_detail SET id_rab = ?, id_pekerjaan = ?, volume = ? WHERE id = ?";
 
-        $rabDetailModel->save($data);
+        // Execute the query with bound parameters
+        $result = $db->query($sql, [$idRab, $idPekerjaan, $volume, $id]);
 
-        return redirect()->to('/daftar-rab/detail/' . $data['id_rab']);
+        if ($result) {
+            // Successful, redirect to the detail page
+            return redirect()->to('/daftar-rab/detail/' . $idRab)->with('success', 'Data berhasil diperbarui.');
+        } else {
+            // Failure, show error message
+            $error = $db->error();
+            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $error['message']);
+        }
     }
 
     public function deleteDetailRab($id)

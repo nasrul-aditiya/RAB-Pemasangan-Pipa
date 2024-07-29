@@ -14,8 +14,12 @@
                 <form action="/daftar-material/store" method="post">
                     <?= csrf_field(); ?>
                     <div class="mb-3">
-                        <label for="nama_material" class="form-label">Nama Material</label>
-                        <input type="text" class="form-control" id="nama_material" name="nama_material" required>
+                        <label for="nama" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="nama" name="nama" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="kode" class="form-label">Kode</label>
+                        <input type="text" class="form-control" id="kode" name="kode" required>
                     </div>
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga</label>

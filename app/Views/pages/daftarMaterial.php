@@ -29,6 +29,7 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nama</th>
+                            <th scope="col">Satuan</th>
                             <th scope="col">Harga</th>
                             <th scope="col">Koefisien</th>
                             <th scope="col">Aksi</th>
@@ -41,6 +42,7 @@
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc($material['nama_material']); ?></td>
+                                    <td><?= esc($material['satuan_nama']); ?></td>
                                     <td>Rp. <?= esc($material['harga']); ?></td>
                                     <td><?= esc($material['koefisien']); ?></td>
                                     <td>

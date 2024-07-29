@@ -20,7 +20,7 @@
                             </div>
                             <div class="col-3">
                                 <div class="p-3 m-1">
-                                    <p>Daftar Pekerja</p>
+                                    <p>Daftar Upah</p>
                                     <h4><?= $pekerjasThisMonth; ?></h4>
                                     <p class="mb-0">+<?= $pekerjasDifference; ?> bulan ini</p>
                                 </div>
@@ -28,8 +28,8 @@
                             <div class="col-3">
                                 <div class="p-3 m-1">
                                     <p>Daftar Pekerjaan</p>
-                                    <h4>170</h4>
-                                    <p class="mb-0">+2 bulan ini</p>
+                                    <h4><?= $pekerjaansThisMonth; ?></h4>
+                                    <p class="mb-0">+<?= $pekerjaansDifference; ?> bulan ini</p>
                                 </div>
                             </div>
                             <div class="col-3">

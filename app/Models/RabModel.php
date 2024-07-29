@@ -30,6 +30,42 @@ class RabModel extends Model
     {
         return $this->find($id);
     }
+    public function getRabDetailsWithTotal($rabId)
+    {
+        // Construct the query to get detailed RAB information along with total cost
+        return $this->select([
+            'rab_profile.id',
+            'rab_profile.id_rab',
+            'rab_profile.nama_pekerjaan',
+            'rab_profile.lokasi',
+            'pekerjaan.nama AS pekerjaan_name',
+            'pekerjaan.jenis AS jenis_pekerjaan',
+            'item.nama AS item_name',
+            'satuan.nama_satuan',
+            'pekerjaan.volume',
+            'item.harga',
+            'SUM(item.harga * pekerjaan.volume) AS jumlah_biaya' // Calculating total cost
+        ])
+            ->join('rab_detail', 'rab_profile.id = rab_detail.id_rab')
+            ->join('pekerjaan', 'rab_detail.id_pekerjaan = pekerjaan.id')
+            ->join('pekerjaan_detail', 'pekerjaan.id = pekerjaan_detail.pekerjaan_id')
+            ->join('item', 'pekerjaan_detail.item_id = item.id')
+            ->join('satuan', 'item.satuan = satuan.id')
+            ->where('rab_detail.id_rab', $rabId)
+            ->groupBy([
+                'rab_profile.id',
+                'rab_profile.id_rab',
+                'rab_profile.nama_pekerjaan',
+                'rab_profile.lokasi',
+                'pekerjaan.nama',
+                'pekerjaan.jenis',
+                'item.nama',
+                'satuan.nama_satuan',
+                'pekerjaan.volume',
+                'item.harga'
+            ])
+            ->findAll();
+    }
     public function updateRabData($id, $data)
     {
         // Update data pengguna berdasarkan ID
