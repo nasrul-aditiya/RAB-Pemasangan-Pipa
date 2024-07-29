@@ -29,6 +29,7 @@ class RabDetailModel extends Model
             'item.nama AS item_name',
             'satuan.nama_satuan',
             'pekerjaan_detail.koefisien',
+            'item.koefisien AS koefisien_item',
             'pekerjaan.volume AS volume_pekerjaan',
             'pekerjaan.profit',
             'item.harga',

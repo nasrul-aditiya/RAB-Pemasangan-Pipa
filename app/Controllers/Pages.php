@@ -10,6 +10,7 @@ use App\Models\SatuanModel;
 use App\Models\MaterialModel;
 use App\Models\PekerjaModel;
 use App\Models\PekerjaanModel;
+use App\Models\JenisPekerjaanModel;
 use App\Models\PekerjaanDetailModel;
 use App\Models\RabModel;
 use App\Models\RabDetailModel;
@@ -325,9 +326,11 @@ class Pages extends BaseController
         }
 
         $satuanModel = new SatuanModel();
+        $jenisModel = new JenisPekerjaanModel();
         $data = [
             'title' => "Tambah Pekerjaan",
             'satuans' => $satuanModel->findAll(),
+            'jenis' => $jenisModel->findAll(),
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
@@ -365,11 +368,13 @@ class Pages extends BaseController
         $model = new PekerjaanModel();
         $pekerjaan = $model->find($id);
         $satuanModel = new SatuanModel();
+        $jenisModel = new JenisPekerjaanModel();
 
         if ($pekerjaan) {
             $data = [
                 'title' => "Edit Pekerjaan",
                 'pekerjaan' => $pekerjaan,
+                'jenis' => $jenisModel->findAll(),
                 'satuans' => $satuanModel->findAll(),
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
@@ -731,6 +736,7 @@ class Pages extends BaseController
                     'nama_satuan' => $rab['nama_satuan'],
                     'harga' => $rab['harga'],
                     'koefisien' => $rab['koefisien'],
+                    'koefisien_item' => $rab['koefisien_item'],
                     'profit' => $rab['profit'],
                     'volume_rab' => $rab['volume_rab'],
                     'volume_pekerjaan' => $rab['volume_pekerjaan'],

@@ -19,7 +19,13 @@
                     </div>
                     <div class="mb-3">
                         <label for="jenis" class="form-label">Jenis Pekerjaan</label>
-                        <input type="text" class="form-control" id="jenis" name="jenis" value="<?= esc($pekerjaan['jenis']); ?>" required>
+                        <select class="form-control" id="jenis" name="jenis" required>
+                            <?php foreach ($jenis as $j) : ?>
+                                <option value="<?= $j['id']; ?>" <?= $pekerjaan['jenis'] == $j['id'] ? 'selected' : ''; ?>>
+                                    <?= esc($j['nama_jenis']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="volume" class="form-label">Volume</label>

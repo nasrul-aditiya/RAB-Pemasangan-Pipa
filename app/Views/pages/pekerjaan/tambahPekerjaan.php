@@ -19,7 +19,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="jenis" class="form-label">Jenis Pekerjaan</label>
-                        <input type="text" class="form-control" id="jenis" name="jenis" required>
+                        <select class="form-control" id="jenis" name="jenis" required>
+                            <?php foreach ($jenis as $pekerjaan) : ?>
+                                <option value="<?= $pekerjaan['id']; ?>"><?= esc($pekerjaan['nama_jenis']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="volume" class="form-label">Volume</label>
