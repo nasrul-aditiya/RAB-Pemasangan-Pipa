@@ -43,7 +43,7 @@
                             <?php foreach ($pekerjaans as $pekerjaan) : ?>
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
-                                    <td><?= esc($pekerjaan['volume']) . ' ' . esc($pekerjaan['nama_satuan']) . ' ' . esc($pekerjaan['nama_pekerjaan']); ?></td>
+                                    <td><?= esc(number_format($pekerjaan['volume'], 2, ',', '.')) . ' ' . esc($pekerjaan['nama_satuan']) . ' ' . esc($pekerjaan['nama_pekerjaan']); ?></td>
                                     <td><?= $pekerjaan['jenis_pekerjaan']; ?></td>
                                     <td><?= $pekerjaan['profit']; ?>%</td>
                                     <td>

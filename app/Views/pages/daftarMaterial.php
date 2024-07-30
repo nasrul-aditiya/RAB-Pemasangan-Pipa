@@ -43,8 +43,8 @@
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc($material['nama_material']); ?></td>
                                     <td><?= esc($material['satuan_nama']); ?></td>
-                                    <td>Rp. <?= esc($material['harga']); ?></td>
-                                    <td><?= esc($material['koefisien']); ?></td>
+                                    <td>Rp. <?= esc(number_format($material['harga'], 2, ',', '.')); ?></td>
+                                    <td><?= esc(number_format($material['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-material/edit/<?= $material['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
                                         <a href="/daftar-material/delete/<?= $material['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>

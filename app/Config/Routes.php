@@ -5,12 +5,12 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/login', 'Login::index');
-$routes->post('/login/auth', 'Login::auth');
+$routes->get('/', 'Login::index');
+$routes->post('/auth', 'Login::auth');
 $routes->get('/logout', 'Login::logout');
 $routes->get('/kelola-akun', 'Pages::kelolaAkun');
 $routes->post('/update-akun', 'Pages::updateAkun');
-$routes->get('/', 'Pages::index');
+$routes->get('/dashboard', 'Pages::index');
 $routes->get('/daftar-material', 'Pages::daftarMaterial');
 $routes->get('/daftar-material/tambah', 'Pages::tambahMaterial');
 $routes->post('/daftar-material/store', 'Pages::storeMaterial');
@@ -43,6 +43,7 @@ $routes->get('/daftar-rab/edit/(:num)', 'Pages::editRab/$1');
 $routes->post('/daftar-rab/update/(:num)', 'Pages::updateRab/$1');
 $routes->get('/daftar-rab/delete/(:num)', 'Pages::deleteRab/$1');
 $routes->get('/daftar-rab/detail/(:num)', 'Pages::detailRab/$1');
+$routes->get('/daftar-rab/detail/cetak/(:num)', 'CetakController::cetak/$1');
 $routes->get('/daftar-rab/detail/tambah/(:num)', 'Pages::tambahDetailRab/$1');
 $routes->post('/daftar-rab/detail/store', 'Pages::storeDetailRab');
 $routes->get('/daftar-rab/detail/edit/(:num)', 'Pages::editDetailRab/$1');

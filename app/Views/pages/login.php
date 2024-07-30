@@ -35,7 +35,7 @@
                                     <div><?= session()->getFlashdata('msg') ?></div>
                                 <?php endif; ?>
                             </div>
-                            <form action="/login/auth" method="post">
+                            <form action="/auth" method="post">
                                 <input type="text" name="username" id="" class="form-control my-4 py-2" placeholder="Username" />
                                 <input type="password" name="password" id="" class="form-control my-4 py-2" placeholder="Password" />
                                 <div class="text-center mt-3">

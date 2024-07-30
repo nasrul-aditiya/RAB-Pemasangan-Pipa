@@ -40,7 +40,7 @@
                                     <td><?= esc(ucfirst($item['jenis'])); ?></td>
                                     <td><?= esc($item['nama_satuan']); ?></td>
                                     <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
-                                    <td><?= esc(number_format($item['koefisien'], 4, ',', '.')); ?></td>
+                                    <td><?= esc(number_format($item['koefisien'], 2, ',', '.')); ?></td>
                                     <td>Rp. <?= esc(number_format($item['harga'] * $item['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-pekerjaan/detail/edit/<?= $item['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>

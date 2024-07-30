@@ -23,6 +23,7 @@ class RabDetailModel extends Model
             'rab_profile.id_rab',
             'rab_profile.nama_pekerjaan',
             'rab_profile.lokasi',
+            'rab_profile.administrasi',
             'rab_detail.volume AS volume_rab',
             'pekerjaan.nama AS pekerjaan_name',
             'jenis_pekerjaan.nama_jenis AS jenis_pekerjaan',

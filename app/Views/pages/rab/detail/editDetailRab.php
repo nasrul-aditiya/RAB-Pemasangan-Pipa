@@ -27,7 +27,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="volume" class="form-label">Volume</label>
-                        <input type="number" class="form-control" id="volume" name="volume" value="<?= esc($detail['volume']); ?>" step="0.01" required>
+                        <input type="number" class="form-control" id="volume" name="volume" value="<?= esc($detail['volume']); ?>" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                 </form>

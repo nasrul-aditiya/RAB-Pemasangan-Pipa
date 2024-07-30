@@ -34,14 +34,14 @@ class Login extends Controller
                     'logged_in' => TRUE
                 ];
                 $session->set($ses_data);
-                return redirect()->to('/');
+                return redirect()->to('/dashboard');
             } else {
                 $session->setFlashdata('msg', 'Username atau Password salah');
-                return redirect()->to('/login');
+                return redirect()->to('/');
             }
         } else {
             $session->setFlashdata('msg', 'Username atau Password salah');
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
     }
 
@@ -49,6 +49,6 @@ class Login extends Controller
     {
         $session = session();
         $session->destroy();
-        return redirect()->to('/login');
+        return redirect()->to('/');
     }
 }

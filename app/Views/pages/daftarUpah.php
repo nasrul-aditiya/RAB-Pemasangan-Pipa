@@ -43,8 +43,8 @@
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc($item['nama_upah']); ?></td>
                                     <td><?= esc($item['satuan_nama']); ?></td>
-                                    <td>Rp. <?= esc($item['harga']); ?></td>
-                                    <td><?= esc($item['koefisien']); ?></td>
+                                    <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
+                                    <td><?= esc(number_format($item['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-upah/edit/<?= $item['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
                                         <a href="/daftar-upah/delete/<?= $item['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>

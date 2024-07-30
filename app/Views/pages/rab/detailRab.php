@@ -16,6 +16,9 @@
                     <div class="col-md-9 text-md-start">
                         <a href="/daftar-rab/detail/tambah/<?= $rab['id']; ?>" class="btn btn-primary"><i class="fas fa-plus"></i></a>
                     </div>
+                    <div class="col-md-3 text-md-end">
+                        <a href="/daftar-rab/detail/cetak/<?= $id; ?>" class="btn btn-info">Cetak RAB <i class="fa-solid fa-print"></i></a>
+                    </div>
                 </div>
                 <table class="table table-striped table-hover">
                     <thead>
@@ -30,40 +33,41 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         <?php $i = 1; ?>
+                        <?php $totalBiayaPekerjaanAll = 0; // Initialize the total biaya pekerjaan for all pekerjaan 
+                        ?>
+
                         <?php foreach ($items as $item) : ?>
+
                             <h5>No. RAB : <?= $item['id_rab']; ?></h5>
                             <h5>Pekerjaan: <?= $item['nama_pekerjaan']; ?></h5>
                             <h5>Lokasi : <?= $item['lokasi']; ?></h5>
 
                             <?php foreach ($item['jenis_pekerjaan'] as $jenisPekerjaan) : ?>
-                                <?php
-                                $totalBiayaPekerjaan = 0; // Initialize the total biaya pekerjaan for each jenis_pekerjaan 
 
+                                <?php
+                                $totalBiayaPekerjaan = 0; // Initialize the total biaya pekerjaan for each jenis_pekerjaan
                                 ?>
+
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= $jenisPekerjaan['jenis']; ?></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td colspan="5"></td>
                                 </tr>
 
                                 <?php foreach ($jenisPekerjaan['pekerjaan'] as $pekerjaan) : ?>
+
                                     <?php $totalBiayaPekerjaanIndividu = 0; // Initialize the total biaya for each individual pekerjaan 
                                     $totalHargaSatuan = 0;
                                     ?>
+
                                     <tr>
                                         <td></td>
                                         <td>
                                             <span style="margin-left: 10px;"><?= esc($pekerjaan['pekerjaan_name']); ?></span>
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="4"></td>
                                         <td>
                                             <a href="/daftar-rab/detail/edit/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
                                             <a href="/daftar-rab/detail/delete/<?= $pekerjaan['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
@@ -77,13 +81,15 @@
                                                 <small style="margin-left: 20px;"><?= esc($item['item_name']); ?></small>
                                             </td>
                                             <td><?= esc($item['nama_satuan']); ?></td>
-                                            <td><?= esc($item['volume_rab']); ?></td>
+                                            <td><?= esc(number_format($item['volume_rab'], 2, ',', '.')); ?></td>
                                             <td>
+
                                                 <?php
                                                 $jumlahBiaya = $item['harga'] * $item['koefisien_item'] * $item['koefisien'] / $item['volume_pekerjaan'];
                                                 $jumlahBiayaDenganProfit = $jumlahBiaya * (1 + $item['profit'] / 100);
                                                 $totalBiayaDenganProfit = $jumlahBiayaDenganProfit * $item['volume_rab'];
                                                 ?>
+
                                                 Rp. <?= esc(number_format($jumlahBiayaDenganProfit, 2, ',', '.')); ?>
                                             </td>
                                             <td>Rp. <?= esc(number_format($totalBiayaDenganProfit, 2, ',', '.')); ?></td>
@@ -93,29 +99,20 @@
                                         <?php
                                         // Add the total_biaya of each item to the total biaya for this pekerjaan
                                         $totalBiayaPekerjaanIndividu += $totalBiayaDenganProfit;
-
                                         $totalHargaSatuan += $jumlahBiayaDenganProfit;
-
                                         // Add the total_biaya of each item to the total biaya pekerjaan
                                         $totalBiayaPekerjaan += $totalBiayaDenganProfit;
                                         ?>
-
                                     <?php endforeach; ?>
                                     <!-- Display the total biaya for the current pekerjaan -->
                                     <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
+                                        <th colspan="3"></th>
                                         <th>Total Harga Satuan</th>
                                         <th>Rp. <?= esc(number_format($totalHargaSatuan, 2, ',', '.')); ?></th>
-                                        <th></th>
-                                        <th></th>
+                                        <th colspan="2"></th>
                                     </tr>
                                     <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
+                                        <th colspan="4"></th>
                                         <th>Jumlah Biaya</th>
                                         <th>Rp. <?= esc(number_format($totalBiayaPekerjaanIndividu, 2, ',', '.')); ?></th>
                                         <th></th>
@@ -125,19 +122,122 @@
                                 <tr>
                                     <th></th>
                                     <th>Total</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                    <th colspan="3"></th>
                                     <th>Rp. <?= esc(number_format($totalBiayaPekerjaan, 2, ',', '.')); ?></th>
                                     <th></th>
                                 </tr>
-                            <?php endforeach; ?>
 
+                                <?php
+                                $totalBiayaPekerjaanAll += $totalBiayaPekerjaan; // Add the total biaya pekerjaan for each jenis_pekerjaan to the total biaya pekerjaan for all pekerjaan 
+                                ?>
+
+                            <?php endforeach; ?>
 
                         <?php endforeach; ?>
 
+                        <!-- Calculate Biaya Pengawasan and Biaya Administrasi -->
+                        <?php
+                        $hargaSurvey = $totalBiayaPekerjaanAll * 0.04; // 4% of the total biaya pekerjaan
+                        $hargaPengawasan = $totalBiayaPekerjaanAll * 0.03; // 3% of the total biaya pekerjaan
+                        $nomor = $i; // Initialize $nomor with the last value of $i
+                        ?>
+
+                        <!-- Display Biaya Lain-lain -->
+                        <tr>
+                            <td><?= $nomor; ?></td>
+                            <td>BIAYA LAIN-LAIN</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <span style="margin-left: 10px;">Biaya Survey dan Perencanaan</span>
+                            </td>
+                            <td>ls</td>
+                            <td>1.0000</td>
+                            <td>Rp. <?= esc(number_format($hargaSurvey, 2, ',', '.')); ?></td>
+                            <td>Rp. <?= esc(number_format($hargaSurvey, 2, ',', '.')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <span style="margin-left: 10px;">Biaya Pengawasan</span>
+                            </td>
+                            <td>ls</td>
+                            <td>1.0000</td>
+                            <td>Rp. <?= esc(number_format($hargaPengawasan, 2, ',', '.')); ?></td>
+                            <td>Rp. <?= esc(number_format($hargaPengawasan, 2, ',', '.')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <span style="margin-left: 10px;">Biaya Administrasi</span>
+                            </td>
+                            <td>ls</td>
+                            <td>1.0000</td>
+                            <?php foreach ($items as $item) : ?>
+                                <td>Rp. <?= esc(number_format($item['administrasi'], 2, ',', '.')); ?></td>
+                                <td>Rp. <?= esc(number_format($item['administrasi'], 2, ',', '.')); ?></td>
+                                <td></td>
+                        </tr>
+
+                        <?php
+                                $jumlahBiayaLain = $hargaSurvey + $hargaPengawasan + $item['administrasi'];
+                        ?>
+
+                        <tr>
+                            <th colspan="3"></th>
+                            <th>Total Harga Satuan</th>
+                            <th>Rp. <?= esc(number_format($jumlahBiayaLain, 2, ',', '.')); ?></th>
+                            <th colspan="2"></th>
+                        </tr>
+                        <tr>
+                            <th colspan="4"></th>
+                            <th>Jumlah Biaya</th>
+                            <th>Rp. <?= esc(number_format($jumlahBiayaLain, 2, ',', '.')); ?></th>
+                            <th></th>
+                        </tr>
+
+                        <!-- Calculate the totalBiaya, ppn, totalKeseluruhan, and bulatkan -->
+                        <?php
+                                $totalBiaya = $totalBiayaPekerjaanAll + $jumlahBiayaLain; // Total biaya
+                                $ppn = $totalBiaya * 0.11; // PPN 11%
+                                $totalKeseluruhan = $totalBiaya + $ppn; // Total keseluruhan
+                                $bulatkan = ceil($totalKeseluruhan / 1000) * 1000; // Round up to the nearest thousand
+                        ?>
+
+                        <tr>
+                            <th colspan="2"></th>
+                            <th colspan="3">Total Biaya</th>
+                            <th>Rp. <?= esc(number_format($totalBiaya, 2, ',', '.')); ?></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th colspan="2"></th>
+                            <th colspan="3">PPN 11%</th>
+                            <th>Rp. <?= esc(number_format($ppn, 2, ',', '.')); ?></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th colspan="2"></th>
+                            <th colspan="3">Total Keseluruhan</th>
+                            <th>Rp. <?= esc(number_format($totalKeseluruhan, 2, ',', '.')); ?></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th colspan="2"></th>
+                            <th colspan="3">Dibulatkan</th>
+                            <th>Rp. <?= esc(number_format($bulatkan, 2, ',', '.')); ?></th>
+                            <th></th>
+                        </tr>
+
+                    <?php endforeach; ?>
+
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>

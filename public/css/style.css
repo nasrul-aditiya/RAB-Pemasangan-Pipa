@@ -185,6 +185,19 @@ a.sidebar-link {
     width: 100vw;
   }
 }
+.sidebar-item.active > .sidebar-link {
+  background-color: #376d8c; /* Change to your preferred background color */
+  color: #ffffff; /* Change to your preferred text color */
+}
+
+.sidebar-item.active > .sidebar-link i {
+  color: #ffffff; /* Change icon color */
+}
+
+.sidebar-dropdown .sidebar-item.active > .sidebar-link {
+  background-color: #0056b3; /* Slightly different color for dropdown items */
+  color: #ffffff;
+}
 
 /* Theme Toggler */
 

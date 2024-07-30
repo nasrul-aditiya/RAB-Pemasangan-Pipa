@@ -21,7 +21,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $itemModel = new ItemModel();
@@ -65,7 +65,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -86,7 +86,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $satuanModel = new SatuanModel();
@@ -101,7 +101,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -122,7 +122,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -147,7 +147,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -169,7 +169,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -186,7 +186,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -206,7 +206,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $satuanModel = new SatuanModel();
@@ -223,7 +223,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -244,7 +244,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -269,7 +269,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -291,7 +291,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new ItemModel();
@@ -303,7 +303,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new PekerjaanModel();
@@ -322,7 +322,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $satuanModel = new SatuanModel();
@@ -341,7 +341,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new PekerjaanModel();
@@ -362,7 +362,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new PekerjaanModel();
@@ -389,7 +389,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new PekerjaanModel();
@@ -410,7 +410,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new PekerjaanModel();
@@ -425,7 +425,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $pekerjaanModel = new PekerjaanModel();
@@ -449,7 +449,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $pekerjaanModel = new PekerjaanModel();
@@ -471,7 +471,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
@@ -490,7 +490,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
@@ -520,7 +520,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
@@ -539,7 +539,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
@@ -553,7 +553,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         $model = new RabModel();
 
@@ -586,7 +586,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         $data = [
             'title' => "Tambah RAB"
@@ -597,7 +597,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new RabModel();
@@ -617,7 +617,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new RabModel();
@@ -641,7 +641,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new RabModel();
@@ -660,7 +660,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new RabModel();
@@ -677,7 +677,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $rabModel = new RabDetailModel();
@@ -703,6 +703,7 @@ class Pages extends BaseController
                         'lokasi' => $rab['lokasi'],
                         'jenis_pekerjaan' => [],
                         'jenis' => $rab['jenis_pekerjaan'],
+                        'administrasi' => $rab['administrasi'],
                         'total_biaya' => 0,
                     ];
                 }
@@ -759,11 +760,12 @@ class Pages extends BaseController
         $data = [
             'title' => "Detail RAB",
             'rab' => $rabs,
+            'id' => $id,
             'items' => $groupedRabDetails,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
-        //  dd($data);
+        // dd($data);
 
         return view('pages/rab/detailRab', $data);
     }
@@ -773,7 +775,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         $rabModel = new RabModel();
         $pekerjaanModel = new PekerjaanModel();
@@ -796,7 +798,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $idRab = $this->request->getPost('id_rab');
@@ -823,7 +825,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $rabModel = new RabModel();
@@ -841,7 +843,7 @@ class Pages extends BaseController
         // exit;
 
         $data = [
-            'title' => "Edit Detail Pekerjaan",
+            'title' => "Edit Detail RAB",
             'detail' => $id_rab,
             'rab' => $detail,
             'pekerjaans' => $pekerjaans,
@@ -856,7 +858,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $id = $this->request->getPost('id');
@@ -884,7 +886,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $rabDetailModel = new RabDetailModel();
@@ -898,7 +900,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         if ($session->get('role') !== 'Admin') {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -930,7 +932,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         if ($session->get('role') !== 'Admin') {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -944,7 +946,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         if ($session->get('role') !== 'Admin') {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -966,7 +968,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         if ($session->get('role') !== 'Admin') {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -992,7 +994,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         if ($session->get('role') !== 'Admin') {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -1021,7 +1023,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
         if ($session->get('role') !== 'Admin') {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -1044,7 +1046,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new UserModel();
@@ -1062,7 +1064,7 @@ class Pages extends BaseController
     {
         $session = session();
         if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
+            return redirect()->to('/');
         }
 
         $model = new UserModel();
