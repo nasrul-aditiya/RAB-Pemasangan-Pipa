@@ -44,7 +44,7 @@
                                     <td>Rp. <?= esc(number_format($item['harga'] * $item['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-pekerjaan/detail/edit/<?= $item['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/daftar-pekerjaan/detail/delete/<?= $item['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                        <a href="/daftar-pekerjaan/detail/delete/<?= $item['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

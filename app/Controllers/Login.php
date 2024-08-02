@@ -9,6 +9,10 @@ class Login extends Controller
 {
     public function index()
     {
+        $session = session();
+        if ($session->get('logged_in')) {
+            return redirect()->to('/dashboard');
+        }
         $data = [
             'title' => "Login"
         ];

@@ -11,7 +11,7 @@ class PekerjaanModel extends Model
 
     protected $allowedFields = ['nama', 'jenis', 'satuan', 'volume', 'profit'];
 
-    public function getPekerjaanWithDetails($keyword = null)
+    public function getPekerjaanWithDetails($num, $keyword = null)
     {
         $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.volume, pekerjaan.profit, jenis_pekerjaan.nama_jenis AS jenis_pekerjaan, pekerjaan.satuan, satuan.nama_satuan')
             ->join('jenis_pekerjaan', 'pekerjaan.jenis = jenis_pekerjaan.id')
@@ -23,8 +23,10 @@ class PekerjaanModel extends Model
                 ->orLike('satuan.nama_satuan', $keyword)
                 ->groupEnd();
         }
-
-        return $this->findAll();
+        return [
+            'pekerjaan' => $this->paginate($num),
+            'pager' => $this->pager,
+        ];
     }
 
     public function getPekerjaan($id)
@@ -63,5 +65,9 @@ class PekerjaanModel extends Model
         return $this->where('MONTH(created_at)', date('m', strtotime('-1 month')))
             ->where('YEAR(created_at)', date('Y', strtotime('-1 month')))
             ->countAllResults();
+    }
+    public function countAllPekerjaans()
+    {
+        return $this->countAllResults();
     }
 }

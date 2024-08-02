@@ -3,6 +3,7 @@
 <?= $this->section('content'); ?>
 <main class="content px-3 py-2">
     <div class="container-fluid">
+        <div class="swal" data-swal="<?= session()->getFlashdata('success'); ?>"></div>
         <div class="mb-3 text-center">
             <h4><?= $title; ?></h4>
         </div>
@@ -18,10 +19,24 @@
                     <div class="col-md-3 text-md-end">
                         <form action="/daftar-material" method="GET" class="form-inline">
                             <div class="input-group">
-                                <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
+                                <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2" value="<?= esc($keyword); ?>">
                                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
                             </div>
                         </form>
+                    </div>
+                    <div class="row mb-3 mt-3 align-items-center">
+                        <div class="col-md-1 text-md-start">
+                            <form action="/daftar-material" method="GET" class="form-inline">
+                                <div class="input-group">
+                                    <select class="form-select" name="per_page" id="perPageSelect" onchange="this.form.submit()">
+                                        <option value="5" <?= ($perPage == 5) ? 'selected' : ''; ?>>5</option>
+                                        <option value="10" <?= ($perPage == 10) ? 'selected' : ''; ?>>10</option>
+                                        <option value="15" <?= ($perPage == 15) ? 'selected' : ''; ?>>15</option>
+                                        <option value="20" <?= ($perPage == 20) ? 'selected' : ''; ?>>20</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <table class="table table-striped table-hover">
@@ -36,9 +51,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1; ?>
+                        <?php
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $i = 1 + ($perPage * ($page - 1));
+                        ?>
                         <?php if (!empty($materials) && is_array($materials)) : ?>
-                            <?php foreach ($materials as $material) : ?>
+                            <?php foreach ($materials['material'] as $material) : ?>
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc($material['nama_material']); ?></td>
@@ -47,7 +65,7 @@
                                     <td><?= esc(number_format($material['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-material/edit/<?= $material['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/daftar-material/delete/<?= $material['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                        <a href="/daftar-material/delete/<?= $material['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -58,6 +76,14 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-between">
+                    <div class="">
+                        <i>Menampilkan <?= 1 + ($perPage * ($page - 1)) ?> sampai <?= $i - 1 ?> dari <?= $materials['pager']->getTotal() ?> entri</i>
+                    </div>
+                    <div class="">
+                        <?= $materials['pager']->links('default', 'pagination'); ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

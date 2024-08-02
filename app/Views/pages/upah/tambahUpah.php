@@ -29,6 +29,7 @@
                     <div class="mb-3">
                         <label for="satuan" class="form-label">Satuan</label>
                         <select class="form-control" id="satuan" name="satuan" required>
+                            <option value="">-- Pilih Satuan --</option>
                             <?php foreach ($satuan as $unit) : ?>
                                 <option value="<?= esc($unit['id']); ?>"><?= esc($unit['nama_satuan']); ?></option>
                             <?php endforeach; ?>

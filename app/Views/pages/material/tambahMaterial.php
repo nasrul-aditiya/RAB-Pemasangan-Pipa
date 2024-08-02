@@ -28,6 +28,7 @@
                     <div class="mb-3">
                         <label for="satuan" class="form-label">Satuan</label>
                         <select class="form-control" id="satuan" name="satuan" required>
+                            <option value="">-- Pilih Satuan --</option>
                             <?php foreach ($satuan as $unit) : ?>
                                 <option value="<?= $unit['id']; ?>"><?= $unit['nama_satuan']; ?></option>
                             <?php endforeach; ?>
@@ -44,5 +45,28 @@
         </div>
     </div>
 </main>
+
+<!-- SweetAlert Notifications -->
+<script>
+    <?php if (session()->getFlashdata('success')) : ?>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: '<?= session()->getFlashdata('success'); ?>',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')) : ?>
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: '<?= session()->getFlashdata('error'); ?>',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Coba Lagi'
+        });
+    <?php endif; ?>
+</script>
 
 <?= $this->endSection(); ?>

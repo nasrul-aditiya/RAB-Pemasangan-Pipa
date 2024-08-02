@@ -86,6 +86,10 @@
                         <label for="tanggal" class="form-label">Tanggal</label>
                         <input type="date" name="tanggal" id="" class="form-control my-4 py-2" placeholder="Tanggal" />
                     </div>
+                    <div class="mb-3">
+                        <label for="administrasi" class="form-label">Biaya Administrasi</label>
+                        <input type="number" class="form-control" id="administrasi" name="administrasi" required>
+                    </div>
                     <button type="submit" class="btn btn-primary">Tambah</button>
                     <a href="/daftar-pekerjaan" class="btn btn-secondary">Kembali</a>
                 </form>

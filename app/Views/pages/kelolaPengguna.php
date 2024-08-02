@@ -46,7 +46,7 @@
                                     <td><?= esc($user['role']); ?></td>
                                     <td>
                                         <a href="/kelola-pengguna/edit/<?= $user['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/kelola-pengguna/delete/<?= $user['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                        <a href="/kelola-pengguna/delete/<?= $user['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

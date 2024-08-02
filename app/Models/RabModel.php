@@ -11,15 +11,18 @@ class RabModel extends Model
 
     protected $allowedFields = ['id_rab', 'nama_pekerjaan', 'lokasi', 'tanggal', 'administrasi'];
 
-    public function searchRabs($keyword)
+    public function searchRabs($num, $keyword)
     {
+        $this->table('rab_profile');
         if ($keyword) {
-            return $this->table('rab_profile')
+            $this->groupStart()
                 ->like('nama_pekerjaan', $keyword)
-                ->findAll();
-        } else {
-            return $this->findAll();
+                ->groupEnd();
         }
+        return [
+            'rab' => $this->paginate($num),
+            'pager' => $this->pager,
+        ];
     }
     public function getRabs()
     {
@@ -84,5 +87,9 @@ class RabModel extends Model
         return $this->where('MONTH(created_at)', date('m', strtotime('-1 month')))
             ->where('YEAR(created_at)', date('Y', strtotime('-1 month')))
             ->countAllResults();
+    }
+    public function countAllRabs()
+    {
+        return $this->countAllResults();
     }
 }

@@ -7,8 +7,6 @@ use App\Models\ChartModel;
 use App\Models\ItemModel;
 use App\Models\UserModel;
 use App\Models\SatuanModel;
-use App\Models\MaterialModel;
-use App\Models\PekerjaModel;
 use App\Models\PekerjaanModel;
 use App\Models\JenisPekerjaanModel;
 use App\Models\PekerjaanDetailModel;
@@ -26,23 +24,19 @@ class Pages extends BaseController
 
         $itemModel = new ItemModel();
 
+        $allMaterial = $itemModel->countAllMaterials();
         $materialsThisMonth = $itemModel->countMaterialsThisMonth();
-        $materialsLastMonth = $itemModel->countMaterialsLastMonth();
-        $materialsDifference = $materialsThisMonth - $materialsLastMonth;
 
+        $allUpah = $itemModel->countAllUpah();
         $pekerjasThisMonth = $itemModel->countUpahsThisMonth();
-        $pekerjasLastMonth = $itemModel->countUpahsLastMonth();
-        $pekerjasDifference = $pekerjasThisMonth - $pekerjasLastMonth;
 
         $pekerjaanModel = new PekerjaanModel();
         $pekerjaansThisMonth = $pekerjaanModel->countPekerjaansThisMonth();
-        $pekerjaansLastMonth = $pekerjaanModel->countPekerjaansLastMonth();
-        $pekerjaansDifference = $pekerjaansThisMonth - $pekerjaansLastMonth;
+        $allPekerjaan = $pekerjaanModel->countAllPekerjaans();
 
         $rabModel = new RabModel();
         $rabsThisMonth = $rabModel->countRabsThisMonth();
-        $rabsLastMonth = $rabModel->countRabsLastMonth();
-        $rabsDifference = $rabsThisMonth - $rabsLastMonth;
+        $allRab = $rabModel->countAllRabs();
 
         $model = new ChartModel();
         $data = [
@@ -50,13 +44,13 @@ class Pages extends BaseController
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
             'materialsThisMonth' => $materialsThisMonth,
-            'materialsDifference' => $materialsDifference,
+            'allMaterial' => $allMaterial,
             'pekerjasThisMonth' => $pekerjasThisMonth,
-            'pekerjasDifference' => $pekerjasDifference,
+            'allUpah' => $allUpah,
             'pekerjaansThisMonth' => $pekerjaansThisMonth,
-            'pekerjaansDifference' => $pekerjaansDifference,
+            'allPekerjaan' => $allPekerjaan,
             'rabsThisMonth' => $rabsThisMonth,
-            'rabsDifference' => $rabsDifference,
+            'allRab' => $allRab,
             'chartData' => $model->findAll()
         ];
         return view('pages/dashboard', $data);
@@ -71,13 +65,20 @@ class Pages extends BaseController
         $model = new ItemModel();
 
         $keyword = $this->request->getGet('keyword');
-        $materials = $keyword ? $model->searchMaterials($keyword) : $model->getMaterials();
+
+        // Get the selected number of items per page from the dropdown
+        $perPage = $this->request->getGet('per_page') ?: 10; // Default to 10 if not set
+
+        // Retrieve data with the specified number of items per page
+        $materials = $model->searchMaterials($perPage, $keyword);
 
         $data = [
             'title' => "Daftar Material",
             'materials' => $materials,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'keyword' => $keyword, // To keep the keyword in the search bar
+            'perPage' => $perPage, // Pass perPage to the view
         ];
         return view('pages/daftarMaterial', $data);
     }
@@ -113,7 +114,12 @@ class Pages extends BaseController
             'harga' => $this->request->getVar('harga'),
             'koefisien' => $this->request->getVar('koefisien'),
         ];
-        $model->insert($data);
+        try {
+            $model->insert($data);
+            $session->setFlashdata('success', 'Material berhasil disimpan.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Material gagal disimpan. Silahkan coba lagi.');
+        }
 
         return redirect()->to('/daftar-material');
     }
@@ -159,10 +165,14 @@ class Pages extends BaseController
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'material', // Tetap 'material'
         ];
+        try {
+            $model->update($id, $data);
+            $session->setFlashdata('success', 'Material berhasil diubah.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Material gagal diubah. Silahkan coba lagi.');
+        }
 
-        $model->update($id, $data);
-
-        return redirect()->to('/daftar-material')->with('success', 'Material berhasil diperbarui.');
+        return redirect()->to('/daftar-material');
     }
 
     public function deleteMaterial($id)
@@ -192,13 +202,19 @@ class Pages extends BaseController
         $model = new ItemModel();
 
         $keyword = $this->request->getGet('keyword');
-        $upah = $keyword ? $model->searchUpah($keyword) : $model->getUpah();
+        // Get the selected number of items per page from the dropdown
+        $perPage = $this->request->getGet('per_page') ?: 10; // Default to 10 if not set
+
+        // Retrieve data with the specified number of items per page
+        $upah = $model->searchUpah($perPage, $keyword);
 
         $data = [
             'title' => "Daftar Upah",
             'upah' => $upah,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'keyword' => $keyword, // To keep the keyword in the search bar
+            'perPage' => $perPage, // Pass perPage to the view
         ];
         return view('pages/daftarUpah', $data);
     }
@@ -235,9 +251,14 @@ class Pages extends BaseController
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'upah',
         ];
-        $model->insert($data);
+        try {
+            $model->insert($data);
+            $session->setFlashdata('success', 'Upah berhasil disimpan.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Upah gagal disimpan. Silahkan coba lagi.');
+        }
 
-        return redirect()->to('/daftar-upah')->with('success', 'Upah berhasil ditambahkan.');
+        return redirect()->to('/daftar-upah');
     }
 
     public function editUpah($id)
@@ -281,10 +302,14 @@ class Pages extends BaseController
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'upah',
         ];
+        try {
+            $model->update($id, $data);
+            $session->setFlashdata('success', 'Upah berhasil diubah.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Upah gagal diubah. Silahkan coba lagi.');
+        }
 
-        $model->update($id, $data);
-
-        return redirect()->to('/daftar-upah')->with('success', 'Upah berhasil diperbarui.');
+        return redirect()->to('/daftar-upah');
     }
 
     public function deleteUpah($id)
@@ -308,16 +333,25 @@ class Pages extends BaseController
 
         $model = new PekerjaanModel();
         $keyword = $this->request->getGet('keyword');
-        $pekerjaans = $model->getPekerjaanWithDetails($keyword);
+
+        // Get the selected number of items per page from the dropdown
+        $perPage = $this->request->getGet('per_page') ?: 10; // Default to 10 if not set
+
+        // Retrieve data with the specified number of items per page
+        $pekerjaans = $model->getPekerjaanWithDetails($perPage, $keyword);
 
         $data = [
             'title' => "Daftar Pekerjaan",
             'pekerjaans' => $pekerjaans,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'keyword' => $keyword, // To keep the keyword in the search bar
+            'perPage' => $perPage, // Pass perPage to the view
         ];
+
         return view('pages/daftarPekerjaan', $data);
     }
+
     public function tambahPekerjaan()
     {
         $session = session();
@@ -352,10 +386,14 @@ class Pages extends BaseController
             'satuan' => $this->request->getVar('satuan'),
             'profit' => $this->request->getVar('profit'),
         ];
+        try {
+            $model->insert($data);
+            $session->setFlashdata('success', 'Pekerjaan berhasil disimpan.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Pekerjaan gagal disimpan. Silahkan coba lagi.');
+        }
 
-        $model->insert($data);
-
-        return redirect()->to('/daftar-pekerjaan')->with('success', 'Pekerjaan berhasil ditambahkan.');
+        return redirect()->to('/daftar-pekerjaan');
     }
 
     public function editPekerjaan($id)
@@ -400,10 +438,14 @@ class Pages extends BaseController
             'satuan' => $this->request->getPost('satuan'),
             'profit' => $this->request->getPost('profit'),
         ];
+        try {
+            $model->updatePekerjaanData($id, $data);
+            $session->setFlashdata('success', 'Pekerjaan berhasil diubah.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Pekerjaan gagal diubah. Silahkan coba lagi.');
+        }
 
-        $model->updatePekerjaanData($id, $data);
-
-        return redirect()->to('/daftar-pekerjaan')->with('success', 'Pekerjaan berhasil diperbarui.');
+        return redirect()->to('/daftar-pekerjaan');
     }
 
     public function deletePekerjaan($id)
@@ -482,7 +524,12 @@ class Pages extends BaseController
             'koefisien' => $this->request->getPost('koefisien'),
         ];
 
-        $pekerjaanDetailModel->save($data);
+        try {
+            $pekerjaanDetailModel->save($data);
+            $session->setFlashdata('success', 'Detail Pekerjaan berhasil disimpan.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Detail Pekerjaan gagal disimpan. Silahkan coba lagi.');
+        }
 
         return redirect()->to('/daftar-pekerjaan/detail/' . $data['pekerjaan_id']);
     }
@@ -501,19 +548,28 @@ class Pages extends BaseController
         if (!$pekerjaanDetail) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
+        $filter = $itemModel->find($pekerjaanDetail['item_id']);
 
         $pekerjaan = $pekerjaanModel->find($pekerjaanDetail['pekerjaan_id']);
         $items = $itemModel->findAll();
-
-        $data = [
-            'title' => "Edit Detail Pekerjaan",
-            'pekerjaan' => $pekerjaan,
-            'pekerjaanDetail' => $pekerjaanDetail,
-            'items' => $items,
-            'nama' => $session->get('nama'),
-            'role' => $session->get('role'),
-        ];
-        return view('pages/pekerjaan/detail/editDetailPekerjaan', $data);
+        // Tentukan tipe item yang sudah dipilih sebelumnya (contoh)
+        $selectedType = $filter['jenis'] ?? '';
+        if ($pekerjaanDetail) {
+            $data = [
+                'title' => "Edit Detail Pekerjaan",
+                'pekerjaan' => $pekerjaan,
+                'pekerjaanDetail' => $pekerjaanDetail,
+                'selectedType' => $selectedType,
+                'items' => $items,
+                'filter' => $filter,
+                'nama' => $session->get('nama'),
+                'role' => $session->get('role'),
+            ];
+            // dd($data);
+            return view('pages/pekerjaan/detail/editDetailPekerjaan', $data);
+        } else {
+            return redirect()->to('/daftar-pekerjaan/detail' . $pekerjaanDetail['pekerjaan_id'])->with('error', 'Item tidak ditemukan.');
+        }
     }
 
     public function updateDetailPekerjaan($id)
@@ -529,8 +585,12 @@ class Pages extends BaseController
             'item_id' => $this->request->getPost('item_id'),
             'koefisien' => $this->request->getPost('koefisien'),
         ];
-
-        $pekerjaanDetailModel->update($id, $data);
+        try {
+            $pekerjaanDetailModel->update($id, $data);
+            $session->setFlashdata('success', 'Detail Pekerjaan berhasil diubah.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Detail Pekerjaan gagal diubah. Silahkan coba lagi.');
+        }
 
         return redirect()->to('/daftar-pekerjaan/detail/' . $this->request->getPost('pekerjaan_id'));
     }
@@ -544,10 +604,12 @@ class Pages extends BaseController
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
         $detail = $pekerjaanDetailModel->find($id);
-
-        $pekerjaanDetailModel->delete($id);
-
-        return redirect()->to('/daftar-pekerjaan/detail/' . $detail['pekerjaan_id']);
+        if ($detail) {
+            $pekerjaanDetailModel->delete($id);
+            return redirect()->to('/daftar-pekerjaan/detail/' . $detail['pekerjaan_id'])->with('success', 'Detail Pekerjaan berhasil dihapus.');
+        } else {
+            return redirect()->to('/daftar-pekerjaan/detail/' . $detail['pekerjaan_id'])->with('error', 'Detail Pekerjaan tidak ditemukan.');
+        }
     }
     public function daftarRab()
     {
@@ -560,17 +622,15 @@ class Pages extends BaseController
         // Ambil keyword pencarian dari input form atau query string
         $keyword = $this->request->getGet('keyword');
 
-        // Lakukan pencarian jika ada keyword
-        if ($keyword) {
-            $rabs = $model->searchRabs($keyword);
-        } else {
-            // Jika tidak ada keyword, ambil semua data pengguna
-            $rabs = $model->findAll();
-        }
+        // Get the selected number of items per page from the dropdown
+        $perPage = $this->request->getGet('per_page') ?: 10; // Default to 10 if not set
+
+        // Retrieve data with the specified number of items per page
+        $rabs = $model->searchRabs($perPage, $keyword);
         // Format dates using IntlDateFormatter
         $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
 
-        foreach ($rabs as &$rab) {
+        foreach ($rabs['rab'] as &$rab) {
             $timestamp = strtotime($rab['tanggal']);
             $rab['tanggal'] = $formatter->format($timestamp);
         }
@@ -579,6 +639,8 @@ class Pages extends BaseController
             'rabs' => $rabs,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'keyword' => $keyword, // To keep the keyword in the search bar
+            'perPage' => $perPage, // Pass perPage to the view
         ];
         return view('pages/daftarRab', $data);
     }
@@ -607,9 +669,14 @@ class Pages extends BaseController
             'nama_pekerjaan'     => $this->request->getVar('nama_pekerjaan'),
             'lokasi'     => $this->request->getVar('lokasi'),
             'tanggal' => $this->request->getVar('tanggal'),
+            'administrasi' => $this->request->getVar('administrasi'),
         ];
-
-        $model->insert($data);
+        try {
+            $model->insert($data);
+            $session->setFlashdata('success', 'RAB berhasil disimpan.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'RAB gagal disimpan. Silahkan coba lagi.');
+        }
 
         return redirect()->to('/daftar-rab');
     }
@@ -651,10 +718,14 @@ class Pages extends BaseController
             'lokasi' => $this->request->getPost('lokasi'),
             'tanggal' => $this->request->getPost('tanggal'),
         ];
+        try {
+            $model->updateRabData($id, $data);
+            $session->setFlashdata('success', 'RAB berhasil diubah.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'RAB gagal diubah. Silahkan coba lagi.');
+        }
 
-        $model->updateRabData($id, $data);
-
-        return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diperbarui.');
+        return redirect()->to('/daftar-rab');
     }
     public function deleteRab($id)
     {
@@ -814,11 +885,9 @@ class Pages extends BaseController
 
         if ($result) {
             // Berhasil, redirect ke halaman detail RAB
-            return redirect()->to('/daftar-rab/detail/' . $idRab)->with('success', 'Data berhasil disimpan.');
+            return redirect()->to('/daftar-rab/detail/' . $idRab)->with('success', 'Detail RAB berhasil disimpan.');
         } else {
-            // Gagal, tampilkan pesan error
-            $error = $db->error();
-            return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $error['message']);
+            return redirect()->back()->with('error', 'Detail RAB gagal disimpan. Silahkan coba lagi');
         }
     }
     public function editDetailRab($id)
@@ -841,17 +910,20 @@ class Pages extends BaseController
         // print_r($detail);
         // echo '</pre>';
         // exit;
+        if ($detail) {
+            $data = [
+                'title' => "Edit Detail RAB",
+                'detail' => $id_rab,
+                'rab' => $detail,
+                'pekerjaans' => $pekerjaans,
+                'nama' => $session->get('nama'),
+                'role' => $session->get('role'),
+            ];
 
-        $data = [
-            'title' => "Edit Detail RAB",
-            'detail' => $id_rab,
-            'rab' => $detail,
-            'pekerjaans' => $pekerjaans,
-            'nama' => $session->get('nama'),
-            'role' => $session->get('role'),
-        ];
-
-        return view('pages/rab/detail/editDetailRab', $data);
+            return view('pages/rab/detail/editDetailRab', $data);
+        } else {
+            return redirect()->to('/daftar-rab/detail/' . $id_rab['id_rab'])->with('error', 'Pekerjaan tidak ditemukan.');
+        }
     }
 
     public function updateDetailRab()
@@ -874,11 +946,11 @@ class Pages extends BaseController
 
         if ($result) {
             // Successful, redirect to the detail page
-            return redirect()->to('/daftar-rab/detail/' . $idRab)->with('success', 'Data berhasil diperbarui.');
+            return redirect()->to('/daftar-rab/detail/' . $idRab)->with('success', 'Detail RAB berhasil diubah.');
         } else {
             // Failure, show error message
             $error = $db->error();
-            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $error['message']);
+            return redirect()->back()->with('error', 'Detail RAB gagal diubah. Silahkan coba lagi.');
         }
     }
 
@@ -891,10 +963,12 @@ class Pages extends BaseController
 
         $rabDetailModel = new RabDetailModel();
         $detail = $rabDetailModel->find($id);
-
-        $rabDetailModel->delete($id);
-
-        return redirect()->to('/daftar-rab/detail/' . $detail['id_rab']);
+        if ($detail) {
+            $rabDetailModel->delete($id);
+            return redirect()->to('/daftar-rab/detail/' . $detail['id_rab'])->with('success', 'Detail RAB berhasil dihapus.');
+        } else {
+            return redirect()->to('/daftar-rab/detail/' . $detail['id_rab'])->with('error', 'Detail RAB tidak ditemukan.');
+        }
     }
     public function kelolaPengguna()
     {
@@ -959,8 +1033,12 @@ class Pages extends BaseController
             'role'     => $this->request->getVar('role'),
             'password' => $this->request->getVar('password'),
         ];
-
-        $model->insert($data);
+        try {
+            $model->insert($data);
+            $session->setFlashdata('success', 'Pengguna baru berhasil disimpan.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Pengguna baru gagal disimpan. Silahkan coba lagi.');
+        }
 
         return redirect()->to('/kelola-pengguna');
     }
@@ -1013,11 +1091,14 @@ class Pages extends BaseController
         // $validation = \Config\Services::validation();
         // $validation->run($userData, 'user');
 
-        // Simpan perubahan ke dalam database
-        $userModel->update($id, $userData);
+        try {
+            $userModel->update($id, $userData);
+            $session->setFlashdata('success', 'Data Pengguna berhasil diubah.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Data Pengguna gagal diubah. Silahkan coba lagi.');
+        }
 
-        // Redirect kembali ke halaman kelola pengguna atau halaman lain yang sesuai
-        return redirect()->to('/kelola-pengguna')->with('success', 'Data pengguna berhasil diperbarui.');
+        return redirect()->to('/kelola-pengguna');
     }
     public function deletePengguna($id)
     {
@@ -1033,14 +1114,14 @@ class Pages extends BaseController
         // Cek apakah user ada
         $user = $userModel->find($id);
         if (!$user) {
-            return redirect()->to('/kelola-pengguna')->with('error', 'User not found');
+            return redirect()->to('/kelola-pengguna')->with('error', 'Pengguna tidak ditemukan.');
         }
 
         // Lakukan penghapusan user
         $userModel->delete($id);
 
         // Redirect kembali ke halaman pengelolaan pengguna dengan pesan sukses
-        return redirect()->to('/kelola-pengguna')->with('success', 'User deleted successfully');
+        return redirect()->to('/kelola-pengguna')->with('success', 'Pengguna berhasil dihapus.');
     }
     public function kelolaAkun()
     {
@@ -1048,13 +1129,14 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/');
         }
-
         $model = new UserModel();
         $user = $model->find($session->get('id'));
 
         $data = [
             'title' => 'Kelola Akun',
             'user' => $user,
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
         ];
 
         return view('pages/kelolaAkun', $data);
@@ -1073,14 +1155,18 @@ class Pages extends BaseController
             'username' => $this->request->getPost('username'),
             'nama' => $this->request->getPost('nama'),
             'password' => $this->request->getPost('password'),
+            'role' => $this->request->getPost('role'),
         ];
-
-        $model->update($id, $data);
-        $session->set([
-            'username' => $data['username'],
-            'nama' => $data['nama']
-        ]);
-
-        return redirect()->to('/kelola-akun')->with('success', 'Akun berhasil diperbarui.');
+        try {
+            $model->update($id, $data);
+            // Perbarui data session dengan data yang baru diupdate
+            $session->set('username', $data['username']);
+            $session->set('nama', $data['nama']);
+            $session->set('role', $data['role']);
+            $session->setFlashdata('success', 'Akun berhasil diperbarui.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Akun gagal diperbarui. Silahkan coba lagi.');
+        }
+        return redirect()->back();
     }
 }

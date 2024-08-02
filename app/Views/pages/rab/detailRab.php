@@ -70,7 +70,7 @@
                                         <td colspan="4"></td>
                                         <td>
                                             <a href="/daftar-rab/detail/edit/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                            <a href="/daftar-rab/detail/delete/<?= $pekerjaan['id']; ?>" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                            <a href="/daftar-rab/detail/delete/<?= $pekerjaan['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
                                         </td>
                                     </tr>
 

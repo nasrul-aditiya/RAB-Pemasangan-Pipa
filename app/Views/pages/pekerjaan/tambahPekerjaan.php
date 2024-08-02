@@ -20,6 +20,7 @@
                     <div class="mb-3">
                         <label for="jenis" class="form-label">Jenis Pekerjaan</label>
                         <select class="form-control" id="jenis" name="jenis" required>
+                            <option value="">-- Pilih Jenis Pekerjaan --</option>
                             <?php foreach ($jenis as $pekerjaan) : ?>
                                 <option value="<?= $pekerjaan['id']; ?>"><?= esc($pekerjaan['nama_jenis']); ?></option>
                             <?php endforeach; ?>
@@ -27,11 +28,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="volume" class="form-label">Volume</label>
-                        <input type="number" class="form-control" id="volume" name="volume" step="0.01" required>
+                        <input type="number" class="form-control" id="volume" name="volume" required>
                     </div>
                     <div class="mb-3">
                         <label for="satuan" class="form-label">Satuan</label>
                         <select class="form-control" id="satuan" name="satuan" required>
+                            <option value="">-- Pilih Satuan --</option>
                             <?php foreach ($satuans as $satuan) : ?>
                                 <option value="<?= $satuan['id']; ?>"><?= esc($satuan['nama_satuan']); ?></option>
                             <?php endforeach; ?>
@@ -39,7 +41,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="profit" class="form-label">Overhead & Profit (%)</label>
-                        <input type="number" class="form-control" id="profit" name="profit" step="0.01" required>
+                        <input type="number" class="form-control" id="profit" name="profit">
                     </div>
                     <button type="submit" class="btn btn-primary">Tambah</button>
                     <a href="/daftar-pekerjaan" class="btn btn-secondary">Kembali</a>

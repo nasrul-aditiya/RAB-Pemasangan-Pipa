@@ -13,6 +13,7 @@
             <div class="card-body">
                 <form action="/update-akun" method="post">
                     <?= csrf_field(); ?>
+                    <input type="hidden" name="role" value="<?= esc($user['role']); ?>">
                     <div class="mb-3 row">
                         <label for="username" class="col-sm-2 col-form-label">Username</label>
                         <div class="col-sm-8">

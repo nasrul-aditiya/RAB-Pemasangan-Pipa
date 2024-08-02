@@ -16,16 +16,22 @@
                     <input type="hidden" name="pekerjaan_id" value="<?= esc($pekerjaan['id']); ?>">
 
                     <div class="mb-3">
+                        <label for="item_type" class="form-label">Jenis Item</label>
+                        <select class="form-select" id="item_type" name="item_type" required>
+                            <option value="">-- Pilih Jenis Item --</option>
+                            <option value="material" <?= ($selectedType === 'material') ? 'selected' : ''; ?>>Material</option>
+                            <option value="upah" <?= ($selectedType === 'upah') ? 'selected' : ''; ?>>Upah</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="item_id" class="form-label">Nama Item</label>
                         <select class="form-select" id="item_id" name="item_id" required>
                             <option value="">-- Pilih Item --</option>
-                            <?php foreach ($items as $item) : ?>
-                                <option value="<?= $item['id']; ?>" <?= ($item['id'] == $pekerjaanDetail['item_id']) ? 'selected' : ''; ?>>
-                                    <?= esc($item['nama']); ?> (<?= esc($item['jenis']); ?>)
-                                </option>
-                            <?php endforeach; ?>
+                            <!-- Options will be populated by JavaScript -->
                         </select>
                     </div>
+
                     <div class="mb-3">
                         <label for="koefisien" class="form-label">Koefisien</label>
                         <input type="text" class="form-control" id="koefisien" name="koefisien" value="<?= esc($pekerjaanDetail['koefisien']); ?>" required>
@@ -36,4 +42,46 @@
         </div>
     </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const itemTypeSelect = document.getElementById('item_type');
+        const itemSelect = document.getElementById('item_id');
+
+        const items = <?= json_encode($items); ?>; // Data items dari PHP
+        const selectedType = '<?= esc($selectedType); ?>'; // Jenis item yang sudah dipilih sebelumnya
+        const selectedItem = '<?= esc($pekerjaanDetail['item_id']); ?>'; // Item yang sudah dipilih sebelumnya
+
+        function updateItemSelect(type) {
+            // Clear previous options
+            itemSelect.innerHTML = '<option value="">-- Pilih Item --</option>';
+
+            // Filter items based on selected type
+            const filteredItems = items.filter(item => item.jenis === type || type === '');
+
+            // Populate the item dropdown
+            filteredItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = `${item.nama} (${item.jenis})`;
+                itemSelect.appendChild(option);
+            });
+
+            // Set the previously selected item
+            if (selectedItem) {
+                itemSelect.value = selectedItem;
+            }
+        }
+
+        // Initialize the item dropdown based on the selected type
+        updateItemSelect(selectedType);
+
+        // Add event listener to update item dropdown on type change
+        itemTypeSelect.addEventListener('change', function() {
+            const type = itemTypeSelect.value;
+            updateItemSelect(type);
+        });
+    });
+</script>
+
 <?= $this->endSection(); ?>

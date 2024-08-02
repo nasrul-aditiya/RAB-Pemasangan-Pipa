@@ -14,29 +14,29 @@
                             <div class="col-3">
                                 <div class="p-3 m-1">
                                     <p>Daftar Material</p>
-                                    <h4><?= $materialsThisMonth; ?></h4>
-                                    <p class="mb-0">+<?= $materialsDifference; ?> bulan ini</p>
+                                    <h4><?= $allMaterial; ?></h4>
+                                    <p class="mb-0">+<?= $materialsThisMonth; ?> bulan ini</p>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="p-3 m-1">
                                     <p>Daftar Upah</p>
-                                    <h4><?= $pekerjasThisMonth; ?></h4>
-                                    <p class="mb-0">+<?= $pekerjasDifference; ?> bulan ini</p>
+                                    <h4><?= $allUpah; ?></h4>
+                                    <p class="mb-0">+<?= $pekerjasThisMonth; ?> bulan ini</p>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="p-3 m-1">
                                     <p>Daftar Pekerjaan</p>
-                                    <h4><?= $pekerjaansThisMonth; ?></h4>
-                                    <p class="mb-0">+<?= $pekerjaansDifference; ?> bulan ini</p>
+                                    <h4><?= $allPekerjaan; ?></h4>
+                                    <p class="mb-0">+<?= $pekerjaansThisMonth; ?> bulan ini</p>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="p-3 m-1">
                                     <p>Daftar RAB</p>
-                                    <h4><?= $rabsThisMonth; ?></h4>
-                                    <p class="mb-0">+<?= $rabsDifference; ?> bulan ini</p>
+                                    <h4><?= $allRab; ?></h4>
+                                    <p class="mb-0">+<?= $rabsThisMonth; ?> bulan ini</p>
                                 </div>
                             </div>
                         </div>
