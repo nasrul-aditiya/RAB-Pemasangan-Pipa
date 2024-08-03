@@ -24,8 +24,8 @@
                             <th scope="col">Nama Item</th>
                             <th scope="col">Jenis Item</th>
                             <th scope="col">Satuan</th>
-                            <th scope="col">Harga</th>
                             <th scope="col">Koefisien</th>
+                            <th scope="col">Harga</th>
                             <th scope="col">Jumlah Biaya</th>
                             <th scope="col">Aksi</th>
                         </tr>
@@ -39,8 +39,8 @@
                                     <td><?= esc($item['item_name']); ?></td>
                                     <td><?= esc(ucfirst($item['jenis'])); ?></td>
                                     <td><?= esc($item['nama_satuan']); ?></td>
-                                    <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
                                     <td><?= esc(number_format($item['koefisien'], 2, ',', '.')); ?></td>
+                                    <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
                                     <td>Rp. <?= esc(number_format($item['harga'] * $item['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-pekerjaan/detail/edit/<?= $item['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>

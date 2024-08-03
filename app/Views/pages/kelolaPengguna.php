@@ -21,10 +21,24 @@
                     <div class="col-md-3 text-md-end">
                         <form action="/kelola-pengguna" method="GET" class="form-inline">
                             <div class="input-group">
-                                <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
+                                <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2" value="<?= esc($keyword); ?>">
                                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
                             </div>
                         </form>
+                    </div>
+                    <div class="row mb-3 mt-3 align-items-center">
+                        <div class="col-md-1 text-md-start">
+                            <form action="/daftar-material" method="GET" class="form-inline">
+                                <div class="input-group">
+                                    <select class="form-select" name="per_page" id="perPageSelect" onchange="this.form.submit()">
+                                        <option value="5" <?= ($perPage == 5) ? 'selected' : ''; ?>>5</option>
+                                        <option value="10" <?= ($perPage == 10) ? 'selected' : ''; ?>>10</option>
+                                        <option value="15" <?= ($perPage == 15) ? 'selected' : ''; ?>>15</option>
+                                        <option value="20" <?= ($perPage == 20) ? 'selected' : ''; ?>>20</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <table class="table table-striped table-hover">
@@ -37,9 +51,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1; ?>
+                        <?php
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $i = 1 + ($perPage * ($page - 1));
+                        ?>
                         <?php if (!empty($users) && is_array($users)) : ?>
-                            <?php foreach ($users as $user) : ?>
+                            <?php foreach ($users['users'] as $user) : ?>
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc($user['nama']); ?></td>
@@ -57,6 +74,14 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-between">
+                    <div class="">
+                        <i>Menampilkan <?= 1 + ($perPage * ($page - 1)) ?> sampai <?= $i - 1 ?> dari <?= $users['pager']->getTotal() ?> entri</i>
+                    </div>
+                    <div class="">
+                        <?= $users['pager']->links('default', 'pagination'); ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

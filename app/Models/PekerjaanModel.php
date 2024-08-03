@@ -9,18 +9,17 @@ class PekerjaanModel extends Model
     protected $table = 'pekerjaan';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['nama', 'jenis', 'satuan', 'volume', 'profit'];
+    protected $allowedFields = ['nama', 'jenis_pekerjaan', 'subjenis_pekerjaan', 'satuan', 'volume', 'profit'];
 
     public function getPekerjaanWithDetails($num, $keyword = null)
     {
-        $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.volume, pekerjaan.profit, jenis_pekerjaan.nama_jenis AS jenis_pekerjaan, pekerjaan.satuan, satuan.nama_satuan')
-            ->join('jenis_pekerjaan', 'pekerjaan.jenis = jenis_pekerjaan.id')
+        $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan, pekerjaan.subjenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
             ->join('satuan', 'pekerjaan.satuan = satuan.id');
 
         if ($keyword) {
             $this->groupStart()
                 ->like('pekerjaan.nama', $keyword)
-                ->orLike('satuan.nama_satuan', $keyword)
+                ->orLike('pekerjaan.jenis_pekerjaan', $keyword)
                 ->groupEnd();
         }
         return [
@@ -31,7 +30,7 @@ class PekerjaanModel extends Model
 
     public function getPekerjaan($id)
     {
-        return $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
+        return $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan, pekerjaan.subjenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
             ->join('satuan', 'pekerjaan.satuan = satuan.id')
             ->find($id);
     }
@@ -42,7 +41,7 @@ class PekerjaanModel extends Model
     }
     public function getPekerjaanWithItems($id_rab)
     {
-        return $this->select('pekerjaan.id AS pekerjaan_id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.volume, pekerjaan.profit, item.id AS item_id, item.nama AS item_name, item.satuan, item.harga')
+        return $this->select('pekerjaan.id AS pekerjaan_id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan, pekerjaan.subjenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, item.id AS item_id, item.nama AS item_name, item.satuan, item.harga')
             ->join('pekerjaan_detail', 'pekerjaan_detail.pekerjaan_id = pekerjaan.id')
             ->join('item', 'pekerjaan_detail.item_id = item.id')
             ->where('pekerjaan_detail.id_rab', $id_rab)

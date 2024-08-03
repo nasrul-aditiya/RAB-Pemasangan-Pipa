@@ -17,6 +17,8 @@ class RabModel extends Model
         if ($keyword) {
             $this->groupStart()
                 ->like('nama_pekerjaan', $keyword)
+                ->orLike('id_rab', $keyword)
+                ->orLike('lokasi', $keyword)
                 ->groupEnd();
         }
         return [
@@ -43,6 +45,8 @@ class RabModel extends Model
             'rab_profile.lokasi',
             'pekerjaan.nama AS pekerjaan_name',
             'pekerjaan.jenis AS jenis_pekerjaan',
+            'pekerjaan.jenis_pekerjaan AS jenis',
+            'pekerjaan.subjenis_pekerjaan AS sub_jenis',
             'item.nama AS item_name',
             'satuan.nama_satuan',
             'pekerjaan.volume',
@@ -62,6 +66,8 @@ class RabModel extends Model
                 'rab_profile.lokasi',
                 'pekerjaan.nama',
                 'pekerjaan.jenis',
+                'pekerjaan.jenis_pekerjaan',
+                'pekerjaan.subjenis_pekerjaan',
                 'item.nama',
                 'satuan.nama_satuan',
                 'pekerjaan.volume',

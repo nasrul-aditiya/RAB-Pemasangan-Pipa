@@ -18,7 +18,7 @@
                     <div class="col-md-3 text-md-end">
                         <form action="/daftar-upah" method="GET" class="form-inline">
                             <div class="input-group">
-                                <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
+                                <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2" value="<?= esc($keyword); ?>">
                                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
                             </div>
                         </form>

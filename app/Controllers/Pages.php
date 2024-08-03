@@ -348,6 +348,7 @@ class Pages extends BaseController
             'keyword' => $keyword, // To keep the keyword in the search bar
             'perPage' => $perPage, // Pass perPage to the view
         ];
+        // dd($data);
 
         return view('pages/daftarPekerjaan', $data);
     }
@@ -361,13 +362,41 @@ class Pages extends BaseController
 
         $satuanModel = new SatuanModel();
         $jenisModel = new JenisPekerjaanModel();
+        $pekerjaanModel = new PekerjaanModel();
+        $pekerjaans = $pekerjaanModel->findAll();
+        // Group the results by id_rab and jenis_pekerjaan
+        $groupedJenisPekerjaan = [];
+        foreach ($pekerjaans as $pekerjaan) {
+            // Ensure $rab is an array
+            if (is_array($pekerjaan)) {
+                $jenisPekerjaan = $pekerjaan['jenis_pekerjaan'];
+                $subJenisPekerjaan = $pekerjaan['subjenis_pekerjaan'];
+
+                // Initialize the RAB grouping if not already set
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan] = [
+                        'jenis_pekerjaan' => $pekerjaan['jenis_pekerjaan'],
+                        'subjenis_pekerjaan' => [],
+                    ];
+                }
+                // Initialize the jenis_pekerjaan grouping if not already set
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan] = [
+                        'sub_jenis' => $pekerjaan['subjenis_pekerjaan'],
+                    ];
+                }
+            }
+        }
+        // dd($groupedJenisPekerjaan);
         $data = [
             'title' => "Tambah Pekerjaan",
             'satuans' => $satuanModel->findAll(),
             'jenis' => $jenisModel->findAll(),
+            'jenis_pekerjaan' => $groupedJenisPekerjaan,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
+        // dd($data);
         return view('pages/pekerjaan/tambahPekerjaan', $data);
     }
 
@@ -381,7 +410,8 @@ class Pages extends BaseController
         $model = new PekerjaanModel();
         $data = [
             'nama' => $this->request->getVar('nama'),
-            'jenis' => $this->request->getVar('jenis'),
+            'jenis_pekerjaan' => $this->request->getVar('jenis2'),
+            'subjenis_pekerjaan' => $this->request->getVar('sub_jenis'),
             'volume' => $this->request->getVar('volume'),
             'satuan' => $this->request->getVar('satuan'),
             'profit' => $this->request->getVar('profit'),
@@ -406,17 +436,41 @@ class Pages extends BaseController
         $model = new PekerjaanModel();
         $pekerjaan = $model->find($id);
         $satuanModel = new SatuanModel();
-        $jenisModel = new JenisPekerjaanModel();
+        $pekerjaans = $model->findAll();
+        // Group the results by id_rab and jenis_pekerjaan
+        $groupedJenisPekerjaan = [];
+        foreach ($pekerjaans as $p) {
+            // Ensure $rab is an array
+            if (is_array($pekerjaan)) {
+                $jenisPekerjaan = $p['jenis_pekerjaan'];
+                $subJenisPekerjaan = $p['subjenis_pekerjaan'];
+
+                // Initialize the RAB grouping if not already set
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan] = [
+                        'jenis_pekerjaan' => $p['jenis_pekerjaan'],
+                        'subjenis_pekerjaan' => [],
+                    ];
+                }
+                // Initialize the jenis_pekerjaan grouping if not already set
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan] = [
+                        'sub_jenis' => $p['subjenis_pekerjaan'],
+                    ];
+                }
+            }
+        }
 
         if ($pekerjaan) {
             $data = [
                 'title' => "Edit Pekerjaan",
                 'pekerjaan' => $pekerjaan,
-                'jenis' => $jenisModel->findAll(),
                 'satuans' => $satuanModel->findAll(),
+                'jenis_pekerjaan' => $groupedJenisPekerjaan,
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
             ];
+            // dd($data);
             return view('pages/pekerjaan/editPekerjaan', $data);
         } else {
             return redirect()->to('/daftar-pekerjaan')->with('error', 'Pekerjaan tidak ditemukan.');
@@ -433,7 +487,8 @@ class Pages extends BaseController
         $model = new PekerjaanModel();
         $data = [
             'nama' => $this->request->getPost('nama'),
-            'jenis' => $this->request->getPost('jenis'),
+            'jenis_pekerjaan' => $this->request->getVar('jenis'),
+            'subjenis_pekerjaan' => $this->request->getVar('sub_jenis'),
             'volume' => $this->request->getPost('volume'),
             'satuan' => $this->request->getPost('satuan'),
             'profit' => $this->request->getPost('profit'),
@@ -763,7 +818,8 @@ class Pages extends BaseController
             // Ensure $rab is an array
             if (is_array($rab)) {
                 $rabId = $rab['id_rab'];
-                $jenisPekerjaan = $rab['jenis_pekerjaan'];
+                $jenisPekerjaan = $rab['jenis'];
+                $subJenis = $rab['sub_jenis'];
                 $pekerjaanName = $rab['pekerjaan_name'];
 
                 // Initialize the RAB grouping if not already set
@@ -773,7 +829,7 @@ class Pages extends BaseController
                         'nama_pekerjaan' => $rab['nama_pekerjaan'],
                         'lokasi' => $rab['lokasi'],
                         'jenis_pekerjaan' => [],
-                        'jenis' => $rab['jenis_pekerjaan'],
+                        'jenis' => $rab['jenis'],
                         'administrasi' => $rab['administrasi'],
                         'total_biaya' => 0,
                     ];
@@ -783,17 +839,28 @@ class Pages extends BaseController
                 if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan])) {
                     $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan] = [
                         'jenis' => $jenisPekerjaan,
+                        'jenis_pekerjaan' => $rab['jenis'],
+                        'sub_jenis' => $rab['sub_jenis'],
                         'total_biaya_jenis' => 0,
-                        'pekerjaan' => [],
+                        'sub_pekerjaan' => [],
                     ];
                 }
 
                 // Initialize the pekerjaan grouping if not already set
-                if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName])) {
-                    $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName] = [
+                if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis])) {
+                    $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis] = [
+                        'sub_jenis' => $subJenis,
+                        'pekerjaan' => [],
+                    ];
+                }
+                // Initialize the pekerjaan grouping if not already set
+                if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName])) {
+                    $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName] = [
                         'id' => $rab['id'],
                         'pekerjaan_name' => $pekerjaanName,
                         'volume_pekerjaan' => $rab['volume_pekerjaan'],
+                        'volume_rab' => $rab['volume_rab'],
+                        'nama_satuan' => $rab['nama_satuan'],
                         'items' => [],
                         'total_biaya_pekerjaan' => 0,
                     ];
@@ -803,7 +870,7 @@ class Pages extends BaseController
                 $totalBiayaItem = $rab['volume_rab'] * $rab['harga'];
 
                 // Add item details with total biaya
-                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName]['items'][] = [
+                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName]['items'][] = [
                     'item_name' => $rab['item_name'],
                     'nama_satuan' => $rab['nama_satuan'],
                     'harga' => $rab['harga'],
@@ -816,7 +883,7 @@ class Pages extends BaseController
                 ];
 
                 // Add to total biaya for this pekerjaan
-                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName]['total_biaya_pekerjaan'] += $totalBiayaItem;
+                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName]['total_biaya_pekerjaan'] += $totalBiayaItem;
 
                 // Add to total biaya for this jenis pekerjaan
                 $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['total_biaya_jenis'] += $totalBiayaItem;
@@ -985,19 +1052,19 @@ class Pages extends BaseController
         // Ambil keyword pencarian dari input form atau query string
         $keyword = $this->request->getGet('keyword');
 
-        // Lakukan pencarian jika ada keyword
-        if ($keyword) {
-            $users = $model->searchUsers($keyword);
-        } else {
-            // Jika tidak ada keyword, ambil semua data pengguna
-            $users = $model->findAll();
-        }
+        // Get the selected number of items per page from the dropdown
+        $perPage = $this->request->getGet('per_page') ?: 10; // Default to 10 if not set
+
+        // Retrieve data with the specified number of items per page
+        $users = $model->searchUsers($perPage, $keyword);
 
         $data = [
             'title' => "Kelola Pengguna",
             'users' => $users,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'keyword' => $keyword, // To keep the keyword in the search bar
+            'perPage' => $perPage, // Pass perPage to the view
         ];
 
         return view('pages/kelolaPengguna', $data);

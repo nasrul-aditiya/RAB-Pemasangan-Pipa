@@ -42,12 +42,13 @@
     </div>
 </main>
 
+<!-- Initialize Select2 and handle item type changes -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const itemTypeSelect = document.getElementById('item_type');
-        const itemSelect = document.getElementById('item_id');
+        const itemSelect = $('#item_id'); // Use jQuery for Select2
 
-        const items = <?= json_encode($items); ?>; // Data items dari PHP
+        const items = <?= json_encode($items); ?>; // Data items from PHP
 
         itemTypeSelect.addEventListener('change', function() {
             const selectedType = itemTypeSelect.value;
@@ -56,19 +57,35 @@
 
         function updateItemSelect(selectedType) {
             // Clear previous options
-            itemSelect.innerHTML = '<option value="">-- Pilih Item --</option>';
+            itemSelect.empty().append('<option value="">-- Pilih Item --</option>');
 
             // Filter items based on selected type
             const filteredItems = items.filter(item => item.jenis === selectedType);
 
-            // Populate the item dropdown
+            // Populate the item dropdown with filtered items
             filteredItems.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.id;
-                option.textContent = `${item.nama} (${item.jenis})`;
-                itemSelect.appendChild(option);
+                const option = new Option(`${item.nama} (${item.jenis})`, item.id, false, false);
+                itemSelect.append(option);
             });
+
+            // Refresh Select2 to show new options
+            itemSelect.trigger('change');
         }
+
+        // Initialize Select2 for the Nama Item dropdown
+        itemSelect.select2({
+            placeholder: "-- Pilih Item --",
+            allowClear: false,
+            width: '100%' // Ensures the dropdown is as wide as its container
+        });
+
+        // Focus on the search input when the dropdown is opened
+        itemSelect.on('select2:open', function() {
+            // Set a timeout to allow the dropdown to fully render before focusing
+            setTimeout(function() {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
+            }, 100);
+        });
     });
 </script>
 

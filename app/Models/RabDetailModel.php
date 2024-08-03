@@ -26,7 +26,8 @@ class RabDetailModel extends Model
             'rab_profile.administrasi',
             'rab_detail.volume AS volume_rab',
             'pekerjaan.nama AS pekerjaan_name',
-            'jenis_pekerjaan.nama_jenis AS jenis_pekerjaan',
+            'pekerjaan.jenis_pekerjaan AS jenis',
+            'pekerjaan.subjenis_pekerjaan AS sub_jenis',
             'item.nama AS item_name',
             'satuan.nama_satuan',
             'pekerjaan_detail.koefisien',
@@ -39,9 +40,8 @@ class RabDetailModel extends Model
             ->join('rab_profile', 'rab_detail.id_rab = rab_profile.id')
             ->join('pekerjaan', 'rab_detail.id_pekerjaan = pekerjaan.id')
             ->join('pekerjaan_detail', 'pekerjaan.id = pekerjaan_detail.pekerjaan_id')
-            ->join('jenis_pekerjaan', 'pekerjaan.jenis = jenis_pekerjaan.id')
             ->join('item', 'pekerjaan_detail.item_id = item.id')
-            ->join('satuan', 'item.satuan = satuan.id')
+            ->join('satuan', 'pekerjaan.satuan = satuan.id')
             ->where('rab_profile.id', $rabId)
             ->groupBy([
                 'rab_profile.id',

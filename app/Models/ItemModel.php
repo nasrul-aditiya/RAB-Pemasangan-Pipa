@@ -20,6 +20,9 @@ class ItemModel extends Model
         if ($keyword) {
             $this->groupStart()
                 ->like('item.nama', $keyword)
+                ->orLike('satuan.nama_satuan', $keyword)
+                ->orLike('item.harga', $keyword)
+                ->orLike('item.koefisien', $keyword)
                 ->groupEnd();
         }
         return [
@@ -67,6 +70,9 @@ class ItemModel extends Model
         if ($keyword) {
             $this->groupStart()
                 ->like('item.nama', $keyword)
+                ->orLike('satuan.nama_satuan', $keyword)
+                ->orLike('item.harga', $keyword)
+                ->orLike('item.koefisien', $keyword)
                 ->groupEnd();
         }
         return [

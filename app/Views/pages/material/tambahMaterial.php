@@ -27,7 +27,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="satuan" class="form-label">Satuan</label>
-                        <select class="form-control" id="satuan" name="satuan" required>
+                        <select class="form-control select2" id="satuan" name="satuan" required>
                             <option value="">-- Pilih Satuan --</option>
                             <?php foreach ($satuan as $unit) : ?>
                                 <option value="<?= $unit['id']; ?>"><?= $unit['nama_satuan']; ?></option>
@@ -46,27 +46,23 @@
     </div>
 </main>
 
-<!-- SweetAlert Notifications -->
+<!-- Initialize Select2 -->
 <script>
-    <?php if (session()->getFlashdata('success')) : ?>
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil',
-            text: '<?= session()->getFlashdata('success'); ?>',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
+    $(document).ready(function() {
+        $('#satuan').select2({
+            placeholder: "-- Pilih Satuan --",
+            allowClear: true,
+            width: '100%' // Ensures the dropdown is as wide as its container
         });
-    <?php endif; ?>
 
-    <?php if (session()->getFlashdata('error')) : ?>
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal',
-            text: '<?= session()->getFlashdata('error'); ?>',
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Coba Lagi'
+        // Focus on the search input when the dropdown is opened
+        $('#satuan').on('select2:open', function() {
+            // Focus on the search input field
+            setTimeout(function() {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
+            }, 100); // Add a slight delay to ensure the dropdown is fully rendered
         });
-    <?php endif; ?>
+    });
 </script>
 
 <?= $this->endSection(); ?>

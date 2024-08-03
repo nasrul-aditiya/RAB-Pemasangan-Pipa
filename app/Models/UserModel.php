@@ -12,17 +12,19 @@ class UserModel extends Model
     protected $allowedFields = ['username', 'role', 'nama', 'password'];
 
     protected $useTimestamps = false;
-    public function searchUsers($keyword)
+    public function searchUsers($num, $keyword)
     {
+        $this->table('users');
         if ($keyword) {
-            return $this->table('users')
-                ->like('username', $keyword)
-                ->orLike('nama', $keyword)
+            $this->groupStart()
+                ->like('nama', $keyword)
                 ->orLike('role', $keyword)
-                ->findAll();
-        } else {
-            return $this->findAll();
+                ->groupEnd();
         }
+        return [
+            'users' => $this->paginate($num),
+            'pager' => $this->pager,
+        ];
     }
     public function getUsers()
     {

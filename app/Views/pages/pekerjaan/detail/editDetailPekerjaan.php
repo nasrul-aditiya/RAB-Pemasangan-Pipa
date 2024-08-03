@@ -26,7 +26,7 @@
 
                     <div class="mb-3">
                         <label for="item_id" class="form-label">Nama Item</label>
-                        <select class="form-select" id="item_id" name="item_id" required>
+                        <select class="form-select select2" id="item_id" name="item_id" required>
                             <option value="">-- Pilih Item --</option>
                             <!-- Options will be populated by JavaScript -->
                         </select>
@@ -44,9 +44,9 @@
 </main>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const itemTypeSelect = document.getElementById('item_type');
-        const itemSelect = document.getElementById('item_id');
+    $(document).ready(function() {
+        const itemTypeSelect = $('#item_type');
+        const itemSelect = $('#item_id');
 
         const items = <?= json_encode($items); ?>; // Data items dari PHP
         const selectedType = '<?= esc($selectedType); ?>'; // Jenis item yang sudah dipilih sebelumnya
@@ -54,32 +54,45 @@
 
         function updateItemSelect(type) {
             // Clear previous options
-            itemSelect.innerHTML = '<option value="">-- Pilih Item --</option>';
+            itemSelect.empty().append('<option value="">-- Pilih Item --</option>');
 
             // Filter items based on selected type
             const filteredItems = items.filter(item => item.jenis === type || type === '');
 
             // Populate the item dropdown
             filteredItems.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.id;
-                option.textContent = `${item.nama} (${item.jenis})`;
-                itemSelect.appendChild(option);
+                const option = new Option(`${item.nama} (${item.jenis})`, item.id);
+                itemSelect.append(option);
             });
 
             // Set the previously selected item
             if (selectedItem) {
-                itemSelect.value = selectedItem;
+                itemSelect.val(selectedItem).trigger('change');
             }
         }
+
+        // Initialize the item dropdown with Select2
+        itemSelect.select2({
+            placeholder: "-- Pilih Item --",
+            allowClear: false,
+            width: '100%' // Ensures the dropdown matches the container width
+        });
 
         // Initialize the item dropdown based on the selected type
         updateItemSelect(selectedType);
 
         // Add event listener to update item dropdown on type change
-        itemTypeSelect.addEventListener('change', function() {
-            const type = itemTypeSelect.value;
+        itemTypeSelect.on('change', function() {
+            const type = itemTypeSelect.val();
             updateItemSelect(type);
+        });
+
+        // Focus on the search input when the dropdown is opened
+        itemSelect.on('select2:open', function() {
+            // Focus on the search input field
+            setTimeout(function() {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
+            }, 100); // Add a slight delay to ensure the dropdown is fully rendered
         });
     });
 </script>
