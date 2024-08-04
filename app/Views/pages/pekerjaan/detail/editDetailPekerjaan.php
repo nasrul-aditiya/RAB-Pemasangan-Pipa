@@ -61,7 +61,7 @@
 
             // Populate the item dropdown
             filteredItems.forEach(item => {
-                const option = new Option(`${item.nama} (${item.jenis})`, item.id);
+                const option = new Option(`${item.nama}`, item.id);
                 itemSelect.append(option);
             });
 

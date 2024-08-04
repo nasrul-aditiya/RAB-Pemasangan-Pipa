@@ -17,7 +17,7 @@
                         <a href="/daftar-rab/detail/tambah/<?= $rab['id']; ?>" class="btn btn-primary"><i class="fas fa-plus"></i></a>
                     </div>
                     <div class="col-md-3 text-md-end">
-                        <a href="/daftar-rab/detail/cetak/<?= $id; ?>" class="btn btn-info">Cetak RAB <i class="fa-solid fa-print"></i></a>
+                        <a href="/daftar-rab/detail/cetak/<?= $id; ?>" target="_blank" class="btn btn-info">Cetak RAB <i class="fa-solid fa-print"></i></a>
                     </div>
                 </div>
                 <table class="table table-striped table-hover">

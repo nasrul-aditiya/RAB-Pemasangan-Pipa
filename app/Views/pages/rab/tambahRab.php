@@ -91,7 +91,7 @@
                         <input type="number" class="form-control" id="administrasi" name="administrasi" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Tambah</button>
-                    <a href="/daftar-pekerjaan" class="btn btn-secondary">Kembali</a>
+                    <a href="/daftar-rab" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
         </div>

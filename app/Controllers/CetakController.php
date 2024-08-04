@@ -28,7 +28,8 @@ class CetakController extends Controller
             // Ensure $rab is an array
             if (is_array($rab)) {
                 $rabId = $rab['id_rab'];
-                $jenisPekerjaan = $rab['jenis_pekerjaan'];
+                $jenisPekerjaan = $rab['jenis'];
+                $subJenis = $rab['sub_jenis'];
                 $pekerjaanName = $rab['pekerjaan_name'];
 
                 // Initialize the RAB grouping if not already set
@@ -38,7 +39,7 @@ class CetakController extends Controller
                         'nama_pekerjaan' => $rab['nama_pekerjaan'],
                         'lokasi' => $rab['lokasi'],
                         'jenis_pekerjaan' => [],
-                        'jenis' => $rab['jenis_pekerjaan'],
+                        'jenis' => $rab['jenis'],
                         'administrasi' => $rab['administrasi'],
                         'total_biaya' => 0,
                     ];
@@ -48,17 +49,28 @@ class CetakController extends Controller
                 if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan])) {
                     $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan] = [
                         'jenis' => $jenisPekerjaan,
+                        'jenis_pekerjaan' => $rab['jenis'],
+                        'sub_jenis' => $rab['sub_jenis'],
                         'total_biaya_jenis' => 0,
-                        'pekerjaan' => [],
+                        'sub_pekerjaan' => [],
                     ];
                 }
 
                 // Initialize the pekerjaan grouping if not already set
-                if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName])) {
-                    $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName] = [
+                if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis])) {
+                    $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis] = [
+                        'sub_jenis' => $subJenis,
+                        'pekerjaan' => [],
+                    ];
+                }
+                // Initialize the pekerjaan grouping if not already set
+                if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName])) {
+                    $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName] = [
                         'id' => $rab['id'],
                         'pekerjaan_name' => $pekerjaanName,
                         'volume_pekerjaan' => $rab['volume_pekerjaan'],
+                        'volume_rab' => $rab['volume_rab'],
+                        'nama_satuan' => $rab['nama_satuan'],
                         'items' => [],
                         'total_biaya_pekerjaan' => 0,
                     ];
@@ -68,7 +80,7 @@ class CetakController extends Controller
                 $totalBiayaItem = $rab['volume_rab'] * $rab['harga'];
 
                 // Add item details with total biaya
-                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName]['items'][] = [
+                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName]['items'][] = [
                     'item_name' => $rab['item_name'],
                     'nama_satuan' => $rab['nama_satuan'],
                     'harga' => $rab['harga'],
@@ -81,7 +93,7 @@ class CetakController extends Controller
                 ];
 
                 // Add to total biaya for this pekerjaan
-                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['pekerjaan'][$pekerjaanName]['total_biaya_pekerjaan'] += $totalBiayaItem;
+                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName]['total_biaya_pekerjaan'] += $totalBiayaItem;
 
                 // Add to total biaya for this jenis pekerjaan
                 $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['total_biaya_jenis'] += $totalBiayaItem;

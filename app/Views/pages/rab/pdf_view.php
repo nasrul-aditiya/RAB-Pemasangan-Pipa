@@ -8,7 +8,10 @@
     <style>
         @page {
             size: A4;
-            margin: 20mm;
+            margin-top: 25mm;
+            margin-bottom: 20mm;
+            margin-left: 10mm;
+            margin-right: 15mm;
         }
 
         body {
@@ -69,7 +72,7 @@
             border-right: 2px solid black;
             padding: 4px;
             text-align: left;
-            font-size: 9px;
+            font-size: 10px;
             word-wrap: break-word;
         }
 
@@ -104,31 +107,26 @@
         }
 
         .col-uraian {
-            width: 35%;
             /* Adjust percentage as needed */
         }
 
         .col-satuan {
             text-align: center;
-            width: 5%;
             /* Adjust percentage as needed */
         }
 
         .col-volume {
             text-align: right;
-            width: 10%;
             /* Adjust percentage as needed */
         }
 
         .col-harga {
             text-align: right;
-            width: 20%;
             /* Adjust percentage as needed */
         }
 
         .col-jumlah {
             text-align: right;
-            width: 25%;
         }
 
         /* Media query for print */
@@ -142,11 +140,83 @@
                 page-break-inside: auto;
             }
         }
+
+        /* CSS for sectioning */
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .footer .section {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .footer .section div {
+            width: 33%;
+            text-align: center;
+        }
+
+        .footer .section div:first-child {
+            text-align: left;
+        }
+
+        .footer .section div:last-child {
+            text-align: right;
+        }
+
+        .footer .section .center {
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <?php
+        // Fungsi untuk mengubah angka menjadi teks terbilang
+        function terbilang($angka)
+        {
+            $angka = (float) $angka;
+            $bilangan = array(
+                '', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'
+            );
+
+            if ($angka < 12) {
+                return $bilangan[$angka];
+            } else if ($angka < 20) {
+                return $bilangan[$angka - 10] . ' Belas';
+            } else if ($angka < 100) {
+                return $bilangan[(int)($angka / 10)] . ' Puluh ' . $bilangan[$angka % 10];
+            } else if ($angka < 200) {
+                return 'Seratus ' . terbilang($angka - 100);
+            } else if ($angka < 1000) {
+                return $bilangan[(int)($angka / 100)] . ' Ratus ' . terbilang($angka % 100);
+            } else if ($angka < 2000) {
+                return 'Seribu ' . terbilang($angka - 1000);
+            } else if ($angka < 1000000) {
+                return terbilang((int)($angka / 1000)) . ' Ribu ' . terbilang($angka % 1000);
+            } else if ($angka < 1000000000) {
+                return terbilang((int)($angka / 1000000)) . ' Juta ' . terbilang($angka % 1000000);
+            } else if ($angka < 1000000000000) {
+                return terbilang((int)($angka / 1000000000)) . ' Miliar ' . terbilang($angka % 1000000000);
+            } else if ($angka < 1000000000000000) {
+                return terbilang((int)($angka / 1000000000000)) . ' Triliun ' . terbilang($angka % 1000000000000);
+            } else {
+                return 'Angka terlalu besar';
+            }
+        }
+        ?>
+
+
         <?php $i = 1; ?>
         <?php $totalBiayaPekerjaanAll = 0; ?>
 
@@ -183,74 +253,67 @@
                             <td></td>
                         </tr>
 
-                        <?php foreach ($jenisPekerjaan['pekerjaan'] as $pekerjaan) : ?>
-
-                            <?php $totalBiayaPekerjaanIndividu = 0;
-                            $totalHargaSatuan = 0; ?>
-
+                        <?php foreach ($jenisPekerjaan['sub_pekerjaan'] as $subPekerjaan) : ?>
+                            <?php $totalBiayaSubPekerjaan = 0; ?>
                             <tr>
                                 <td></td>
-                                <td>
-                                    <?= esc($pekerjaan['pekerjaan_name']); ?>
-                                </td>
+                                <th><?= $subPekerjaan['sub_jenis']; ?></th>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
+                            <?php foreach ($subPekerjaan['pekerjaan'] as $pekerjaan) : ?>
 
-                            <?php foreach ($pekerjaan['items'] as $item) : ?>
+                                <?php $totalBiayaPekerjaanIndividu = 0;
+                                $totalHargaSatuan = 0; ?>
+
                                 <tr>
                                     <td></td>
-                                    <td class="double-indent small-text col-uraian">
-                                        <?= esc($item['item_name']); ?>
+                                    <td>
+                                        <span style="margin-left: 10px;"><?= esc($pekerjaan['pekerjaan_name']); ?></span>
                                     </td>
-                                    <td class="small-text col-satuan"><?= esc($item['nama_satuan']); ?></td>
-                                    <td class="small-text col-volume"><?= esc(number_format($item['volume_rab'], 2, ',', '.')); ?></td>
-                                    <td class="small-text col-harga">
-
+                                    <td class="col-satuan"><?= $pekerjaan['nama_satuan']; ?></td>
+                                    <td class="col-volume"><?= esc(number_format($pekerjaan['volume_rab'], 2, ',', '.')); ?></td>
+                                    <?php foreach ($pekerjaan['items'] as $item) : ?>
                                         <?php
                                         $jumlahBiaya = $item['harga'] * $item['koefisien_item'] * $item['koefisien'] / $item['volume_pekerjaan'];
                                         $jumlahBiayaDenganProfit = $jumlahBiaya * (1 + $item['profit'] / 100);
                                         $totalBiayaDenganProfit = $jumlahBiayaDenganProfit * $item['volume_rab'];
                                         ?>
 
-                                        <?= esc(number_format($jumlahBiayaDenganProfit, 2, ',', '.')); ?>
-                                    </td>
-                                    <td class="small-text col-jumlah"><?= esc(number_format($totalBiayaDenganProfit, 2, ',', '.')); ?></td>
+
+                                        <?php
+                                        // Add the total_biaya of each item to the total biaya for this pekerjaan
+                                        $totalBiayaPekerjaanIndividu += $totalBiayaDenganProfit;
+                                        $totalHargaSatuan += $jumlahBiayaDenganProfit;
+                                        // Add the total_biaya of each item to the total biaya pekerjaan
+                                        $totalBiayaPekerjaan += $totalBiayaDenganProfit;
+                                        $totalBiayaSubPekerjaan += $totalBiayaDenganProfit;
+                                        ?>
+                                    <?php endforeach; ?>
+                                    <!-- Display the total biaya for the current pekerjaan -->
+                                    <td class="col-harga"><?= esc(number_format($totalHargaSatuan, 2, ',', '.')); ?></td>
+                                    <td class="col-jumlah"><?= esc(number_format($totalBiayaPekerjaanIndividu, 2, ',', '.')); ?></td>
                                 </tr>
-
-                                <?php
-                                $totalBiayaPekerjaanIndividu += $totalBiayaDenganProfit;
-                                $totalHargaSatuan += $jumlahBiayaDenganProfit;
-                                $totalBiayaPekerjaan += $totalBiayaDenganProfit;
-                                ?>
                             <?php endforeach; ?>
-
                             <tr>
                                 <th></th>
-                                <th class="batas"></th>
-                                <th class="batas" colspan="2">Total Harga Satuan</th>
-                                <th class="batas col-jumlah"><?= esc(number_format($totalHargaSatuan, 2, ',', '.')); ?></th>
-                                <th class="batas"></th>
-                            </tr>
-                            <tr>
                                 <th></th>
-                                <th class="batas" colspan="3"></th>
-                                <th class="batas">Jumlah Biaya</th>
-                                <th class="batas col-jumlah"><?= esc(number_format($totalBiayaPekerjaanIndividu, 2, ',', '.')); ?></th>
+                                <th></th>
+                                <th></th>
+                                <th class="col-harga">Total</th>
+                                <th class="col-jumlah"><?= esc(number_format($totalBiayaSubPekerjaan, 2, ',', '.')); ?></th>
                             </tr>
                         <?php endforeach; ?>
-
+                        <?php
+                        $totalBiayaPekerjaanAll += $totalBiayaPekerjaan; // Add the total biaya pekerjaan for each jenis_pekerjaan to the total biaya pekerjaan for all pekerjaan 
+                        ?>
                         <tr>
                             <th class="batas-bawah"></th>
                             <th class="batas" colspan="4">Total</th>
                             <th class="batas col-jumlah"><?= esc(number_format($totalBiayaPekerjaan, 2, ',', '.')); ?></th>
                         </tr>
-
-                        <?php
-                        $totalBiayaPekerjaanAll += $totalBiayaPekerjaan;
-                        ?>
 
                     <?php endforeach; ?>
 
@@ -347,10 +410,146 @@
                     <th class="batas" colspan="3">Dibulatkan</th>
                     <th class="batas col-jumlah"><?= esc(number_format($bulatkan, 2, ',', '.')); ?></th>
                 </tr>
+                <tr>
+                    <th colspan="6" style="text-align:center"><?= terbilang($bulatkan); ?> Rupiah</th>
+                </tr>
 
             <?php endforeach; ?>
 
                 </tbody>
+            </table>
+            <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; width: 100%; border: none;">
+                <tr>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+                                <td style="border: none; text-align:center;">
+                                    <font style="font-size: 10px">Pontianak, 22 Juli 2024</font><br>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; text-align:center;">
+                                    <font style="font-size: 10px">Perusahaan Umum Daerah Air Minum</font><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none; text-align:center;">
+                                    <font style="font-size: 10px">Tirita Khatulistiwa Kota Pontianak</font><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- baris kedua -->
+                <tr>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+                                <td style="padding-bottom: 50px; border: none; text-align:center;">
+                                    <font style="font-size: 10px">Disetujui :</font><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="border: none; text-align:center;">
+                                    <font style="font-size: 10px; text-decoration:underline;">ISNEINI, S.ST,MT</font><br>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="border: none; text-align:center;">
+                                    <font style="font-size: 10px">Kabag perc. & Pengelola Aset</font><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+                                <td style="padding-bottom: 50px; border: none; text-align:center;">
+                                    <font style="font-size: 10px">Diperiksa :</font><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="border: none; text-align:center;">
+                                    <font style="font-size: 10px; text-decoration:underline;">LILIS KURNIATIN, ST</font><br>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="border: none; text-align:center;">
+                                    <font style="font-size: 10px">Kasi Perencanaan</font><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+                                <td style="padding-bottom: 50px; border: none; text-align:center;">
+                                    <font style="font-size: 10px">Dibuat Oleh :</font><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="border: none; text-align:center;">
+                                    <font style="font-size: 10px; text-decoration:underline;">EKA DELVINA SARI, ST</font><br>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="border: none; text-align:center;">
+                                    <font style="font-size: 10px">Karu Perpipaan</font><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- baris ketiga -->
+                <tr>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+                                <td style="padding-bottom: 50px; border: none; text-align:center;">
+                                    <font style="font-size: 10px">Mengetahui :</font><br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="border: none; text-align:center;">
+                                    <font style="font-size: 10px; text-decoration:underline;">ABDULLAH, S.ST</font><br>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="border: none; text-align:center;">
+                                    <font style="font-size: 10px">Direktur Teknik</font><br>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 33%; vertical-align: top; border: none;">
+                        <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
+                            <tr>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
             </table>
     </div>
 </body>
