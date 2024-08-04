@@ -920,16 +920,19 @@ class Pages extends BaseController
 
         $rab = $rabModel->find($id);
 
-        $pekerjaans = $pekerjaanModel->findAll();
+        // Ambil data jenis pekerjaan yang sudah dikelompokkan
+        $jenis_pekerjaan = $pekerjaanModel->getGroupedJenisPekerjaan();
+        // dd($jenis_pekerjaan);
+        // dd($jenis_pekerjaan['PENGADAAN PIPA DAN AKSESORIS']['subjenis_pekerjaan']['Pengadaan Pipa']['pekerjaan']);
+        // dd($jenis_pekerjaan['PENGADAAN PIPA DAN AKSESORIS']['subjenis_pekerjaan']);
 
         $data = [
             'title' => "Tambah Detail RAB",
             'rab' => $rab,
-            'pekerjaans' => $pekerjaans,
+            'jenis_pekerjaan' => $jenis_pekerjaan,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
         ];
-        // dd($data);
         return view('pages/rab/detail/tambahDetailRab', $data);
     }
     public function storeDetailRab()
@@ -968,30 +971,46 @@ class Pages extends BaseController
         $rabDetailModel = new RabDetailModel();
         $pekerjaanModel = new PekerjaanModel();
 
-        $id_rab = $rabDetailModel->find($id);
-        $detail = $rabModel->find($id_rab['id_rab']);
-        // dd($id_rab);
-        $pekerjaans = $pekerjaanModel->findAll();
+        // Ambil detail RAB dan pekerjaan
+        $detail = $rabDetailModel->find($id);
+        $rab = $rabModel->find($detail['id_rab']);
+        $jenisPekerjaan = $pekerjaanModel->getGroupedJenisPekerjaan();
 
-        // echo '<pre>';
-        // print_r($detail);
-        // echo '</pre>';
-        // exit;
+        if ($detail) {
+            // Menentukan jenis dan sub jenis pekerjaan yang sudah dipilih
+            $selected_jenis = null;
+            $selected_sub_jenis = null;
+
+            foreach ($jenisPekerjaan as $jenis => $data) {
+                foreach ($data['subjenis_pekerjaan'] as $subJenis => $subData) {
+                    if (isset($subData['pekerjaan'][$detail['id_pekerjaan']])) {
+                        $selected_jenis = $jenis;
+                        $selected_sub_jenis = $subJenis;
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        // Pastikan detail ada
         if ($detail) {
             $data = [
                 'title' => "Edit Detail RAB",
-                'detail' => $id_rab,
-                'rab' => $detail,
-                'pekerjaans' => $pekerjaans,
+                'detail' => $detail,
+                'rab' => $rab,
+                'jenis_pekerjaan' => $jenisPekerjaan,
+                'selected_jenis' => $selected_jenis,
+                'selected_sub_jenis' => $selected_sub_jenis,
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
             ];
 
             return view('pages/rab/detail/editDetailRab', $data);
         } else {
-            return redirect()->to('/daftar-rab/detail/' . $id_rab['id_rab'])->with('error', 'Pekerjaan tidak ditemukan.');
+            return redirect()->to('/daftar-rab/detail/' . $rab['id'])->with('error', 'Pekerjaan tidak ditemukan.');
         }
     }
+
 
     public function updateDetailRab()
     {

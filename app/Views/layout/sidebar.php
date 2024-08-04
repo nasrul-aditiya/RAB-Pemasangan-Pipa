@@ -37,13 +37,25 @@ function isParentActive($prefixes, $currentPath)
                 </a>
                 <ul id="pages" class="sidebar-dropdown list-unstyled collapse <?php echo isParentActive(['/daftar-material', '/daftar-upah', '/daftar-rab'], $currentPath) ? 'show' : ''; ?>" data-bs-parent="#sidebar">
                     <li class="sidebar-item <?php echo isActive('/daftar-material', $currentPath); ?>">
-                        <a href="/daftar-material" class="sidebar-link">Daftar Material</a>
+                        <a href="/daftar-material" class="sidebar-link">
+                            <span style="margin-left: 30px;">
+                                Daftar Material
+                            </span>
+                        </a>
                     </li>
                     <li class="sidebar-item <?php echo isActive('/daftar-upah', $currentPath); ?>">
-                        <a href="/daftar-upah" class="sidebar-link">Daftar Upah</a>
+                        <a href="/daftar-upah" class="sidebar-link">
+                            <span style="margin-left: 30px;">
+                                Daftar Upah
+                            </span>
+                        </a>
                     </li>
                     <li class="sidebar-item <?php echo isActive('/daftar-rab', $currentPath); ?>">
-                        <a href="/daftar-rab" class="sidebar-link">Daftar RAB</a>
+                        <a href="/daftar-rab" class="sidebar-link">
+                            <span style="margin-left: 30px;">
+                                Daftar RAB
+                            </span>
+                        </a>
                     </li>
                 </ul>
             </li>

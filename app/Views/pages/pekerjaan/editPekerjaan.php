@@ -20,7 +20,6 @@
                     <div class="mb-3">
                         <label for="jenis" class="form-label">Jenis Pekerjaan</label>
                         <select class="form-control" id="jenis" name="jenis" required>
-                            <option value="">-- Pilih Jenis Pekerjaan --</option>
                             <?php foreach ($jenis_pekerjaan as $key => $value) : ?>
                                 <option value="<?= esc($key); ?>" <?= $pekerjaan['jenis_pekerjaan'] == $value['jenis_pekerjaan'] ? 'selected' : ''; ?>>
                                     <?= esc($value['jenis_pekerjaan']); ?>
@@ -63,38 +62,73 @@
 <!-- JavaScript untuk dropdown dinamis -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const jenisSelect = document.getElementById('jenis');
-        const subJenisSelect = document.getElementById('sub_jenis');
+        // Pastikan Select2 sudah terinisialisasi setelah semua elemen siap
+        $('#jenis').select2({
+            tags: "true",
+            width: "100%"
+        });
 
+        $('#sub_jenis').select2({
+            tags: "true",
+            width: "100%"
+        });
+        $('#satuan').select2({
+            width: "100%"
+        });
         // Data sub jenis pekerjaan, dikelompokkan berdasarkan jenis pekerjaan
-        const subJenisData = <?= json_encode($jenis_pekerjaan); ?>;
+        const subJenisData = <?= json_encode($jenis_pekerjaan, JSON_HEX_TAG); ?>;
         const selectedSubJenis = <?= json_encode($pekerjaan['subjenis_pekerjaan']); ?>;
 
         // Update dropdown sub_jenis sesuai pilihan jenis pekerjaan
         function updateSubJenisSelect(selectedJenis) {
+            // Kosongkan opsi sebelumnya
+            $('#sub_jenis').empty().append('<option value="">-- Pilih Sub Jenis Pekerjaan --</option>');
 
             // Tambahkan opsi baru berdasarkan pilihan jenis pekerjaan
             if (subJenisData[selectedJenis]) {
                 for (const subJenis in subJenisData[selectedJenis]['subjenis_pekerjaan']) {
-                    const option = document.createElement('option');
-                    option.value = subJenis;
-                    option.textContent = subJenisData[selectedJenis]['subjenis_pekerjaan'][subJenis]['sub_jenis'];
-                    if (subJenis === selectedSubJenis) {
-                        option.selected = true;
-                    }
-                    subJenisSelect.appendChild(option);
+                    const option = new Option(
+                        subJenisData[selectedJenis]['subjenis_pekerjaan'][subJenis]['sub_jenis'],
+                        subJenis,
+                        false,
+                        subJenis === selectedSubJenis
+                    );
+                    $('#sub_jenis').append(option);
                 }
+                $('#sub_jenis').trigger('change'); // Refresh Select2
             }
         }
 
         // Event listener untuk perubahan pilihan jenis pekerjaan
-        jenisSelect.addEventListener('change', function() {
-            const selectedJenis = jenisSelect.value;
+        $('#jenis').on('change', function() {
+            const selectedJenis = $(this).val();
             updateSubJenisSelect(selectedJenis);
         });
 
         // Inisialisasi dropdown sub_jenis saat halaman dimuat
-        updateSubJenisSelect(jenisSelect.value);
+        updateSubJenisSelect($('#jenis').val());
+
+        // Focus on the search input when the dropdown is opened
+        $('#jenis').on('select2:open', function() {
+            // Focus on the search input field
+            setTimeout(function() {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
+            }, 100); // Add a slight delay to ensure the dropdown is fully rendered
+        });
+        // Focus on the search input when the dropdown is opened
+        $('#sub_jenis').on('select2:open', function() {
+            // Focus on the search input field
+            setTimeout(function() {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
+            }, 100); // Add a slight delay to ensure the dropdown is fully rendered
+        });
+        // Focus on the search input when the dropdown is opened
+        $('#satuan').on('select2:open', function() {
+            // Focus on the search input field
+            setTimeout(function() {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
+            }, 100); // Add a slight delay to ensure the dropdown is fully rendered
+        });
     });
 </script>
 <?= $this->endSection(); ?>

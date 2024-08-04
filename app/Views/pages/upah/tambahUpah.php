@@ -47,5 +47,23 @@
         </div>
     </div>
 </main>
+<!-- Initialize Select2 -->
+<script>
+    $(document).ready(function() {
+        $('#satuan').select2({
+            placeholder: "-- Pilih Satuan --",
+            allowClear: true,
+            width: '100%' // Ensures the dropdown is as wide as its container
+        });
+
+        // Focus on the search input when the dropdown is opened
+        $('#satuan').on('select2:open', function() {
+            // Focus on the search input field
+            setTimeout(function() {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
+            }, 100); // Add a slight delay to ensure the dropdown is fully rendered
+        });
+    });
+</script>
 
 <?= $this->endSection(); ?>

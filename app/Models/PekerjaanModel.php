@@ -20,6 +20,7 @@ class PekerjaanModel extends Model
             $this->groupStart()
                 ->like('pekerjaan.nama', $keyword)
                 ->orLike('pekerjaan.jenis_pekerjaan', $keyword)
+                ->orLike('pekerjaan.subjenis_pekerjaan', $keyword)
                 ->groupEnd();
         }
         return [
@@ -68,5 +69,41 @@ class PekerjaanModel extends Model
     public function countAllPekerjaans()
     {
         return $this->countAllResults();
+    }
+
+    // Method untuk mengelompokkan data pekerjaan
+    public function getGroupedJenisPekerjaan()
+    {
+        $pekerjaans = $this->findAll();
+
+        $groupedJenisPekerjaan = [];
+        foreach ($pekerjaans as $p) {
+            if (is_array($p)) {
+                $jenisPekerjaan = $p['jenis_pekerjaan'];
+                $subJenisPekerjaan = $p['subjenis_pekerjaan'];
+                $pekerjaan = $p['nama'];
+
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan] = [
+                        'id' => $p['id'],
+                        'jenis_pekerjaan' => $p['jenis_pekerjaan'],
+                        'subjenis_pekerjaan' => [],
+                    ];
+                }
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan] = [
+                        'id' => $p['id'],
+                        'sub_jenis' => $p['subjenis_pekerjaan'],
+                        'pekerjaan' => []
+                    ];
+                }
+                $groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan]['pekerjaan'][$p['id']] = [
+                    'nama' => $p['nama'],
+                    'id' => $p['id']
+                ];
+            }
+        }
+
+        return $groupedJenisPekerjaan;
     }
 }
