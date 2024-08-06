@@ -46,3 +46,45 @@ $(document).on("click", ".btn-hapus", function (e) {
     }
   });
 });
+
+$(document).on("click", ".btn-dibuat", function (e) {
+  //hentikan aksi default
+  e.preventDefault();
+  var href = $(this).attr("href");
+
+  Swal.fire({
+    title: "Apakah anda yakin",
+    text: "untuk melakukan verifikasi pada data ini?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya",
+    cancelButtonText: "Batal",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location = href;
+    }
+  });
+});
+
+$(document).on("click", ".btn-verifikasi", function (e) {
+  e.preventDefault();
+  var href = $(this).attr("href");
+
+  Swal.fire({
+    title: "Apakah anda ingin melakukan verifikasi pada RAB ini?",
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: "Verifikasi",
+    denyButtonText: `Tolak`,
+    cancelButtonText: `Batal`,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location = href;
+    } else if (result.isDenied) {
+      // Redirect to a controller method that handles rejection
+      window.location = href + "/reject";
+    }
+  });
+});

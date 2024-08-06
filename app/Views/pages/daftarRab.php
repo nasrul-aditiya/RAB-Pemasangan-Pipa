@@ -49,8 +49,6 @@
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">
-
-
                     <!-- Button Add -->
                     <div class="col-md-9 text-md-start">
                         <a href="/daftar-rab/tambah" class="btn btn-primary"><i class="fas fa-plus"></i></a>
@@ -58,6 +56,8 @@
                     <!-- Search Bar -->
                     <div class="col-md-3 text-md-end">
                         <form action="/daftar-rab" method="GET" class="form-inline">
+                            <input type="hidden" name="filter" value="<?= esc($filter); ?>">
+                            <input type="hidden" name="per_page" value="<?= esc($perPage); ?>">
                             <div class="input-group">
                                 <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2" value="<?= esc($keyword); ?>">
                                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
@@ -67,6 +67,8 @@
                     <div class="row mb-3 mt-3 align-items-center">
                         <div class="col-md-1 text-md-start">
                             <form action="/daftar-rab" method="GET" class="form-inline">
+                                <input type="hidden" name="filter" value="<?= esc($filter); ?>">
+                                <input type="hidden" name="keyword" value="<?= esc($keyword); ?>">
                                 <div class="input-group">
                                     <select class="form-select" name="per_page" id="perPageSelect" onchange="this.form.submit()">
                                         <option value="5" <?= ($perPage == 5) ? 'selected' : ''; ?>>5</option>
@@ -82,14 +84,12 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                        <tr>
                             <th scope="col">#</th>
                             <th scope="col">No RAB</th>
                             <th scope="col">Nama RAB</th>
                             <th scope="col">Lokasi</th>
                             <th scope="col">Tanggal</th>
                             <th scope="col">Aksi</th> <!-- Kolom Aksi -->
-                        </tr>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,34 +106,34 @@
                                     <td><?= esc($rab['lokasi']); ?></td>
                                     <td><?= esc($rab['tanggal']); ?></td>
                                     <td>
-                                        <a href="/daftar-rab/detail/<?= $rab['id']; ?>" class="btn btn-info"><i class="fa-solid fa-file"></i></a>
+                                        <a href="/daftar-rab/detail/<?= $rab['id']; ?>?filter=<?= esc($filter); ?>&per_page=<?= esc($perPage); ?>&keyword=<?= esc($keyword); ?>&page=<?= esc($page); ?>" class="btn btn-info"><i class="fa-solid fa-file"></i></a>
                                         <?php if (isset($role) && $role == "Kepala Regu") : ?>
                                             <?php if (isset($filter) && $filter == "dibuat") : ?>
                                                 <?php if ($rab['pembuat'] == 0) : ?>
-                                                    <a href="/daftar-rab/edit/<?= $rab['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                                    <a href="/daftar-rab/delete/<?= $rab['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
-                                                    <a href="/daftar-rab/dibuat/<?= $rab['id']; ?>" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                                    <a href="/daftar-rab/edit/<?= $rab['id']; ?>?filter=<?= esc($filter); ?>&per_page=<?= esc($perPage); ?>&keyword=<?= esc($keyword); ?>&page=<?= esc($page); ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                    <a href="/daftar-rab/delete/<?= $rab['id']; ?>?filter=<?= esc($filter); ?>&per_page=<?= esc($perPage); ?>&keyword=<?= esc($keyword); ?>&page=<?= esc($page); ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                                    <a href="/daftar-rab/dibuat/<?= $rab['id']; ?>?filter=<?= esc($filter); ?>&per_page=<?= esc($perPage); ?>&keyword=<?= esc($keyword); ?>&page=<?= esc($page); ?>" class="btn btn-success btn-dibuat"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                         <?php if (isset($role) && $role == "Kasi") : ?>
                                             <?php if (isset($filter) && $filter == "dibuat") : ?>
                                                 <?php if ($rab['pemeriksa'] == 0) : ?>
-                                                    <a href="/daftar-rab/diperiksa/<?= $rab['id']; ?>" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                                    <a href="/daftar-rab/diperiksa/<?= $rab['id']; ?>?filter=<?= esc($filter); ?>&per_page=<?= esc($perPage); ?>&keyword=<?= esc($keyword); ?>&page=<?= esc($page); ?>" class="btn btn-success btn-verifikasi"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                         <?php if (isset($role) && $role == "Kabag") : ?>
                                             <?php if (isset($filter) && $filter == "diperiksa") : ?>
                                                 <?php if ($rab['disetujui'] == 0) : ?>
-                                                    <a href="/daftar-rab/diverifikasi/<?= $rab['id']; ?>" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                                    <a href="/daftar-rab/diverifikasi/<?= $rab['id']; ?>?filter=<?= esc($filter); ?>&per_page=<?= esc($perPage); ?>&keyword=<?= esc($keyword); ?>&page=<?= esc($page); ?>" class="btn btn-success btn-verifikasi"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                         <?php if (isset($role) && $role == "Dirtek") : ?>
                                             <?php if (isset($filter) && $filter == "diverifikasi") : ?>
                                                 <?php if ($rab['mengetahui'] == 0) : ?>
-                                                    <a href="/daftar-rab/disetujui/<?= $rab['id']; ?>" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                                    <a href="/daftar-rab/disetujui/<?= $rab['id']; ?>?filter=<?= esc($filter); ?>&per_page=<?= esc($perPage); ?>&keyword=<?= esc($keyword); ?>&page=<?= esc($page); ?>" class="btn btn-success btn-verifikasi"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>

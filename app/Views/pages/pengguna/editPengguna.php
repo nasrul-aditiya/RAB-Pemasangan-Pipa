@@ -9,7 +9,7 @@
         <!-- Form Element -->
         <div class="card border-0">
             <div class="card-header">
-                <h5 class="card-title"><?= $title; ?></h5>
+                <h5 class="card-title">Form <?= $title; ?></h5>
             </div>
             <div class="card-body">
                 <?php if (session()->has('error')) : ?>
@@ -40,6 +40,10 @@
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="text" class="form-control" id="password" name="password" value="<?= esc($user['password']); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="jabatan" class="form-label">Jabatan</label>
+                        <input type="text" class="form-control" id="jabatan" name="jabatan" value="<?= esc($user['jabatan']); ?>">
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="/kelola-pengguna" class="btn btn-secondary">Kembali</a>

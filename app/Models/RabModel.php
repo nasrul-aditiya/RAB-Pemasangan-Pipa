@@ -98,4 +98,73 @@ class RabModel extends Model
     {
         return $this->countAllResults();
     }
+
+    public function getRabWithPembuat($rabId)
+    {
+        // Construct the query to get detailed RAB information along with total cost
+        return $this->select([
+            'rab_profile.id AS id_rab',
+            'rab_profile.pembuat',
+            'users.id AS id_user',
+            'users.nama',
+            'users.jabatan',
+        ])
+            ->join('users', 'users.id = rab_profile.pembuat')
+            ->where('rab_profile.id', $rabId)
+            ->groupBy([
+                'rab_profile.id',
+            ])
+            ->findAll();
+    }
+    public function getRabWithPemeriksa($rabId)
+    {
+        // Construct the query to get detailed RAB information along with total cost
+        return $this->select([
+            'rab_profile.id AS id_rab',
+            'rab_profile.pemeriksa',
+            'users.id AS id_user',
+            'users.nama',
+            'users.jabatan',
+        ])
+            ->join('users', 'users.id = rab_profile.pemeriksa')
+            ->where('rab_profile.id', $rabId)
+            ->groupBy([
+                'rab_profile.id',
+            ])
+            ->findAll();
+    }
+    public function getRabWithDisetujui($rabId)
+    {
+        // Construct the query to get detailed RAB information along with total cost
+        return $this->select([
+            'rab_profile.id AS id_rab',
+            'rab_profile.disetujui',
+            'users.id AS id_user',
+            'users.nama',
+            'users.jabatan',
+        ])
+            ->join('users', 'users.id = rab_profile.disetujui')
+            ->where('rab_profile.id', $rabId)
+            ->groupBy([
+                'rab_profile.id',
+            ])
+            ->findAll();
+    }
+    public function getRabWithMengetahui($rabId)
+    {
+        // Construct the query to get detailed RAB information along with total cost
+        return $this->select([
+            'rab_profile.id AS id_rab',
+            'rab_profile.mengetahui',
+            'users.id AS id_user',
+            'users.nama',
+            'users.jabatan',
+        ])
+            ->join('users', 'users.id = rab_profile.mengetahui')
+            ->where('rab_profile.id', $rabId)
+            ->groupBy([
+                'rab_profile.id',
+            ])
+            ->findAll();
+    }
 }

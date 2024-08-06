@@ -21,6 +21,7 @@
                             <input type="hidden" name="nama" value="<?= esc($user['nama']); ?>">
                             <input type="hidden" name="role" value="<?= esc($user['role']); ?>">
                             <input type="hidden" name="password" value="<?= esc($user['password']); ?>">
+                            <input type="hidden" name="jabatan" value="<?= esc($user['jabatan']); ?>">
                             <label for="avatar" class="avatar-label">
                                 <div class="gambar">
                                     <img src="/uploads/avatars/<?= esc($avatar); ?>" alt="avatar" class="rounded-circle img-fluid image" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;" />
@@ -47,6 +48,7 @@
                             <?= csrf_field(); ?>
                             <input type="hidden" name="role" value="<?= esc($user['role']); ?>">
                             <input type="hidden" name="avatar" value="<?= esc($user['avatar']); ?>">
+                            <input type="hidden" name="jabatan" value="<?= esc($user['jabatan']); ?>">
                             <div class="mb-3 row">
                                 <label for="username" class="col-sm-2 col-form-label">Username</label>
                                 <div class="col-sm-8">

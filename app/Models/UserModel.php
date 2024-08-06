@@ -9,7 +9,7 @@ class UserModel extends Model
     protected $table = 'users';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['username', 'role', 'nama', 'password', 'avatar'];
+    protected $allowedFields = ['username', 'role', 'nama', 'password',  'jabatan', 'avatar'];
 
     protected $useTimestamps = false;
     public function searchUsers($num, $keyword)

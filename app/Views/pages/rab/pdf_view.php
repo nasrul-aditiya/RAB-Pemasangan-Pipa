@@ -449,7 +449,7 @@
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">
-                                    <font style="font-size: 10px">Tirita Khatulistiwa Kota Pontianak</font><br>
+                                    <font style="font-size: 10px">Tirta Khatulistiwa Kota Pontianak</font><br>
                                 </td>
                             </tr>
                         </table>
@@ -466,12 +466,20 @@
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center; background-color:white;">
-                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">ISNEINI, S.ST,MT</font><br>
+                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">
+                                        <?php foreach ($disetujui as $item) : ?>
+                                            <?= $item['nama']; ?>
+                                        <?php endforeach; ?>
+                                    </font><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">
-                                    <font style="font-size: 10px">Kabag perc. & Pengelola Aset</font><br>
+                                    <font style="font-size: 10px">
+                                        <?php foreach ($disetujui as $item) : ?>
+                                            <?= $item['jabatan']; ?>
+                                        <?php endforeach; ?>
+                                    </font><br>
                                 </td>
                             </tr>
                         </table>
@@ -485,12 +493,20 @@
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center; background-color:white;">
-                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">LILIS KURNIATIN, ST</font><br>
+                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">
+                                        <?php foreach ($pemeriksa as $item) : ?>
+                                            <?= $item['nama']; ?>
+                                        <?php endforeach; ?>
+                                    </font><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">
-                                    <font style="font-size: 10px">Kasi Perencanaan</font><br>
+                                    <font style="font-size: 10px">
+                                        <?php foreach ($pemeriksa as $item) : ?>
+                                            <?= $item['jabatan']; ?>
+                                        <?php endforeach; ?>
+                                    </font><br>
                                 </td>
                             </tr>
                         </table>
@@ -504,12 +520,20 @@
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center; background-color:white;">
-                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">EKA DELVINA SARI, ST</font><br>
+                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">
+                                        <?php foreach ($pembuat as $item) : ?>
+                                            <?= $item['nama']; ?>
+                                        <?php endforeach; ?>
+                                    </font><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">
-                                    <font style="font-size: 10px">Karu Perpipaan</font><br>
+                                    <font style="font-size: 10px">
+                                        <?php foreach ($pembuat as $item) : ?>
+                                            <?= $item['jabatan']; ?>
+                                        <?php endforeach; ?>
+                                    </font><br>
                                 </td>
                             </tr>
                         </table>
@@ -533,12 +557,20 @@
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center; background-color:white;">
-                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">ABDULLAH, S.ST</font><br>
+                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">
+                                        <?php foreach ($mengetahui as $item) : ?>
+                                            <?= $item['nama']; ?>
+                                        <?php endforeach; ?>
+                                    </font><br>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">
-                                    <font style="font-size: 10px">Direktur Teknik</font><br>
+                                    <font style="font-size: 10px">
+                                        <?php foreach ($mengetahui as $item) : ?>
+                                            <?= $item['jabatan']; ?>
+                                        <?php endforeach; ?>
+                                    </font><br>
                                 </td>
                             </tr>
                         </table>

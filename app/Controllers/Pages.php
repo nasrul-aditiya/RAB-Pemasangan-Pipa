@@ -787,6 +787,20 @@ class Pages extends BaseController
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
         }
     }
+    public function rejectDiperiksaRab($id)
+    {
+        $rabModel = new RabModel();
+        $rab = $rabModel->find($id);
+
+        if ($rab) {
+            $rab['pembuat'] = 0;
+            $rab['pemeriksa'] = 0;
+            $rabModel->save($rab);
+            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil ditolak');
+        } else {
+            return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
+        }
+    }
     public function diverifikasiRab($id)
     {
         $session = session();
@@ -801,6 +815,21 @@ class Pages extends BaseController
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
         }
     }
+    public function rejectDiverifikasiRab($id)
+    {
+        $rabModel = new RabModel();
+        $rab = $rabModel->find($id);
+
+        if ($rab) {
+            $rab['pembuat'] = 0;
+            $rab['pemeriksa'] = 0;
+            $rab['disetujui'] = 0;
+            $rabModel->save($rab);
+            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil ditolak');
+        } else {
+            return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
+        }
+    }
     public function disetujuiRab($id)
     {
         $session = session();
@@ -811,6 +840,22 @@ class Pages extends BaseController
             $rab['mengetahui'] = $session->get('id'); // Mengambil ID dari session
             $rabModel->save($rab);
             return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
+        } else {
+            return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
+        }
+    }
+    public function rejectDisetujuiRab($id)
+    {
+        $rabModel = new RabModel();
+        $rab = $rabModel->find($id);
+
+        if ($rab) {
+            $rab['pembuat'] = 0;
+            $rab['pemeriksa'] = 0;
+            $rab['disetujui'] = 0;
+            $rab['mengetahui'] = 0;
+            $rabModel->save($rab);
+            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil ditolak');
         } else {
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
         }
@@ -1242,6 +1287,7 @@ class Pages extends BaseController
             'nama'     => $this->request->getVar('nama'),
             'role'     => $this->request->getVar('role'),
             'password' => $this->request->getVar('password'),
+            'jabatan' => $this->request->getVar('jabatan'),
         ];
         try {
             $model->insert($data);
@@ -1296,6 +1342,7 @@ class Pages extends BaseController
             'nama' => $this->request->getPost('nama'),
             'role' => $this->request->getPost('role'),
             'password' => $this->request->getPost('password'),
+            'jabatan' => $this->request->getPost('jabatan'),
         ];
 
         // Validasi data jika diperlukan
@@ -1304,6 +1351,13 @@ class Pages extends BaseController
 
         try {
             $userModel->update($id, $userData);
+            // Perbarui data session dengan data yang baru diupdate
+            $session->set('username', $userData['username']);
+            $session->set('nama', $userData['nama']);
+            $session->set('role', $userData['role']);
+            if (isset($data['avatar'])) {
+                $session->set('avatar', $userData['avatar']);
+            }
             $session->setFlashdata('success', 'Data Pengguna berhasil diubah.');
         } catch (\Exception $e) {
             $session->setFlashdata('error', 'Data Pengguna gagal diubah. Silahkan coba lagi.');
@@ -1373,6 +1427,7 @@ class Pages extends BaseController
             'nama' => $this->request->getPost('nama'),
             'password' => $this->request->getPost('password'),
             'role' => $this->request->getPost('role'),
+            'jabatan' => $this->request->getPost('jabatan'),
         ];
 
         // Handle avatar upload

@@ -88,7 +88,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="administrasi" class="form-label">Biaya Administrasi</label>
-                        <input type="number" class="form-control" id="administrasi" name="administrasi" required>
+                        <input type="number" class="form-control" id="administrasi" name="administrasi">
                     </div>
                     <button type="submit" class="btn btn-primary">Tambah</button>
                     <a href="/daftar-rab" class="btn btn-secondary">Kembali</a>
