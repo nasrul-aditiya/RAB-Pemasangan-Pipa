@@ -6,7 +6,10 @@
         <ul class="navbar-nav">
             <li class="nav-item dropdown">
                 <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                    <img src="/img/profil.png" class="avatar img-fluid rounded" alt="" />
+                    <?php
+                    $avatar = session()->get('avatar') ? session()->get('avatar') : 'profil.png';
+                    ?>
+                    <img src="/uploads/avatars/<?= esc($avatar); ?>" class="avatar img-fluid rounded-circle" style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;" alt="avatar" />
                     <?php if (isset($nama)) : ?>
                         <span><?= esc($nama) ?></span>
                     <?php endif; ?>

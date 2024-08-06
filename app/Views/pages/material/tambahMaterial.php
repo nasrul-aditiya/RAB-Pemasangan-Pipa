@@ -15,7 +15,7 @@
                     <?= csrf_field(); ?>
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="nama" name="nama" required>
+                        <input type="text" class="form-control" id="nama" name="nama" value="<?= old('nama'); ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="kode" class="form-label">Kode</label>
@@ -23,21 +23,22 @@
                     </div>
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga</label>
-                        <input type="number" class="form-control" id="harga" name="harga" required>
+                        <input type="number" class="form-control" id="harga" name="harga" value="<?= old('harga'); ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="satuan" class="form-label">Satuan</label>
                         <select class="form-control select2" id="satuan" name="satuan" required>
                             <option value="">-- Pilih Satuan --</option>
                             <?php foreach ($satuan as $unit) : ?>
-                                <option value="<?= $unit['id']; ?>"><?= $unit['nama_satuan']; ?></option>
+                                <option value="<?= $unit['id']; ?>" <?= (old('satuan') == $unit['id']) ? 'selected' : ''; ?>><?= $unit['nama_satuan']; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="koefisien" class="form-label">Koefisien</label>
-                        <input type="text" class="form-control" id="koefisien" name="koefisien" required>
+                        <input type="text" class="form-control" id="koefisien" name="koefisien" value="<?= old('koefisien'); ?>" required>
                     </div>
+
                     <button type="submit" class="btn btn-primary">Tambah</button>
                     <a href="/daftar-material" class="btn btn-secondary">Kembali</a>
                 </form>

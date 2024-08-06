@@ -438,12 +438,12 @@
                         <table class="center-table" style="font-family: Arial, Helvetica, sans-serif; padding-top: 5px; border: none;">
                             <tr>
                                 <td style="border: none; text-align:center;">
-                                    <font style="font-size: 10px">Pontianak, 22 Juli 2024</font><br>
+                                    <font style="font-size: 10px">Pontianak, <?= $rab['tanggal']; ?></font><br>
 
                                 </td>
                             </tr>
                             <tr>
-                                <td style="border: none; text-align:center;">
+                                <td style="border: none; text-align:center; background-color:white;">
                                     <font style="font-size: 10px">Perusahaan Umum Daerah Air Minum</font><br>
                                 </td>
                             </tr>
@@ -465,9 +465,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th style="border: none; text-align:center;">
-                                    <font style="font-size: 10px; text-decoration:underline;">ISNEINI, S.ST,MT</font><br>
-                                </th>
+                                <td style="border: none; text-align:center; background-color:white;">
+                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">ISNEINI, S.ST,MT</font><br>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">
@@ -484,9 +484,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th style="border: none; text-align:center;">
-                                    <font style="font-size: 10px; text-decoration:underline;">LILIS KURNIATIN, ST</font><br>
-                                </th>
+                                <td style="border: none; text-align:center; background-color:white;">
+                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">LILIS KURNIATIN, ST</font><br>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">
@@ -503,9 +503,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th style="border: none; text-align:center;">
-                                    <font style="font-size: 10px; text-decoration:underline;">EKA DELVINA SARI, ST</font><br>
-                                </th>
+                                <td style="border: none; text-align:center; background-color:white;">
+                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">EKA DELVINA SARI, ST</font><br>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">
@@ -532,9 +532,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th style="border: none; text-align:center;">
-                                    <font style="font-size: 10px; text-decoration:underline;">ABDULLAH, S.ST</font><br>
-                                </th>
+                                <td style="border: none; text-align:center; background-color:white;">
+                                    <font style="font-size: 10px; text-decoration:underline; font-weight:bold;">ABDULLAH, S.ST</font><br>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="border: none; text-align:center;">

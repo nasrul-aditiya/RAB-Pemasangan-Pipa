@@ -6,6 +6,7 @@ use CodeIgniter\Controller;
 use App\Models\RabDetailModel;
 use App\Models\RabModel;
 use Dompdf\Dompdf;
+use IntlDateFormatter;
 
 class CetakController extends Controller
 {
@@ -20,7 +21,11 @@ class CetakController extends Controller
         $model = new RabModel();
         $rabs = $model->find($id);
         $rabDetails = $rabModel->getRabDetailsWithTotal($id);
-        // dd($rabDetails);
+
+        $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+
+        $timestamp = strtotime($rabs['tanggal']);
+        $rabs['tanggal'] = $formatter->format($timestamp);
 
         // Group the results by id_rab and jenis_pekerjaan
         $groupedRabDetails = [];

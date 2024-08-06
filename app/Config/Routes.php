@@ -37,6 +37,10 @@ $routes->post('/daftar-pekerjaan/detail/update/(:num)', 'Pages::updateDetailPeke
 $routes->get('/daftar-pekerjaan/detail/delete/(:num)', 'Pages::deleteDetailPekerjaan/$1');
 
 $routes->get('/daftar-rab', 'Pages::daftarRab');
+$routes->get('/daftar-rab/dibuat/(:num)', 'Pages::dibuatRab/$1');
+$routes->get('/daftar-rab/diperiksa/(:num)', 'Pages::diperiksaRab/$1');
+$routes->get('/daftar-rab/diverifikasi/(:num)', 'Pages::diverifikasiRab/$1');
+$routes->get('/daftar-rab/disetujui/(:num)', 'Pages::disetujuiRab/$1');
 $routes->get('/daftar-rab/tambah', 'Pages::tambahRab');
 $routes->post('/daftar-rab/store', 'Pages::storeRab');
 $routes->get('/daftar-rab/edit/(:num)', 'Pages::editRab/$1');

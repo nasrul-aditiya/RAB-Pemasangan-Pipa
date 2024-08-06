@@ -9,7 +9,7 @@ class RabModel extends Model
     protected $table = 'rab_profile';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['id_rab', 'nama_pekerjaan', 'lokasi', 'tanggal', 'administrasi'];
+    protected $allowedFields = ['id_rab', 'nama_pekerjaan', 'lokasi', 'tanggal', 'administrasi', 'pembuat', 'pemeriksa', 'disetujui', 'mengetahui'];
 
     public function searchRabs($num, $keyword)
     {

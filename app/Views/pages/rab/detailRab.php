@@ -14,7 +14,9 @@
                 <div class="row mb-3 align-items-center">
                     <!-- Button Add -->
                     <div class="col-md-9 text-md-start">
-                        <a href="/daftar-rab/detail/tambah/<?= $rab['id']; ?>" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                        <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                            <a href="/daftar-rab/detail/tambah/<?= $rab['id']; ?>" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                        <?php endif; ?>
                     </div>
                     <div class="col-md-3 text-md-end">
                         <a href="/daftar-rab/detail/cetak/<?= $id; ?>" target="_blank" class="btn btn-info">Cetak RAB <i class="fa-solid fa-print"></i></a>
@@ -29,7 +31,10 @@
                             <th scope="col">Volume</th>
                             <th scope="col">Harga</th>
                             <th scope="col">Jumlah Biaya</th>
-                            <th scope="col">Aksi</th>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+
+                                <th scope="col">Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,7 +58,10 @@
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
                                     <th><?= $jenisPekerjaan['jenis']; ?></th>
-                                    <td colspan="5"></td>
+                                    <td colspan="4"></td>
+                                    <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                        <th></th>
+                                    <?php endif; ?>
                                 </tr>
 
                                 <?php foreach ($jenisPekerjaan['sub_pekerjaan'] as $subPekerjaan) : ?>
@@ -61,7 +69,10 @@
                                     <tr>
                                         <td></td>
                                         <th><?= $subPekerjaan['sub_jenis']; ?></th>
-                                        <td colspan="5"></td>
+                                        <td colspan="4"></td>
+                                        <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                            <th></th>
+                                        <?php endif; ?>
                                     </tr>
                                     <?php foreach ($subPekerjaan['pekerjaan'] as $pekerjaan) : ?>
 
@@ -96,10 +107,12 @@
                                             <!-- Display the total biaya for the current pekerjaan -->
                                             <td>Rp. <?= esc(number_format($totalHargaSatuan, 2, ',', '.')); ?></td>
                                             <td>Rp. <?= esc(number_format($totalBiayaPekerjaanIndividu, 2, ',', '.')); ?></td>
-                                            <td>
-                                                <a href="/daftar-rab/detail/edit/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                                <a href="/daftar-rab/detail/delete/<?= $pekerjaan['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
-                                            </td>
+                                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                                <td>
+                                                    <a href="/daftar-rab/detail/edit/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                    <a href="/daftar-rab/detail/delete/<?= $pekerjaan['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                                </td>
+                                            <?php endif; ?>
                                         </tr>
                                     <?php endforeach; ?>
                                     <!-- Display the total biaya pekerjaan for the current jenis_pekerjaan -->
@@ -109,7 +122,9 @@
                                         <th colspan="3"></th>
                                         <th>Total</th>
                                         <th>Rp. <?= esc(number_format($totalBiayaSubPekerjaan, 2, ',', '.')); ?></th>
-                                        <th></th>
+                                        <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                            <th></th>
+                                        <?php endif; ?>
                                     </tr>
 
 
@@ -123,7 +138,9 @@
                                     <th>Total</th>
                                     <th colspan="3"></th>
                                     <th>Rp. <?= esc(number_format($totalBiayaPekerjaan, 2, ',', '.')); ?></th>
-                                    <th></th>
+                                    <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                        <th></th>
+                                    <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
 
@@ -140,7 +157,10 @@
                         <tr>
                             <td><?= $nomor; ?></td>
                             <th>BIAYA LAIN-LAIN</th>
-                            <td colspan="5"></td>
+                            <td colspan="4"></td>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
                         <tr>
                             <td></td>
@@ -151,7 +171,9 @@
                             <td>1.00</td>
                             <td>Rp. <?= esc(number_format($hargaSurvey, 2, ',', '.')); ?></td>
                             <td>Rp. <?= esc(number_format($hargaSurvey, 2, ',', '.')); ?></td>
-                            <td></td>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
                         <tr>
                             <td></td>
@@ -162,7 +184,9 @@
                             <td>1.00</td>
                             <td>Rp. <?= esc(number_format($hargaPengawasan, 2, ',', '.')); ?></td>
                             <td>Rp. <?= esc(number_format($hargaPengawasan, 2, ',', '.')); ?></td>
-                            <td></td>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
                         <tr>
                             <td></td>
@@ -174,7 +198,9 @@
                             <?php foreach ($items as $item) : ?>
                                 <td>Rp. <?= esc(number_format($item['administrasi'], 2, ',', '.')); ?></td>
                                 <td>Rp. <?= esc(number_format($item['administrasi'], 2, ',', '.')); ?></td>
-                                <td></td>
+                                <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                    <th></th>
+                                <?php endif; ?>
                         </tr>
 
                         <?php
@@ -184,14 +210,18 @@
                             <th colspan="4"></th>
                             <th>Total</th>
                             <th>Rp. <?= esc(number_format($jumlahBiayaLain, 2, ',', '.')); ?></th>
-                            <th></th>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
                         <tr>
                             <th></th>
                             <th>Total</th>
                             <th colspan="3"></th>
                             <th>Rp. <?= esc(number_format($jumlahBiayaLain, 2, ',', '.')); ?></th>
-                            <th></th>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
 
                         <!-- Calculate the totalBiaya, ppn, totalKeseluruhan, and bulatkan -->
@@ -206,25 +236,33 @@
                             <th colspan="2"></th>
                             <th colspan="3">Total Biaya</th>
                             <th>Rp. <?= esc(number_format($totalBiaya, 2, ',', '.')); ?></th>
-                            <th></th>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
                         <tr>
                             <th colspan="2"></th>
                             <th colspan="3">PPN 11%</th>
                             <th>Rp. <?= esc(number_format($ppn, 2, ',', '.')); ?></th>
-                            <th></th>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
                         <tr>
                             <th colspan="2"></th>
                             <th colspan="3">Total Keseluruhan</th>
                             <th>Rp. <?= esc(number_format($totalKeseluruhan, 2, ',', '.')); ?></th>
-                            <th></th>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
                         <tr>
                             <th colspan="2"></th>
                             <th colspan="3">Dibulatkan</th>
                             <th>Rp. <?= esc(number_format($bulatkan, 2, ',', '.')); ?></th>
-                            <th></th>
+                            <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                <th></th>
+                            <?php endif; ?>
                         </tr>
 
                     <?php endforeach; ?>

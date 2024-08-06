@@ -10,6 +10,9 @@ class ItemModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = ['nama', 'jenis', 'kode', 'satuan', 'harga', 'koefisien'];
+    protected $validationRules = [
+        'kode' => 'is_unique[item.kode]',
+    ];
 
     // Method untuk mencari material berdasarkan keyword
     public function searchMaterials($num, $keyword)

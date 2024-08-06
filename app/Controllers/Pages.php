@@ -43,6 +43,7 @@ class Pages extends BaseController
             'title' => "Dashboard",
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
             'materialsThisMonth' => $materialsThisMonth,
             'allMaterial' => $allMaterial,
             'pekerjasThisMonth' => $pekerjasThisMonth,
@@ -77,6 +78,7 @@ class Pages extends BaseController
             'materials' => $materials,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
             'keyword' => $keyword, // To keep the keyword in the search bar
             'perPage' => $perPage, // Pass perPage to the view
         ];
@@ -93,6 +95,9 @@ class Pages extends BaseController
         $satuanModel = new SatuanModel();
         $data = [
             'title' => "Tambah Material",
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
             'satuan' => $satuanModel->findAll()
         ];
         return view('pages/material/tambahMaterial', $data);
@@ -106,14 +111,29 @@ class Pages extends BaseController
         }
 
         $model = new ItemModel();
+        // Retrieve form input
+        $nama = $this->request->getVar('nama');
+        $kode = $this->request->getVar('kode');
+        $satuan = $this->request->getVar('satuan');
+        $harga = $this->request->getVar('harga');
+        $koefisien = $this->request->getVar('koefisien');
+
+        // Check if the kode already exists
+        if ($model->where('kode', $kode)->first()) {
+            $session->setFlashdata('error', 'Kode material sudah ada, silakan gunakan kode lain.');
+            return redirect()->to('/daftar-material/tambah')->withInput();
+        }
+
+        // Prepare data for insertion
         $data = [
-            'nama' => $this->request->getVar('nama'),
+            'nama' => $nama,
             'jenis' => 'material',
-            'kode' => $this->request->getVar('kode'),
-            'satuan' => $this->request->getVar('satuan'),
-            'harga' => $this->request->getVar('harga'),
-            'koefisien' => $this->request->getVar('koefisien'),
+            'kode' => $kode,
+            'satuan' => $satuan,
+            'harga' => $harga,
+            'koefisien' => $koefisien,
         ];
+
         try {
             $model->insert($data);
             $session->setFlashdata('success', 'Material berhasil disimpan.');
@@ -142,6 +162,7 @@ class Pages extends BaseController
                 'satuan' => $satuanModel->findAll(),
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
+                'avatar' => $session->get('avatar'),
             ];
             return view('pages/material/editMaterial', $data);
         } else {
@@ -213,6 +234,7 @@ class Pages extends BaseController
             'upah' => $upah,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
             'keyword' => $keyword, // To keep the keyword in the search bar
             'perPage' => $perPage, // Pass perPage to the view
         ];
@@ -231,6 +253,7 @@ class Pages extends BaseController
             'satuan' => $satuanModel->findAll(),
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
         ];
         return view('pages/upah/tambahUpah', $data);
     }
@@ -279,6 +302,7 @@ class Pages extends BaseController
                 'satuan' => $satuanModel->findAll(),
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
+                'avatar' => $session->get('avatar'),
             ];
             return view('pages/upah/editUpah', $data);
         } else {
@@ -345,6 +369,7 @@ class Pages extends BaseController
             'pekerjaans' => $pekerjaans,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
             'keyword' => $keyword, // To keep the keyword in the search bar
             'perPage' => $perPage, // Pass perPage to the view
         ];
@@ -395,6 +420,7 @@ class Pages extends BaseController
             'jenis_pekerjaan' => $groupedJenisPekerjaan,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
         ];
         // dd($data);
         return view('pages/pekerjaan/tambahPekerjaan', $data);
@@ -469,6 +495,7 @@ class Pages extends BaseController
                 'jenis_pekerjaan' => $groupedJenisPekerjaan,
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
+                'avatar' => $session->get('avatar'),
             ];
             // dd($data);
             return view('pages/pekerjaan/editPekerjaan', $data);
@@ -537,6 +564,7 @@ class Pages extends BaseController
             'items' => $items,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
         ];
         // dd($data);
 
@@ -561,6 +589,7 @@ class Pages extends BaseController
             'items' => $items,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
         ];
         return view('pages/pekerjaan/detail/tambahDetailPekerjaan', $data);
     }
@@ -619,6 +648,7 @@ class Pages extends BaseController
                 'filter' => $filter,
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
+                'avatar' => $session->get('avatar'),
             ];
             // dd($data);
             return view('pages/pekerjaan/detail/editDetailPekerjaan', $data);
@@ -672,8 +702,35 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/');
         }
-        $model = new RabModel();
 
+        $role = $session->get('role');
+        $model = new RabModel();
+        $filter = $this->request->getGet('filter') ?? 'dibuat';
+        if ($role != 'Kepala Regu') {
+            if ($filter == 'dibuat') {
+                $model->where('pembuat !=', 0)
+                    ->where('pemeriksa', 0);
+            } elseif ($filter == 'diperiksa') {
+                $model->where('pemeriksa !=', 0)
+                    ->where('disetujui', 0);
+            } elseif ($filter == 'diverifikasi') {
+                $model->where('disetujui !=', 0)
+                    ->where('mengetahui', 0);
+            } elseif ($filter == 'disetujui') {
+                $model->where('mengetahui !=', 0);
+            }
+        } else {
+            // Logic for 'kasi' role, do not apply specific filter for 'dibuat'
+            if ($filter == 'dibuat') {
+                $model->where('pemeriksa', 0);
+            } elseif ($filter == 'diperiksa') {
+                $model->where('pemeriksa !=', 0);
+            } elseif ($filter == 'diverifikasi') {
+                $model->where('disetujui !=', 0);
+            } elseif ($filter == 'disetujui') {
+                $model->where('mengetahui !=', 0);
+            }
+        }
         // Ambil keyword pencarian dari input form atau query string
         $keyword = $this->request->getGet('keyword');
 
@@ -694,10 +751,69 @@ class Pages extends BaseController
             'rabs' => $rabs,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
+            'id' => $session->get('id'),
             'keyword' => $keyword, // To keep the keyword in the search bar
             'perPage' => $perPage, // Pass perPage to the view
+            'filter' => $filter
         ];
         return view('pages/daftarRab', $data);
+    }
+    public function dibuatRab($id)
+    {
+        $session = session();
+        $rabModel = new RabModel();
+        $rab = $rabModel->find($id);
+
+        if ($rab) {
+            $rab['pembuat'] = $session->get('id'); // Mengambil ID dari session
+            $rabModel->save($rab);
+            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
+        } else {
+            return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
+        }
+    }
+    public function diperiksaRab($id)
+    {
+        $session = session();
+        $rabModel = new RabModel();
+        $rab = $rabModel->find($id);
+
+        if ($rab) {
+            $rab['pemeriksa'] = $session->get('id'); // Mengambil ID dari session
+            $rabModel->save($rab);
+            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
+        } else {
+            return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
+        }
+    }
+    public function diverifikasiRab($id)
+    {
+        $session = session();
+        $rabModel = new RabModel();
+        $rab = $rabModel->find($id);
+
+        if ($rab) {
+            $rab['disetujui'] = $session->get('id'); // Mengambil ID dari session
+            $rabModel->save($rab);
+            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
+        } else {
+            return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
+        }
+    }
+    public function disetujuiRab($id)
+    {
+        $session = session();
+        $rabModel = new RabModel();
+        $rab = $rabModel->find($id);
+
+        if ($rab) {
+            $rab['mengetahui'] = $session->get('id'); // Mengambil ID dari session
+            $rabModel->save($rab);
+            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
+        } else {
+            return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
+        }
     }
     public function tambahRab()
     {
@@ -751,6 +867,7 @@ class Pages extends BaseController
                 'rab' => $rab,
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
+                'avatar' => $session->get('avatar'),
             ];
             return view('pages/rab/editRab', $data);
         } else {
@@ -902,6 +1019,7 @@ class Pages extends BaseController
             'items' => $groupedRabDetails,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
         ];
         // dd($data);
 
@@ -932,6 +1050,7 @@ class Pages extends BaseController
             'jenis_pekerjaan' => $jenis_pekerjaan,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
         ];
         return view('pages/rab/detail/tambahDetailRab', $data);
     }
@@ -1003,6 +1122,7 @@ class Pages extends BaseController
                 'selected_sub_jenis' => $selected_sub_jenis,
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
+                'avatar' => $session->get('avatar'),
             ];
 
             return view('pages/rab/detail/editDetailRab', $data);
@@ -1082,6 +1202,7 @@ class Pages extends BaseController
             'users' => $users,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
             'keyword' => $keyword, // To keep the keyword in the search bar
             'perPage' => $perPage, // Pass perPage to the view
         ];
@@ -1098,7 +1219,10 @@ class Pages extends BaseController
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
         $data = [
-            'title' => "Tambah Pengguna"
+            'title' => "Tambah Pengguna",
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
         ];
         return view('pages/pengguna/tambahPengguna', $data);
     }
@@ -1146,6 +1270,7 @@ class Pages extends BaseController
                 'user' => $user,
                 'nama' => $session->get('nama'),
                 'role' => $session->get('role'),
+                'avatar' => $session->get('avatar'),
             ];
             return view('pages/pengguna/editPengguna', $data); // Ganti 'pages/editUser' dengan nama view edit yang sesuai
         } else {
@@ -1223,6 +1348,7 @@ class Pages extends BaseController
             'user' => $user,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
         ];
 
         return view('pages/kelolaAkun', $data);
@@ -1237,22 +1363,48 @@ class Pages extends BaseController
 
         $model = new UserModel();
         $id = $session->get('id');
+
+        // Ambil data pengguna saat ini untuk mendapatkan avatar lama
+        $user = $model->find($id);
+        $oldAvatar = $user['avatar']; // Nama file avatar lama
+
         $data = [
             'username' => $this->request->getPost('username'),
             'nama' => $this->request->getPost('nama'),
             'password' => $this->request->getPost('password'),
             'role' => $this->request->getPost('role'),
         ];
+
+        // Handle avatar upload
+        $avatar = $this->request->getFile('avatar');
+        if ($avatar && $avatar->isValid() && !$avatar->hasMoved()) {
+            // Generate a new file name and move the uploaded file
+            $newName = $avatar->getRandomName();
+            $avatar->move('uploads/avatars', $newName);
+
+            // Hapus file avatar lama jika ada
+            if ($oldAvatar && file_exists('uploads/avatars/' . $oldAvatar)) {
+                unlink('uploads/avatars/' . $oldAvatar);
+            }
+
+            // Update data dengan nama file avatar baru
+            $data['avatar'] = $newName;
+        }
+
         try {
             $model->update($id, $data);
             // Perbarui data session dengan data yang baru diupdate
             $session->set('username', $data['username']);
             $session->set('nama', $data['nama']);
             $session->set('role', $data['role']);
+            if (isset($data['avatar'])) {
+                $session->set('avatar', $data['avatar']);
+            }
             $session->setFlashdata('success', 'Akun berhasil diperbarui.');
         } catch (\Exception $e) {
             $session->setFlashdata('error', 'Akun gagal diperbarui. Silahkan coba lagi.');
         }
+
         return redirect()->back();
     }
 }

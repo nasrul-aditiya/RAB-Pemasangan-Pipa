@@ -1,6 +1,34 @@
 <?= $this->extend('layout/template'); ?>
 
 <?= $this->section('content'); ?>
+<style>
+    .capsule {
+        display: flex;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        overflow: hidden;
+        width: 50%;
+        padding: 0;
+    }
+
+    .capsule-item {
+        flex: 1;
+        padding: 10px 0;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .capsule-item.active {
+        background-color: #00e0e0;
+        border-radius: 25px;
+        color: white;
+    }
+
+    .capsule-item:not(.active):hover {
+        background-color: #f0f0f0;
+    }
+</style>
 <main class="content px-3 py-2">
     <div class="container-fluid">
         <div class="mb-3 text-center">
@@ -12,7 +40,17 @@
                 <h5 class="card-title">Tabel <?= $title; ?></h5>
             </div>
             <div class="card-body">
+                <div class="row justify-content-center mb-3">
+                    <div class="capsule">
+                        <div class="capsule-item <?= ($filter == 'dibuat') ? 'active' : '' ?>" onclick="window.location.href='?filter=dibuat'">Dibuat</div>
+                        <div class="capsule-item <?= ($filter == 'diperiksa') ? 'active' : '' ?>" onclick="window.location.href='?filter=diperiksa'">Diperiksa</div>
+                        <div class="capsule-item <?= ($filter == 'diverifikasi') ? 'active' : '' ?>" onclick="window.location.href='?filter=diverifikasi'">Diverifikasi</div>
+                        <div class="capsule-item <?= ($filter == 'disetujui') ? 'active' : '' ?>" onclick="window.location.href='?filter=disetujui'">Disetujui</div>
+                    </div>
+                </div>
                 <div class="row mb-3 align-items-center">
+
+
                     <!-- Button Add -->
                     <div class="col-md-9 text-md-start">
                         <a href="/daftar-rab/tambah" class="btn btn-primary"><i class="fas fa-plus"></i></a>
@@ -69,9 +107,35 @@
                                     <td><?= esc($rab['tanggal']); ?></td>
                                     <td>
                                         <a href="/daftar-rab/detail/<?= $rab['id']; ?>" class="btn btn-info"><i class="fa-solid fa-file"></i></a>
-                                        <?php if (isset($role) && $role == "Admin") : ?>
-                                            <a href="/daftar-rab/edit/<?= $rab['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                            <a href="/daftar-rab/delete/<?= $rab['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                        <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                            <?php if (isset($filter) && $filter == "dibuat") : ?>
+                                                <?php if ($rab['pembuat'] == 0) : ?>
+                                                    <a href="/daftar-rab/edit/<?= $rab['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                    <a href="/daftar-rab/delete/<?= $rab['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                                    <a href="/daftar-rab/dibuat/<?= $rab['id']; ?>" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                        <?php if (isset($role) && $role == "Kasi") : ?>
+                                            <?php if (isset($filter) && $filter == "dibuat") : ?>
+                                                <?php if ($rab['pemeriksa'] == 0) : ?>
+                                                    <a href="/daftar-rab/diperiksa/<?= $rab['id']; ?>" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                        <?php if (isset($role) && $role == "Kabag") : ?>
+                                            <?php if (isset($filter) && $filter == "diperiksa") : ?>
+                                                <?php if ($rab['disetujui'] == 0) : ?>
+                                                    <a href="/daftar-rab/diverifikasi/<?= $rab['id']; ?>" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                        <?php if (isset($role) && $role == "Dirtek") : ?>
+                                            <?php if (isset($filter) && $filter == "diverifikasi") : ?>
+                                                <?php if ($rab['mengetahui'] == 0) : ?>
+                                                    <a href="/daftar-rab/disetujui/<?= $rab['id']; ?>" class="btn btn-success"><i class="fas fa-check"></i></a>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
