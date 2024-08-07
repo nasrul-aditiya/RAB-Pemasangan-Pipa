@@ -15,7 +15,7 @@
                 <div class="row mb-3 align-items-center">
                     <!-- Button Add -->
                     <div class="col-md-9 text-md-start">
-                        <a href="/kelola-pengguna/tambah" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                        <a href="/kelola-pengguna/tambah" class="btn btn-outline-primary shadow"><i class="fas fa-plus"></i></a>
                     </div>
                     <!-- Search Bar -->
                     <div class="col-md-3 text-md-end">
@@ -62,8 +62,8 @@
                                     <td><?= esc($user['nama']); ?></td>
                                     <td><?= esc($user['role']); ?></td>
                                     <td>
-                                        <a href="/kelola-pengguna/edit/<?= $user['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/kelola-pengguna/delete/<?= $user['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                        <a href="/kelola-pengguna/edit/<?= $user['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="/kelola-pengguna/delete/<?= $user['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

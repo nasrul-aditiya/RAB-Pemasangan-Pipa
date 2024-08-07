@@ -13,7 +13,7 @@
             <div class="card-body">
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-9 text-md-start">
-                        <a href="/daftar-upah/tambah" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                        <a href="/daftar-upah/tambah" class="btn btn-outline-primary shadow"><i class="fas fa-plus"></i></a>
                     </div>
                     <div class="col-md-3 text-md-end">
                         <form action="/daftar-upah" method="GET" class="form-inline">
@@ -63,8 +63,8 @@
                                     <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
                                     <td><?= esc(number_format($item['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
-                                        <a href="/daftar-upah/edit/<?= $item['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/daftar-upah/delete/<?= $item['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                        <a href="/daftar-upah/edit/<?= $item['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="/daftar-upah/delete/<?= $item['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -186,6 +186,11 @@ class Pages extends BaseController
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'material', // Tetap 'material'
         ];
+        // Check if the kode already exists
+        if ($model->where('kode', $data['kode'])->first()) {
+            $session->setFlashdata('error', 'Kode material sudah ada, silakan gunakan kode lain.');
+            return redirect()->to('/daftar-material/edit/' . $id)->withInput();
+        }
         try {
             $model->update($id, $data);
             $session->setFlashdata('success', 'Material berhasil diubah.');
@@ -274,6 +279,11 @@ class Pages extends BaseController
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'upah',
         ];
+        // Check if the kode already exists
+        if ($model->where('kode', $data['kode'])->first()) {
+            $session->setFlashdata('error', 'Kode upah sudah ada, silakan gunakan kode lain.');
+            return redirect()->to('/daftar-upah/tambah')->withInput();
+        }
         try {
             $model->insert($data);
             $session->setFlashdata('success', 'Upah berhasil disimpan.');
@@ -326,6 +336,11 @@ class Pages extends BaseController
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'upah',
         ];
+        // Check if the kode already exists
+        if ($model->where('kode', $data['kode'])->first()) {
+            $session->setFlashdata('error', 'Kode upah sudah ada, silakan gunakan kode lain.');
+            return redirect()->to('/daftar-upah/edit/' . $id)->withInput();
+        }
         try {
             $model->update($id, $data);
             $session->setFlashdata('success', 'Upah berhasil diubah.');

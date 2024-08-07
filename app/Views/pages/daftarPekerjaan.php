@@ -15,7 +15,7 @@
                 <div class="row mb-3 align-items-center">
                     <!-- Button Add -->
                     <div class="col-md-9 text-md-start">
-                        <a href="/daftar-pekerjaan/tambah" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                        <a href="/daftar-pekerjaan/tambah" class="btn btn-outline-primary shadow"><i class="fas fa-plus"></i></a>
                     </div>
                     <!-- Search Bar -->
                     <div class="col-md-3 text-md-end">
@@ -66,9 +66,9 @@
                                     <td><?= $pekerjaan['subjenis_pekerjaan']; ?></td>
                                     <td><?= $pekerjaan['profit']; ?>%</td>
                                     <td>
-                                        <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-file"></i></a>
-                                        <a href="/daftar-pekerjaan/edit/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/daftar-pekerjaan/delete/<?= $pekerjaan['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                        <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-outline-info shadow"><i class="fa-solid fa-file"></i></a>
+                                        <a href="/daftar-pekerjaan/edit/<?= $pekerjaan['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="/daftar-pekerjaan/delete/<?= $pekerjaan['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

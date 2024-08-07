@@ -12,11 +12,6 @@
                 <h5 class="card-title">Form Edit Upah</h5>
             </div>
             <div class="card-body">
-                <?php if (session()->has('error')) : ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?= session()->get('error'); ?>
-                    </div>
-                <?php endif; ?>
                 <form action="/daftar-upah/update/<?= esc($upah['id']); ?>" method="post">
                     <?= csrf_field(); ?>
                     <div class="mb-3">

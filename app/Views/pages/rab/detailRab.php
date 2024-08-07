@@ -21,7 +21,7 @@
                     <div class="col-md-3 text-md-end">
                         <?php if (isset($rab) && $rab['mengetahui'] != "0") : ?>
                             <a href="/daftar-rab/detail/cetak/<?= $id; ?>" target="_blank" class="btn btn-outline-danger shadow float-right ml-2">PDF<i class="fa-solid fa-file-pdf"></i></i></a>
-                            <a href="/daftar-rab/detail/excel/<?= $id; ?>" target="_blank" class="btn btn-outline-success shadow float-right">Excel <i class="fa-solid fa-print"></i></a>
+                            <a href="/daftar-rab/detail/excel/<?= $id; ?>" target="_blank" class="btn btn-outline-success shadow float-right">Excel <i class="fa-solid fa-file-excel"></i></a>
                         <?php endif; ?>
                     </div>
                 </div>
