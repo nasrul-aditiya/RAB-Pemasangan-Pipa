@@ -171,7 +171,7 @@ a.sidebar-link {
 
 /* Footer and Nav */
 
-@media (max-width: 767.98px) {
+@media (max-width: 800px) {
   .js-sidebar {
     margin-left: -264px;
   }
@@ -184,6 +184,37 @@ a.sidebar-link {
   footer {
     width: 100vw;
   }
+  .chart-container {
+    width: 100%;
+    height: 300px;
+  }
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+#myChart {
+  width: 100% !important; /* Memastikan lebar canvas 100% dari kontainer */
+}
+.notif {
+  font-size: 20px;
+  position: relative;
+}
+
+.notif .count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background: red;
+  border-radius: 50%;
+  color: white;
+  border: 2px solid white;
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .sidebar-item.active > .sidebar-link {
   background-color: #376d8c; /* Change to your preferred background color */
@@ -193,7 +224,9 @@ a.sidebar-link {
 .sidebar-item.active > .sidebar-link i {
   color: #ffffff; /* Change icon color */
 }
-
+.sidebar-dropdown {
+  background-color: #376d8c;
+}
 .sidebar-dropdown .sidebar-item.active > .sidebar-link {
   background-color: #0056b3; /* Slightly different color for dropdown items */
   color: #ffffff;
@@ -228,4 +261,65 @@ html[data-bs-theme="dark"] .theme-toggle .fa-moon {
 
 html[data-bs-theme="light"] .theme-toggle .fa-sun {
   display: none;
+}
+
+.reminders {
+  margin-top: 2rem;
+}
+
+.reminders .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+}
+
+.reminders .header span {
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.reminders .notification {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reminders .notification:hover {
+  box-shadow: none;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  width: 100%;
+}
+
+.reminders .notification .icon {
+  padding: 0.6rem;
+  color: var(--color-white);
+  border-radius: 20%;
+  display: flex;
+}
+
+.reminders .add-reminder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.reminders .add-reminder:hover {
+  color: white;
+}
+
+.reminders .add-reminder div {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }

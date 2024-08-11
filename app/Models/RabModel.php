@@ -9,7 +9,7 @@ class RabModel extends Model
     protected $table = 'rab_profile';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['id_rab', 'nama_pekerjaan', 'lokasi', 'tanggal', 'administrasi', 'pembuat', 'pemeriksa', 'disetujui', 'mengetahui'];
+    protected $allowedFields = ['id_rab', 'nama_pekerjaan', 'lokasi', 'tanggal', 'administrasi', 'pembuat', 'pemeriksa', 'disetujui', 'mengetahui', 'status'];
 
     public function searchRabs($num, $keyword)
     {
@@ -165,6 +165,41 @@ class RabModel extends Model
             ->groupBy([
                 'rab_profile.id',
             ])
+            ->findAll();
+    }
+    public function getRabsWithNoStatus()
+    {
+        return $this->select('id, updated_at')
+            ->where('status', 'Belum Ada Status')
+            ->findAll();
+    }
+    public function getRabsDibuat()
+    {
+        return $this->select('id, updated_at')
+            ->where('status', 'Dibuat')
+            ->findAll();
+    }
+    public function getRabsDiperiksa()
+    {
+        return $this->select('id, updated_at')
+            ->where('status', 'Diperiksa')
+            ->findAll();
+    }
+    public function getRabsDisetujui()
+    {
+        return $this->select('id, updated_at')
+            ->where('status', 'Disetujui')
+            ->findAll();
+    }
+    public function getRabsDitolak()
+    {
+        return $this->select('id, updated_at')
+            ->where('status', 'Ditolak')
+            ->findAll();
+    }
+    public function getRabsMengetahui()
+    {
+        return $this->where('status', 'Mengetahui')
             ->findAll();
     }
 }

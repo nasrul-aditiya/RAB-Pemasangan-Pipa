@@ -4,6 +4,13 @@
     </button>
     <div class="navbar-collapse navbar">
         <ul class="navbar-nav">
+            <!-- <li>
+                <a href="#" class="notif float-end me-3 mt-1">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="count">12</span>
+                </a>
+
+            </li> -->
             <li class="nav-item dropdown">
                 <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                     <?php

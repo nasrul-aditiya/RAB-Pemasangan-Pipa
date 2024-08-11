@@ -139,6 +139,11 @@
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
+                                        <?php if (isset($role) && $role == "Admin") : ?>
+                                            <?php if (isset($filter) && $filter == "disetujui") : ?>
+                                                <a href="/daftar-rab/delete/<?= $rab['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -16,7 +16,17 @@
             font-size: 0.875rem;
             opacity: 1;
             margin: 0;
-            background-color: #3C8DBC;
+            background: #3c8dbc;
+            background: linear-gradient(to right, #3c8dbc, #5DB05C);
+        }
+
+        .card {
+            border-radius: 15px;
+        }
+
+        .card-body {
+            background-color: #F0F0F0;
+            border-radius: 15px;
         }
     </style>
 </head>

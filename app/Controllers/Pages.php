@@ -37,6 +37,16 @@ class Pages extends BaseController
         $rabModel = new RabModel();
         $rabsThisMonth = $rabModel->countRabsThisMonth();
         $allRab = $rabModel->countAllRabs();
+        $rabsNoStatus = $rabModel->getRabsWithNoStatus();
+        $rabsDitolak = $rabModel->getRabsDitolak();
+        $rabsDibuat = $rabModel->getRabsDibuat();
+        $rabsDiperiksa = $rabModel->getRabsDiperiksa();
+        $rabsDisetujui = $rabModel->getRabsDisetujui();
+        $ditolakDate = !empty($rabsDitolak) ? max(array_column($rabsDitolak, 'updated_at')) : null;
+        $noStatusDate = !empty($rabsNoStatus) ? max(array_column($rabsNoStatus, 'updated_at')) : null;
+        $dibuatDate = !empty($rabsDibuat) ? max(array_column($rabsDibuat, 'updated_at')) : null;
+        $diperiksaDate = !empty($rabsDiperiksa) ? max(array_column($rabsDiperiksa, 'updated_at')) : null;
+        $disetujuiDate = !empty($rabsDisetujui) ? max(array_column($rabsDisetujui, 'updated_at')) : null;
 
         $model = new ChartModel();
         $data = [
@@ -52,6 +62,15 @@ class Pages extends BaseController
             'allPekerjaan' => $allPekerjaan,
             'rabsThisMonth' => $rabsThisMonth,
             'allRab' => $allRab,
+            'noStatusDate' => $noStatusDate,
+            'rabsNoStatus' => $rabsNoStatus,
+            'ditolakDate' => $ditolakDate,
+            'rabsDitolak' => $rabsDitolak,
+            'dibuatDate' => $dibuatDate,
+            'rabsDisetujui' => $rabsDisetujui,
+            'rabsDiperiksa' => $rabsDiperiksa,
+            'diperiksaDate' => $diperiksaDate,
+            'disetujuiDate' => $disetujuiDate,
             'chartData' => $model->findAll()
         ];
         return view('pages/dashboard', $data);
@@ -782,6 +801,7 @@ class Pages extends BaseController
 
         if ($rab) {
             $rab['pembuat'] = $session->get('id'); // Mengambil ID dari session
+            $rab['status'] = 'Dibuat';
             $rabModel->save($rab);
             return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
         } else {
@@ -796,6 +816,7 @@ class Pages extends BaseController
 
         if ($rab) {
             $rab['pemeriksa'] = $session->get('id'); // Mengambil ID dari session
+            $rab['status'] = 'Diperiksa';
             $rabModel->save($rab);
             return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
         } else {
@@ -810,6 +831,7 @@ class Pages extends BaseController
         if ($rab) {
             $rab['pembuat'] = 0;
             $rab['pemeriksa'] = 0;
+            $rab['status'] = 'Ditolak';
             $rabModel->save($rab);
             return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil ditolak');
         } else {
@@ -824,6 +846,7 @@ class Pages extends BaseController
 
         if ($rab) {
             $rab['disetujui'] = $session->get('id'); // Mengambil ID dari session
+            $rab['status'] = 'Disetujui';
             $rabModel->save($rab);
             return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
         } else {
@@ -839,6 +862,7 @@ class Pages extends BaseController
             $rab['pembuat'] = 0;
             $rab['pemeriksa'] = 0;
             $rab['disetujui'] = 0;
+            $rab['status'] = 'Ditolak';
             $rabModel->save($rab);
             return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil ditolak');
         } else {
@@ -853,6 +877,7 @@ class Pages extends BaseController
 
         if ($rab) {
             $rab['mengetahui'] = $session->get('id'); // Mengambil ID dari session
+            $rab['status'] = 'Mengetahui';
             $rabModel->save($rab);
             return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
         } else {
@@ -869,6 +894,7 @@ class Pages extends BaseController
             $rab['pemeriksa'] = 0;
             $rab['disetujui'] = 0;
             $rab['mengetahui'] = 0;
+            $rab['status'] = 'Ditolak';
             $rabModel->save($rab);
             return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil ditolak');
         } else {
