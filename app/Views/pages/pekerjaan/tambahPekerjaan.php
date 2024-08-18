@@ -30,7 +30,6 @@
                         <label for="sub_jenis" class="form-label">Sub Jenis Pekerjaan</label>
                         <select class="form-control" id="sub_jenis" name="sub_jenis" required>
                             <option value="">-- Pilih Sub Jenis Pekerjaan --</option>
-                            <!-- Options will be populated by JavaScript -->
                         </select>
                     </div>
                     <div class="mb-3">

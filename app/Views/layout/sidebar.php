@@ -30,12 +30,12 @@ function isParentActive($prefixes, $currentPath)
                     Dashboard
                 </a>
             </li>
-            <li class="sidebar-item <?php echo isParentActive(['/daftar-material', '/daftar-upah', '/daftar-pekerjaan'], $currentPath); ?>">
+            <li class="sidebar-item <?php echo isParentActive(['/daftar-material', '/daftar-upah', '/daftar-alat', '/daftar-pekerjaan'], $currentPath); ?>">
                 <a href="#" class="sidebar-link collapsed" data-bs-target="#pages" data-bs-toggle="collapse" aria-expanded="false">
                     <i class="fa-solid fa-chart-pie pe-2"></i>
                     Data Master
                 </a>
-                <ul id="pages" class="sidebar-dropdown list-unstyled collapse <?php echo isParentActive(['/daftar-material', '/daftar-upah', '/daftar-pekerjaan'], $currentPath) ? 'show' : ''; ?>" data-bs-parent="#sidebar">
+                <ul id="pages" class="sidebar-dropdown list-unstyled collapse <?php echo isParentActive(['/daftar-material', '/daftar-upah', '/daftar-alat', '/daftar-pekerjaan'], $currentPath) ? 'show' : ''; ?>" data-bs-parent="#sidebar">
                     <li class="sidebar-item <?php echo isActive('/daftar-material', $currentPath); ?>">
                         <a href="/daftar-material" class="sidebar-link">
                             <span style="margin-left: 30px;">
@@ -50,10 +50,17 @@ function isParentActive($prefixes, $currentPath)
                             </span>
                         </a>
                     </li>
+                    <li class="sidebar-item <?php echo isActive('/daftar-alat', $currentPath); ?>">
+                        <a href="/daftar-alat" class="sidebar-link">
+                            <span style="margin-left: 30px;">
+                                Daftar Alat
+                            </span>
+                        </a>
+                    </li>
                     <li class="sidebar-item <?php echo isActive('/daftar-pekerjaan', $currentPath); ?>">
                         <a href="/daftar-pekerjaan" class="sidebar-link">
                             <span style="margin-left: 30px;">
-                                Daftar Pekerjaan
+                                AHSP
                             </span>
                         </a>
                     </li>

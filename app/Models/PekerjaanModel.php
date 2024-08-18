@@ -9,18 +9,17 @@ class PekerjaanModel extends Model
     protected $table = 'pekerjaan';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['nama', 'jenis_pekerjaan', 'subjenis_pekerjaan', 'satuan', 'volume', 'profit'];
+    protected $allowedFields = ['nama', 'jenis_pekerjaan', 'satuan', 'volume', 'profit'];
 
     public function getPekerjaanWithDetails($num, $keyword = null)
     {
-        $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan, pekerjaan.subjenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
+        $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan,  pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
             ->join('satuan', 'pekerjaan.satuan = satuan.id');
 
         if ($keyword) {
             $this->groupStart()
                 ->like('pekerjaan.nama', $keyword)
                 ->orLike('pekerjaan.jenis_pekerjaan', $keyword)
-                ->orLike('pekerjaan.subjenis_pekerjaan', $keyword)
                 ->groupEnd();
         }
         return [
@@ -31,7 +30,7 @@ class PekerjaanModel extends Model
 
     public function getPekerjaan($id)
     {
-        return $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan, pekerjaan.subjenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
+        return $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
             ->join('satuan', 'pekerjaan.satuan = satuan.id')
             ->find($id);
     }
@@ -42,7 +41,7 @@ class PekerjaanModel extends Model
     }
     public function getPekerjaanWithItems($id_rab)
     {
-        return $this->select('pekerjaan.id AS pekerjaan_id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan, pekerjaan.subjenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, item.id AS item_id, item.nama AS item_name, item.satuan, item.harga')
+        return $this->select('pekerjaan.id AS pekerjaan_id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, item.id AS item_id, item.nama AS item_name, item.satuan, item.harga')
             ->join('pekerjaan_detail', 'pekerjaan_detail.pekerjaan_id = pekerjaan.id')
             ->join('item', 'pekerjaan_detail.item_id = item.id')
             ->where('pekerjaan_detail.id_rab', $id_rab)
@@ -80,27 +79,21 @@ class PekerjaanModel extends Model
         foreach ($pekerjaans as $p) {
             if (is_array($p)) {
                 $jenisPekerjaan = $p['jenis_pekerjaan'];
-                $subJenisPekerjaan = $p['subjenis_pekerjaan'];
-                $pekerjaan = $p['nama'];
+                $id = $p['id'];
 
                 if (!isset($groupedJenisPekerjaan[$jenisPekerjaan])) {
                     $groupedJenisPekerjaan[$jenisPekerjaan] = [
                         'id' => $p['id'],
                         'jenis_pekerjaan' => $p['jenis_pekerjaan'],
-                        'subjenis_pekerjaan' => [],
+                        'pekerjaan' => [],
                     ];
                 }
-                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan])) {
-                    $groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan] = [
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan]['pekerjaan'][$id])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan]['pekerjaan'][$id] = [
                         'id' => $p['id'],
-                        'sub_jenis' => $p['subjenis_pekerjaan'],
-                        'pekerjaan' => []
+                        'nama' => $p['nama'],
                     ];
                 }
-                $groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan]['pekerjaan'][$p['id']] = [
-                    'nama' => $p['nama'],
-                    'id' => $p['id']
-                ];
             }
         }
 

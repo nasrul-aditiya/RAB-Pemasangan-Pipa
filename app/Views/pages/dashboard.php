@@ -88,11 +88,11 @@
             <div class="col-xl-3">
                 <div class="card border-0">
                     <div class="card-header">
-                        <h5 class="card-title">Notifikasi</h5>
+                        <h5 class="card-title">Pemberitahuan</h5>
                     </div>
                     <div class="card-body" style="height: 320px; overflow-y: auto;">
                         <div class="list-group">
-                            <?php if (isset($role) && $role == "Kepala Regu" && count($rabsNoStatus) > 0) : ?>
+                            <?php if (isset($role) && $role == "Kepala Regu" && count($rabsNoStatus ?? []) > 0) : ?>
                                 <a href="/daftar-rab?filter=dibuat" class="list-group-item list-group-item-action flex-column align-items-start">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">RAB</h5>
@@ -103,7 +103,7 @@
                                 </a>
                             <?php endif; ?>
 
-                            <?php if (isset($role) && $role == "Kepala Regu" && count($rabsDitolak) > 0) : ?>
+                            <?php if (isset($role) && $role == "Kepala Regu" && count($rabsDitolak ?? []) > 0) : ?>
                                 <a href="/daftar-rab?filter=dibuat" class="list-group-item list-group-item-action flex-column align-items-start">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">RAB</h5>
@@ -114,7 +114,7 @@
                                 </a>
                             <?php endif; ?>
 
-                            <?php if (isset($role) && $role == "Kasi" && count($rabsDibuat) > 0) : ?>
+                            <?php if (isset($role) && $role == "Kasi" && count($rabsDibuat ?? []) > 0) : ?>
                                 <a href="/daftar-rab?filter=dibuat" class="list-group-item list-group-item-action flex-column align-items-start">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">RAB</h5>
@@ -125,7 +125,7 @@
                                 </a>
                             <?php endif; ?>
 
-                            <?php if (isset($role) && $role == "Kabag" && count($rabsDiperiksa) > 0) : ?>
+                            <?php if (isset($role) && $role == "Kabag" && count($rabsDiperiksa ?? []) > 0) : ?>
                                 <a href="/daftar-rab?filter=diperiksa" class="list-group-item list-group-item-action flex-column align-items-start">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">RAB</h5>
@@ -136,7 +136,7 @@
                                 </a>
                             <?php endif; ?>
 
-                            <?php if (isset($role) && $role == "Dirtek" && count($rabsDisetujui) > 0) : ?>
+                            <?php if (isset($role) && $role == "Dirtek" && count($rabsDisetujui ?? []) > 0) : ?>
                                 <a href="/daftar-rab?filter=diverifikasi" class="list-group-item list-group-item-action flex-column align-items-start">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">RAB</h5>

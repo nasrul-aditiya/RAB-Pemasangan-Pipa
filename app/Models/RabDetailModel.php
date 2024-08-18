@@ -9,7 +9,7 @@ class RabDetailModel extends Model
     protected $table = 'rab_detail';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['rab_id', 'id_pekerjaan'];
+    protected $allowedFields = ['rab_id', 'id_pekerjaan', 'jenis_pekerjaan', 'subjenis_pekerjaan', 'nama_pekerjaan'];
     public function getDetailsByRabId($id_rab)
     {
         return $this->where('id_rab', $id_rab)->findAll();
@@ -25,13 +25,13 @@ class RabDetailModel extends Model
             'rab_profile.lokasi',
             'rab_profile.administrasi',
             'rab_detail.volume AS volume_rab',
+            'rab_detail.jenis_pekerjaan AS jenis',
+            'rab_detail.subJenis_pekerjaan AS sub_jenis',
+            'rab_detail.nama_pekerjaan AS name_pekerjaan',
             'pekerjaan.nama AS pekerjaan_name',
-            'pekerjaan.jenis_pekerjaan AS jenis',
-            'pekerjaan.subjenis_pekerjaan AS sub_jenis',
             'item.nama AS item_name',
             'satuan.nama_satuan',
             'pekerjaan_detail.koefisien',
-            'item.koefisien AS koefisien_item',
             'pekerjaan.volume AS volume_pekerjaan',
             'pekerjaan.profit',
             'item.harga',
@@ -48,11 +48,35 @@ class RabDetailModel extends Model
                 'rab_detail.id',
                 'pekerjaan.id',
                 'pekerjaan_detail.item_id',
-
-                // 'pekerjaan.jenis',
-                // 'pekerjaan.nama',
-                // 'item.nama',
             ])
             ->findAll();
+    }
+    public function getGroupedJenisPekerjaan()
+    {
+        $pekerjaans = $this->findAll();
+
+        $groupedJenisPekerjaan = [];
+        foreach ($pekerjaans as $p) {
+            if (is_array($p)) {
+                $jenisPekerjaan = $p['jenis_pekerjaan'];
+                $subJenisPekerjaan = $p['subjenis_pekerjaan'];
+
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan] = [
+                        'id' => $p['id'],
+                        'jenis_pekerjaan' => $p['jenis_pekerjaan'],
+                        'subjenis_pekerjaan' => [],
+                    ];
+                }
+                if (!isset($groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan])) {
+                    $groupedJenisPekerjaan[$jenisPekerjaan]['subjenis_pekerjaan'][$subJenisPekerjaan] = [
+                        'id' => $p['id'],
+                        'sub_jenis' => $p['subjenis_pekerjaan'],
+                    ];
+                }
+            }
+        }
+
+        return $groupedJenisPekerjaan;
     }
 }

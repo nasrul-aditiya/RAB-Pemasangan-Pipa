@@ -9,12 +9,12 @@ class ItemModel extends Model
     protected $table = 'item';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['nama', 'jenis', 'kode', 'satuan', 'harga', 'koefisien'];
+    protected $allowedFields = ['nama', 'jenis', 'kode', 'satuan', 'harga'];
 
     // Method untuk mencari material berdasarkan keyword
     public function searchMaterials($num, $keyword)
     {
-        $this->select('item.id, item.nama AS nama_material, satuan.nama_satuan AS satuan_nama, item.harga, item.koefisien')
+        $this->select('item.id, item.nama AS nama_material, satuan.nama_satuan AS satuan_nama, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
             ->where('item.jenis', 'material');
         if ($keyword) {
@@ -22,7 +22,6 @@ class ItemModel extends Model
                 ->like('item.nama', $keyword)
                 ->orLike('satuan.nama_satuan', $keyword)
                 ->orLike('item.harga', $keyword)
-                ->orLike('item.koefisien', $keyword)
                 ->groupEnd();
         }
         return [
@@ -34,7 +33,7 @@ class ItemModel extends Model
     // Method untuk mendapatkan semua material
     public function getMaterials()
     {
-        return $this->select('item.id, item.nama AS nama_material, satuan.nama_satuan AS satuan_nama, item.harga, item.koefisien')
+        return $this->select('item.id, item.nama AS nama_material, satuan.nama_satuan AS satuan_nama, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
             ->where('item.jenis', 'material')
             ->findAll();
@@ -64,7 +63,7 @@ class ItemModel extends Model
     // Method untuk mencari upah berdasarkan keyword
     public function searchUpah($num, $keyword)
     {
-        $this->select('item.id, item.nama AS nama_upah, satuan.nama_satuan AS satuan_nama, item.harga, item.koefisien')
+        $this->select('item.id, item.nama AS nama_upah, satuan.nama_satuan AS satuan_nama, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
             ->where('item.jenis', 'upah');
         if ($keyword) {
@@ -72,7 +71,6 @@ class ItemModel extends Model
                 ->like('item.nama', $keyword)
                 ->orLike('satuan.nama_satuan', $keyword)
                 ->orLike('item.harga', $keyword)
-                ->orLike('item.koefisien', $keyword)
                 ->groupEnd();
         }
         return [
@@ -84,9 +82,36 @@ class ItemModel extends Model
     // Method untuk mendapatkan semua upah
     public function getUpah()
     {
-        return $this->select('item.id, item.nama AS nama_upah, satuan.nama_satuan AS satuan_nama, item.harga, item.koefisien')
+        return $this->select('item.id, item.nama AS nama_upah, satuan.nama_satuan AS satuan_nama, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
             ->where('item.jenis', 'upah')
+            ->findAll();
+    }
+    // Method untuk mencari upah berdasarkan keyword
+    public function searchAlat($num, $keyword)
+    {
+        $this->select('item.id, item.nama AS nama_alat, satuan.nama_satuan AS satuan_nama, item.harga')
+            ->join('satuan', 'item.satuan = satuan.id')
+            ->where('item.jenis', 'alat');
+        if ($keyword) {
+            $this->groupStart()
+                ->like('item.nama', $keyword)
+                ->orLike('satuan.nama_satuan', $keyword)
+                ->orLike('item.harga', $keyword)
+                ->groupEnd();
+        }
+        return [
+            'alat' => $this->paginate($num),
+            'pager' => $this->pager,
+        ];
+    }
+
+    // Method untuk mendapatkan semua upah
+    public function getAlat()
+    {
+        return $this->select('item.id, item.nama AS nama_alat, satuan.nama_satuan AS satuan_nama, item.harga')
+            ->join('satuan', 'item.satuan = satuan.id')
+            ->where('item.jenis', 'alat')
             ->findAll();
     }
     public function getItem($id)

@@ -206,7 +206,9 @@ class Pages extends BaseController
             'jenis' => 'material', // Tetap 'material'
         ];
         // Check if the kode already exists
-        if ($model->where('kode', $data['kode'])->first()) {
+        $existingData = $model->where('kode', $data['kode'])->first();
+
+        if ($existingData && $existingData['id'] != $id) {
             $session->setFlashdata('error', 'Kode material sudah ada, silakan gunakan kode lain.');
             return redirect()->to('/daftar-material/edit/' . $id)->withInput();
         }
@@ -355,8 +357,9 @@ class Pages extends BaseController
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'upah',
         ];
-        // Check if the kode already exists
-        if ($model->where('kode', $data['kode'])->first()) {
+        $existingData = $model->where('kode', $data['kode'])->first();
+
+        if ($existingData && $existingData['id'] != $id) {
             $session->setFlashdata('error', 'Kode upah sudah ada, silakan gunakan kode lain.');
             return redirect()->to('/daftar-upah/edit/' . $id)->withInput();
         }
@@ -381,6 +384,152 @@ class Pages extends BaseController
         $model->delete($id);
 
         return redirect()->to('/daftar-upah')->with('success', 'Upah berhasil dihapus.');
+    }
+    public function daftarAlat()
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/');
+        }
+
+        $model = new ItemModel();
+
+        $keyword = $this->request->getGet('keyword');
+        // Get the selected number of items per page from the dropdown
+        $perPage = $this->request->getGet('per_page') ?: 10; // Default to 10 if not set
+
+        // Retrieve data with the specified number of items per page
+        $alats = $model->searchAlat($perPage, $keyword);
+
+        $data = [
+            'title' => "Daftar Alat",
+            'alats' => $alats,
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
+            'keyword' => $keyword, // To keep the keyword in the search bar
+            'perPage' => $perPage, // Pass perPage to the view
+        ];
+        return view('pages/daftarAlat', $data);
+    }
+    public function tambahAlat()
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/');
+        }
+
+        $satuanModel = new SatuanModel();
+        $data = [
+            'title' => "Tambah Alat",
+            'satuan' => $satuanModel->findAll(),
+            'nama' => $session->get('nama'),
+            'role' => $session->get('role'),
+            'avatar' => $session->get('avatar'),
+        ];
+        return view('pages/alat/tambahAlat', $data);
+    }
+
+    public function storeAlat()
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/');
+        }
+
+        $model = new ItemModel();
+        $data = [
+            'nama' => $this->request->getPost('nama'),
+            'kode' => $this->request->getPost('kode'),
+            'harga' => $this->request->getPost('harga'),
+            'satuan' => $this->request->getPost('satuan'),
+            'koefisien' => $this->request->getPost('koefisien'),
+            'jenis' => 'alat',
+        ];
+        // Check if the kode already exists
+        if ($model->where('kode', $data['kode'])->first()) {
+            $session->setFlashdata('error', 'Kode alat sudah ada, silakan gunakan kode lain.');
+            return redirect()->to('/daftar-alat/tambah')->withInput();
+        }
+        try {
+            $model->insert($data);
+            $session->setFlashdata('success', 'Alat berhasil disimpan.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Alat gagal disimpan. Silahkan coba lagi.');
+        }
+
+        return redirect()->to('/daftar-upah');
+    }
+
+    public function editAlat($id)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/');
+        }
+
+        $model = new ItemModel();
+        $alat = $model->find($id);
+        $satuanModel = new SatuanModel();
+
+        if ($alat) {
+            $data = [
+                'title' => "Edit Alat",
+                'alat' => $alat,
+                'satuan' => $satuanModel->findAll(),
+                'nama' => $session->get('nama'),
+                'role' => $session->get('role'),
+                'avatar' => $session->get('avatar'),
+            ];
+            return view('pages/alat/editAlat', $data);
+        } else {
+            return redirect()->to('/daftar-alat')->with('error', 'Alat tidak ditemukan.');
+        }
+    }
+
+    public function updateAlat($id)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/');
+        }
+
+        $model = new ItemModel();
+        $data = [
+            'nama' => $this->request->getPost('nama'),
+            'kode' => $this->request->getPost('kode'),
+            'harga' => $this->request->getPost('harga'),
+            'satuan' => $this->request->getPost('satuan'),
+            'koefisien' => $this->request->getPost('koefisien'),
+            'jenis' => 'alat',
+        ];
+        $existingData = $model->where('kode', $data['kode'])->first();
+
+        if ($existingData && $existingData['id'] != $id) {
+            $session->setFlashdata('error', 'Kode alat sudah ada, silakan gunakan kode lain.');
+            return redirect()->to('/daftar-alat/edit/' . $id)->withInput();
+        }
+        try {
+            $model->update($id, $data);
+            $session->setFlashdata('success', 'Alat berhasil diubah.');
+        } catch (\Exception $e) {
+            $session->setFlashdata('error', 'Alat gagal diubah. Silahkan coba lagi.');
+        }
+
+        return redirect()->to('/daftar-alat');
+    }
+
+    public function deleteAlat($id)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/');
+        }
+
+        $model = new ItemModel();
+        $model->delete($id);
+
+        return redirect()->to('/daftar-alat')->with('success', 'Alat berhasil dihapus.');
     }
     public function daftarPekerjaan()
     {
@@ -1060,7 +1209,7 @@ class Pages extends BaseController
                 if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName])) {
                     $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName] = [
                         'id' => $rab['id'],
-                        'pekerjaan_name' => $pekerjaanName,
+                        'pekerjaan_name' => $rab['name_pekerjaan'],
                         'volume_pekerjaan' => $rab['volume_pekerjaan'],
                         'volume_rab' => $rab['volume_rab'],
                         'nama_satuan' => $rab['nama_satuan'],
@@ -1078,7 +1227,6 @@ class Pages extends BaseController
                     'nama_satuan' => $rab['nama_satuan'],
                     'harga' => $rab['harga'],
                     'koefisien' => $rab['koefisien'],
-                    'koefisien_item' => $rab['koefisien_item'],
                     'profit' => $rab['profit'],
                     'volume_rab' => $rab['volume_rab'],
                     'volume_pekerjaan' => $rab['volume_pekerjaan'],
@@ -1120,20 +1268,21 @@ class Pages extends BaseController
             return redirect()->to('/');
         }
         $rabModel = new RabModel();
+        $rabDetailModel = new RabDetailModel();
         $pekerjaanModel = new PekerjaanModel();
 
         $rab = $rabModel->find($id);
 
         // Ambil data jenis pekerjaan yang sudah dikelompokkan
         $jenis_pekerjaan = $pekerjaanModel->getGroupedJenisPekerjaan();
-        // dd($jenis_pekerjaan);
-        // dd($jenis_pekerjaan['PENGADAAN PIPA DAN AKSESORIS']['subjenis_pekerjaan']['Pengadaan Pipa']['pekerjaan']);
-        // dd($jenis_pekerjaan['PENGADAAN PIPA DAN AKSESORIS']['subjenis_pekerjaan']);
+        $jenis_pekerjaan_rab = $rabDetailModel->getGroupedJenisPekerjaan();
+        // dd($jenis_pekerjaan_rab);
 
         $data = [
             'title' => "Tambah Detail RAB",
             'rab' => $rab,
             'jenis_pekerjaan' => $jenis_pekerjaan,
+            'jenis_pekerjaan_rab' => $jenis_pekerjaan_rab,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
             'avatar' => $session->get('avatar'),
@@ -1150,12 +1299,15 @@ class Pages extends BaseController
         $idRab = $this->request->getPost('id_rab');
         $idPekerjaan = $this->request->getPost('id_pekerjaan');
         $volume = $this->request->getPost('volume');
+        $jenis_pekerjaan = $this->request->getPost('jenis_pekerjaan');
+        $subjenis_pekerjaan = $this->request->getPost('subjenis_pekerjaan');
+        $nama_pekerjaan = $this->request->getPost('nama_pekerjaan');
         $db = \Config\Database::connect();
 
-        $sql = "INSERT INTO rab_detail (id_rab, id_pekerjaan, volume) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO rab_detail (id_rab, jenis_pekerjaan, subjenis_pekerjaan, nama_pekerjaan, id_pekerjaan, volume) VALUES (?, ?, ?, ?, ?, ?)";
 
         // Eksekusi query dengan binding parameter
-        $result = $db->query($sql, [$idRab, $idPekerjaan, $volume]);
+        $result = $db->query($sql, [$idRab, $jenis_pekerjaan, $subjenis_pekerjaan, $nama_pekerjaan, $idPekerjaan, $volume]);
         // dd($data);
 
         if ($result) {
@@ -1180,6 +1332,7 @@ class Pages extends BaseController
         $detail = $rabDetailModel->find($id);
         $rab = $rabModel->find($detail['id_rab']);
         $jenisPekerjaan = $pekerjaanModel->getGroupedJenisPekerjaan();
+        $jenis_pekerjaan_rab = $rabDetailModel->getGroupedJenisPekerjaan();
 
         if ($detail) {
             // Menentukan jenis dan sub jenis pekerjaan yang sudah dipilih
@@ -1187,12 +1340,9 @@ class Pages extends BaseController
             $selected_sub_jenis = null;
 
             foreach ($jenisPekerjaan as $jenis => $data) {
-                foreach ($data['subjenis_pekerjaan'] as $subJenis => $subData) {
-                    if (isset($subData['pekerjaan'][$detail['id_pekerjaan']])) {
-                        $selected_jenis = $jenis;
-                        $selected_sub_jenis = $subJenis;
-                        break 2;
-                    }
+                if (isset($data['pekerjaan'][$detail['id_pekerjaan']])) {
+                    $selected_jenis = $jenis;
+                    break;
                 }
             }
         }
@@ -1204,6 +1354,7 @@ class Pages extends BaseController
                 'detail' => $detail,
                 'rab' => $rab,
                 'jenis_pekerjaan' => $jenisPekerjaan,
+                'jenis_pekerjaan_rab' => $jenis_pekerjaan_rab,
                 'selected_jenis' => $selected_jenis,
                 'selected_sub_jenis' => $selected_sub_jenis,
                 'nama' => $session->get('nama'),
@@ -1229,12 +1380,15 @@ class Pages extends BaseController
         $idRab = $this->request->getPost('id_rab');
         $idPekerjaan = $this->request->getPost('id_pekerjaan');
         $volume = $this->request->getPost('volume');
+        $jenis_pekerjaan = $this->request->getPost('jenis_pekerjaan');
+        $subjenis_pekerjaan = $this->request->getPost('subjenis_pekerjaan');
+        $nama_pekerjaan = $this->request->getPost('nama_pekerjaan');
         $db = \Config\Database::connect();
 
-        $sql = "UPDATE rab_detail SET id_rab = ?, id_pekerjaan = ?, volume = ? WHERE id = ?";
+        $sql = "UPDATE rab_detail SET id_rab = ?, jenis_pekerjaan = ?, subjenis_pekerjaan = ?, nama_pekerjaan = ?, id_pekerjaan = ?, volume = ? WHERE id = ?";
 
         // Execute the query with bound parameters
-        $result = $db->query($sql, [$idRab, $idPekerjaan, $volume, $id]);
+        $result = $db->query($sql, [$idRab, $jenis_pekerjaan, $subjenis_pekerjaan, $nama_pekerjaan, $idPekerjaan, $volume, $id]);
 
         if ($result) {
             // Successful, redirect to the detail page

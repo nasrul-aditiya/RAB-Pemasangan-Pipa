@@ -4,11 +4,11 @@
 <main class="content px-3 py-2">
     <div class="container-fluid">
         <div class="mb-3 text-center">
-            <h4>Tambah Material</h4>
+            <h4><?= esc($title); ?></h4>
         </div>
         <div class="card border-0">
             <div class="card-header">
-                <h5 class="card-title">Form Tambah Material</h5>
+                <h5 class="card-title">Form <?= esc($title); ?></h5>
             </div>
             <div class="card-body">
                 <form action="/daftar-material/store" method="post">
@@ -33,10 +33,6 @@
                                 <option value="<?= $unit['id']; ?>" <?= (old('satuan') == $unit['id']) ? 'selected' : ''; ?>><?= $unit['nama_satuan']; ?></option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="koefisien" class="form-label">Koefisien</label>
-                        <input type="text" class="form-control" id="koefisien" name="koefisien" value="<?= old('koefisien'); ?>" required>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Tambah</button>

@@ -28,7 +28,18 @@ header("Content-Disposition: attachment; filename=rab.xls");
         {
             $angka = (float) $angka;
             $bilangan = array(
-                '', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'
+                '',
+                'Satu',
+                'Dua',
+                'Tiga',
+                'Empat',
+                'Lima',
+                'Enam',
+                'Tujuh',
+                'Delapan',
+                'Sembilan',
+                'Sepuluh',
+                'Sebelas'
             );
 
             if ($angka < 12) {
@@ -152,7 +163,7 @@ header("Content-Disposition: attachment; filename=rab.xls");
                                 <td style="border-right: 2px solid black;" class="col-volume"><?= esc(number_format($pekerjaan['volume_rab'], 2, ',', '.')); ?></td>
                                 <?php foreach ($pekerjaan['items'] as $item) : ?>
                                     <?php
-                                    $jumlahBiaya = $item['harga'] * $item['koefisien_item'] * $item['koefisien'] / $item['volume_pekerjaan'];
+                                    $jumlahBiaya = $item['harga'] * $item['koefisien'] / $item['volume_pekerjaan'];
                                     $jumlahBiayaDenganProfit = $jumlahBiaya * (1 + $item['profit'] / 100);
                                     $totalBiayaDenganProfit = $jumlahBiayaDenganProfit * $item['volume_rab'];
                                     ?>

@@ -76,7 +76,7 @@ class CetakController extends Controller
                 if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName])) {
                     $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName] = [
                         'id' => $rab['id'],
-                        'pekerjaan_name' => $pekerjaanName,
+                        'pekerjaan_name' => $rab['name_pekerjaan'],
                         'volume_pekerjaan' => $rab['volume_pekerjaan'],
                         'volume_rab' => $rab['volume_rab'],
                         'nama_satuan' => $rab['nama_satuan'],
@@ -94,7 +94,6 @@ class CetakController extends Controller
                     'nama_satuan' => $rab['nama_satuan'],
                     'harga' => $rab['harga'],
                     'koefisien' => $rab['koefisien'],
-                    'koefisien_item' => $rab['koefisien_item'],
                     'profit' => $rab['profit'],
                     'volume_rab' => $rab['volume_rab'],
                     'volume_pekerjaan' => $rab['volume_pekerjaan'],
@@ -203,7 +202,7 @@ class CetakController extends Controller
                 if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName])) {
                     $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName] = [
                         'id' => $rab['id'],
-                        'pekerjaan_name' => $pekerjaanName,
+                        'pekerjaan_name' => $rab['name_pekerjaan'],
                         'volume_pekerjaan' => $rab['volume_pekerjaan'],
                         'volume_rab' => $rab['volume_rab'],
                         'nama_satuan' => $rab['nama_satuan'],
@@ -221,7 +220,6 @@ class CetakController extends Controller
                     'nama_satuan' => $rab['nama_satuan'],
                     'harga' => $rab['harga'],
                     'koefisien' => $rab['koefisien'],
-                    'koefisien_item' => $rab['koefisien_item'],
                     'profit' => $rab['profit'],
                     'volume_rab' => $rab['volume_rab'],
                     'volume_pekerjaan' => $rab['volume_pekerjaan'],

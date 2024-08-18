@@ -47,7 +47,6 @@
                             <th scope="col">#</th>
                             <th scope="col">Nama Pekerjaan</th>
                             <th scope="col">Jenis Pekerjaan</th>
-                            <th scope="col">Sub-Jenis Pekerjaan</th>
                             <th scope="col">Overhead & Profit</th>
                             <th scope="col">Aksi</th> <!-- Kolom Aksi -->
                         </tr>
@@ -63,7 +62,6 @@
                                     <th scope="row"><?= $i++; ?></th>
                                     <td><?= esc(number_format($pekerjaan['volume'], 2, ',', '.')) . ' ' . esc($pekerjaan['nama_satuan']) . ' ' . esc($pekerjaan['nama_pekerjaan']); ?></td>
                                     <td><?= $pekerjaan['jenis_pekerjaan']; ?></td>
-                                    <td><?= $pekerjaan['subjenis_pekerjaan']; ?></td>
                                     <td><?= $pekerjaan['profit']; ?>%</td>
                                     <td>
                                         <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-outline-info shadow"><i class="fa-solid fa-file"></i></a>

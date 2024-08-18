@@ -46,7 +46,6 @@
                             <th scope="col">Nama</th>
                             <th scope="col">Satuan</th>
                             <th scope="col">Harga</th>
-                            <th scope="col">Koefisien</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
@@ -62,7 +61,6 @@
                                     <td><?= esc($material['nama_material']); ?></td>
                                     <td><?= esc($material['satuan_nama']); ?></td>
                                     <td>Rp. <?= esc(number_format($material['harga'], 2, ',', '.')); ?></td>
-                                    <td><?= esc(number_format($material['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-material/edit/<?= $material['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
                                         <a href="/daftar-material/delete/<?= $material['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>

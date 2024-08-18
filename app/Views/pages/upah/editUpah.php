@@ -36,10 +36,7 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="koefisien" class="form-label">Koefisien</label>
-                        <input type="text" class="form-control" id="koefisien" name="koefisien" value="<?= esc($upah['koefisien']); ?>" required>
-                    </div>
+
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="/daftar-upah" class="btn btn-secondary">Kembali</a>
                 </form>

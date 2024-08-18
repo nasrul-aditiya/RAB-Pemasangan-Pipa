@@ -24,7 +24,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga</label>
-                        <input type="number" class="form-control" id="harga" name="harga" value="<?= esc($material['harga']); ?>" required>
+                        <input type="number" class="form-control" id="harga" name="harga" value="<?= esc($material['harga']); ?>" step="any" required>
                     </div>
                     <div class="mb-3">
                         <label for="satuan" class="form-label">Satuan</label>
@@ -36,10 +36,7 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="koefisien" class="form-label">Koefisien</label>
-                        <input type="text" class="form-control" id="koefisien" name="koefisien" value="<?= esc($material['koefisien']); ?>" required>
-                    </div>
+
                     <input type="hidden" name="jenis" value="material">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                     <a href="/daftar-material" class="btn btn-secondary">Kembali</a>

@@ -45,7 +45,6 @@
                             <th scope="col">Nama</th>
                             <th scope="col">Satuan</th>
                             <th scope="col">Harga</th>
-                            <th scope="col">Koefisien</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
@@ -61,7 +60,6 @@
                                     <td><?= esc($item['nama_upah']); ?></td>
                                     <td><?= esc($item['satuan_nama']); ?></td>
                                     <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
-                                    <td><?= esc(number_format($item['koefisien'], 2, ',', '.')); ?></td>
                                     <td>
                                         <a href="/daftar-upah/edit/<?= $item['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
                                         <a href="/daftar-upah/delete/<?= $item['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
