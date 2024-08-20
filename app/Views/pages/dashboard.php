@@ -11,32 +11,46 @@
                 <div class="card w-100">
                     <div class="card-body p-0">
                         <div class="row g-0">
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="p-3 m-1">
                                     <p>Daftar Material</p>
                                     <h4><?= $allMaterial; ?></h4>
                                     <p class="mb-0">+<?= $materialsThisMonth; ?> bulan ini</p>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="p-3 m-1">
                                     <p>Daftar Upah</p>
                                     <h4><?= $allUpah; ?></h4>
-                                    <p class="mb-0">+<?= $pekerjasThisMonth; ?> bulan ini</p>
+                                    <p class="mb-0">+<?= $upahsThisMonth; ?> bulan ini</p>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
+                                <div class="p-3 m-1">
+                                    <p>Daftar Alat</p>
+                                    <h4><?= $allAlat; ?></h4>
+                                    <p class="mb-0">+<?= $alatsThisMonth; ?> bulan ini</p>
+                                </div>
+                            </div>
+                            <div class="col-2">
                                 <div class="p-3 m-1">
                                     <p>Daftar Pekerjaan</p>
                                     <h4><?= $allPekerjaan; ?></h4>
                                     <p class="mb-0">+<?= $pekerjaansThisMonth; ?> bulan ini</p>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="p-3 m-1">
                                     <p>Daftar RAB</p>
                                     <h4><?= $allRab; ?></h4>
                                     <p class="mb-0">+<?= $rabsThisMonth; ?> bulan ini</p>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="p-3 m-1">
+                                    <p>Daftar User</p>
+                                    <h4><?= $allUser; ?></h4>
+                                    <p class="mb-0">+<?= $usersThisMonth; ?> bulan ini</p>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +63,7 @@
             <div class="col-xl-9">
                 <div class="card border-0">
                     <div class="card-header">
-                        <h5 class="card-title">Proyek Tahun 2024</h5>
+                        <h5 class="card-title">Proyek Tahun <?php echo date('Y'); ?></h5>
                     </div>
                     <div class="card-body" style="height: 320px">
                         <canvas id="myChart"></canvas>

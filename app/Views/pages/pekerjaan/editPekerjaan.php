@@ -28,12 +28,6 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="sub_jenis" class="form-label">Sub Jenis Pekerjaan</label>
-                        <select class="form-control" id="sub_jenis" name="sub_jenis" required>
-                            <!-- Options will be populated by JavaScript -->
-                        </select>
-                    </div>
-                    <div class="mb-3">
                         <label for="volume" class="form-label">Volume</label>
                         <input type="number" class="form-control" id="volume" name="volume" value="<?= esc($pekerjaan['volume']); ?>" required>
                     </div>
@@ -67,56 +61,12 @@
             tags: "true",
             width: "100%"
         });
-
-        $('#sub_jenis').select2({
-            tags: "true",
-            width: "100%"
-        });
         $('#satuan').select2({
             width: "100%"
         });
-        // Data sub jenis pekerjaan, dikelompokkan berdasarkan jenis pekerjaan
-        const subJenisData = <?= json_encode($jenis_pekerjaan, JSON_HEX_TAG); ?>;
-        const selectedSubJenis = <?= json_encode($pekerjaan['subjenis_pekerjaan']); ?>;
-
-        // Update dropdown sub_jenis sesuai pilihan jenis pekerjaan
-        function updateSubJenisSelect(selectedJenis) {
-            // Kosongkan opsi sebelumnya
-            $('#sub_jenis').empty().append('<option value="">-- Pilih Sub Jenis Pekerjaan --</option>');
-
-            // Tambahkan opsi baru berdasarkan pilihan jenis pekerjaan
-            if (subJenisData[selectedJenis]) {
-                for (const subJenis in subJenisData[selectedJenis]['subjenis_pekerjaan']) {
-                    const option = new Option(
-                        subJenisData[selectedJenis]['subjenis_pekerjaan'][subJenis]['sub_jenis'],
-                        subJenis,
-                        false,
-                        subJenis === selectedSubJenis
-                    );
-                    $('#sub_jenis').append(option);
-                }
-                $('#sub_jenis').trigger('change'); // Refresh Select2
-            }
-        }
-
-        // Event listener untuk perubahan pilihan jenis pekerjaan
-        $('#jenis').on('change', function() {
-            const selectedJenis = $(this).val();
-            updateSubJenisSelect(selectedJenis);
-        });
-
-        // Inisialisasi dropdown sub_jenis saat halaman dimuat
-        updateSubJenisSelect($('#jenis').val());
 
         // Focus on the search input when the dropdown is opened
         $('#jenis').on('select2:open', function() {
-            // Focus on the search input field
-            setTimeout(function() {
-                document.querySelector('.select2-container--open .select2-search__field').focus();
-            }, 100); // Add a slight delay to ensure the dropdown is fully rendered
-        });
-        // Focus on the search input when the dropdown is opened
-        $('#sub_jenis').on('select2:open', function() {
             // Focus on the search input field
             setTimeout(function() {
                 document.querySelector('.select2-container--open .select2-search__field').focus();

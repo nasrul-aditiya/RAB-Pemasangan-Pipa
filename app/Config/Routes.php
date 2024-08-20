@@ -5,7 +5,8 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Login::index');
+$routes->get('/login', 'Login::index');
+$routes->get('/', 'Pages::landing');
 $routes->post('/auth', 'Login::auth');
 $routes->get('/logout', 'Login::logout');
 $routes->get('/kelola-akun', 'Pages::kelolaAkun');

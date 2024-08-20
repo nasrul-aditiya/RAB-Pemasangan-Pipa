@@ -14,7 +14,8 @@ class PekerjaanModel extends Model
     public function getPekerjaanWithDetails($num, $keyword = null)
     {
         $this->select('pekerjaan.id, pekerjaan.nama AS nama_pekerjaan, pekerjaan.jenis_pekerjaan,  pekerjaan.volume, pekerjaan.profit, pekerjaan.satuan, satuan.nama_satuan')
-            ->join('satuan', 'pekerjaan.satuan = satuan.id');
+            ->join('satuan', 'pekerjaan.satuan = satuan.id')
+            ->orderBy('pekerjaan.id', 'DESC');
 
         if ($keyword) {
             $this->groupStart()

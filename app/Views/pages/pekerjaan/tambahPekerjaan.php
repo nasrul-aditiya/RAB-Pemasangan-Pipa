@@ -27,12 +27,6 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="sub_jenis" class="form-label">Sub Jenis Pekerjaan</label>
-                        <select class="form-control" id="sub_jenis" name="sub_jenis" required>
-                            <option value="">-- Pilih Sub Jenis Pekerjaan --</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
                         <label for="volume" class="form-label">Volume</label>
                         <input type="number" class="form-control" id="volume" name="volume" required>
                     </div>
@@ -66,48 +60,10 @@
             tags: "true",
             width: "100%"
         });
-
-        $('#sub_jenis').select2({
-            placeholder: "-- Pilih Sub Jenis Pekerjaan --",
-            tags: "true",
-            width: "100%"
-        });
         $('#satuan').select2({
             placeholder: "-- Pilih Satuan --",
             width: "100%"
         });
-
-        // Ambil elemen select
-        const jenis2Select = $('#jenis2');
-        const subJenisSelect = $('#sub_jenis');
-
-        // Data sub jenis pekerjaan
-        const subJenisData = <?= json_encode($jenis_pekerjaan, JSON_HEX_TAG); ?>;
-
-        // Event listener untuk perubahan jenis pekerjaan
-        jenis2Select.on('change', function() {
-            const selectedJenis2 = $(this).val();
-            updateSubJenisSelect(selectedJenis2);
-        });
-
-        // Fungsi untuk memperbarui sub jenis
-        function updateSubJenisSelect(selectedJenis2) {
-            // Kosongkan opsi sebelumnya
-            subJenisSelect.empty().append('<option value="">-- Pilih Sub Jenis Pekerjaan --</option>');
-
-            // Cek apakah sub jenis data tersedia
-            if (subJenisData[selectedJenis2] && subJenisData[selectedJenis2]['subjenis_pekerjaan']) {
-                // Iterasi dan tambahkan setiap sub jenis pekerjaan ke dropdown
-                Object.entries(subJenisData[selectedJenis2]['subjenis_pekerjaan']).forEach(([key, value]) => {
-                    const option = new Option(value['sub_jenis'], key, false, false);
-                    subJenisSelect.append(option);
-                });
-            }
-
-            // Refresh select2 untuk sub jenis
-            subJenisSelect.trigger('change');
-        }
-
         // Focus on the search input when the dropdown is opened
         $('#jenis2').on('select2:open', function() {
             // Focus on the search input field
@@ -115,13 +71,7 @@
                 document.querySelector('.select2-container--open .select2-search__field').focus();
             }, 100); // Add a slight delay to ensure the dropdown is fully rendered
         });
-        // Focus on the search input when the dropdown is opened
-        $('#sub_jenis').on('select2:open', function() {
-            // Focus on the search input field
-            setTimeout(function() {
-                document.querySelector('.select2-container--open .select2-search__field').focus();
-            }, 100); // Add a slight delay to ensure the dropdown is fully rendered
-        });
+
         // Focus on the search input when the dropdown is opened
         $('#satuan').on('select2:open', function() {
             // Focus on the search input field

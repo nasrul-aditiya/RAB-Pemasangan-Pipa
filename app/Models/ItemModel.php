@@ -114,6 +114,18 @@ class ItemModel extends Model
             ->where('item.jenis', 'alat')
             ->findAll();
     }
+    public function countAlatsThisMonth()
+    {
+        return $this->where('MONTH(created_at)', date('m'))
+            ->where('item.jenis', 'alat')
+            ->where('YEAR(created_at)', date('Y'))
+            ->countAllResults();
+    }
+    public function countAllAlat()
+    {
+        return $this->where('item.jenis', 'alat')
+            ->countAllResults();
+    }
     public function getItem($id)
     {
         return $this->find($id);

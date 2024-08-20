@@ -13,11 +13,13 @@
             <div class="card-body">
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-9 text-md-start">
-                        <a href="/daftar-upah/tambah" class="btn btn-outline-primary shadow"><i class="fas fa-plus"></i></a>
+                        <?php if (isset($role) && ($role == "Kepala Regu" || $role == "Admin")) : ?>
+                            <a href="/daftar-upah/tambah" class="btn btn-outline-primary shadow"><i class="fas fa-plus"></i></a>
+                        <?php endif; ?>
                     </div>
                     <div class="col-md-3 text-md-end">
                         <form action="/daftar-upah" method="GET" class="form-inline">
-                            <div class="input-group">
+                            <div class="input-group shadow">
                                 <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2" value="<?= esc($keyword); ?>">
                                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
                             </div>
@@ -26,7 +28,7 @@
                     <div class="row mb-3 mt-3 align-items-center">
                         <div class="col-md-1 text-md-start">
                             <form action="/daftar-upah" method="GET" class="form-inline">
-                                <div class="input-group">
+                                <div class="input-group shadow">
                                     <select class="form-select" name="per_page" id="perPageSelect" onchange="this.form.submit()">
                                         <option value="5" <?= ($perPage == 5) ? 'selected' : ''; ?>>5</option>
                                         <option value="10" <?= ($perPage == 10) ? 'selected' : ''; ?>>10</option>
@@ -45,7 +47,9 @@
                             <th scope="col">Nama</th>
                             <th scope="col">Satuan</th>
                             <th scope="col">Harga</th>
-                            <th scope="col">Aksi</th>
+                            <?php if (isset($role) && ($role == "Kepala Regu" || $role == "Admin")) : ?>
+                                <th scope="col">Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,8 +65,10 @@
                                     <td><?= esc($item['satuan_nama']); ?></td>
                                     <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
                                     <td>
-                                        <a href="/daftar-upah/edit/<?= $item['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/daftar-upah/delete/<?= $item['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                        <?php if (isset($role) && ($role == "Kepala Regu" || $role == "Admin")) : ?>
+                                            <a href="/daftar-upah/edit/<?= $item['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a href="/daftar-upah/delete/<?= $item['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

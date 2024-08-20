@@ -41,7 +41,7 @@
             </div>
             <div class="card-body">
                 <div class="row justify-content-center mb-3">
-                    <div class="capsule">
+                    <div class="capsule shadow">
                         <div class="capsule-item <?= ($filter == 'dibuat') ? 'active' : '' ?>" onclick="window.location.href='?filter=dibuat'">Dibuat</div>
                         <div class="capsule-item <?= ($filter == 'diperiksa') ? 'active' : '' ?>" onclick="window.location.href='?filter=diperiksa'">Diperiksa</div>
                         <div class="capsule-item <?= ($filter == 'diverifikasi') ? 'active' : '' ?>" onclick="window.location.href='?filter=diverifikasi'">Diverifikasi</div>
@@ -51,7 +51,7 @@
                 <div class="row mb-3 align-items-center">
                     <!-- Button Add -->
                     <div class="col-md-9 text-md-start">
-                        <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                        <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
                             <a href="/daftar-rab/tambah" class="btn btn-outline-primary shadow"><i class="fas fa-plus"></i></a>
                         <?php endif; ?>
                     </div>
@@ -60,7 +60,7 @@
                         <form action="/daftar-rab" method="GET" class="form-inline">
                             <input type="hidden" name="filter" value="<?= esc($filter); ?>">
                             <input type="hidden" name="per_page" value="<?= esc($perPage); ?>">
-                            <div class="input-group">
+                            <div class="input-group shadow">
                                 <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2" value="<?= esc($keyword); ?>">
                                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
                             </div>
@@ -71,7 +71,7 @@
                             <form action="/daftar-rab" method="GET" class="form-inline">
                                 <input type="hidden" name="filter" value="<?= esc($filter); ?>">
                                 <input type="hidden" name="keyword" value="<?= esc($keyword); ?>">
-                                <div class="input-group">
+                                <div class="input-group shadow">
                                     <select class="form-select" name="per_page" id="perPageSelect" onchange="this.form.submit()">
                                         <option value="5" <?= ($perPage == 5) ? 'selected' : ''; ?>>5</option>
                                         <option value="10" <?= ($perPage == 10) ? 'selected' : ''; ?>>10</option>
@@ -109,32 +109,32 @@
                                     <td><?= esc($rab['tanggal']); ?></td>
                                     <td>
                                         <a href="/daftar-rab/detail/<?= $rab['id']; ?>" class="btn btn-outline-info shadow"><i class="fa-solid fa-file"></i></a>
-                                        <?php if (isset($role) && $role == "Kepala Regu") : ?>
+                                        <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
                                             <?php if (isset($filter) && $filter == "dibuat") : ?>
-                                                <?php if ($rab['pembuat'] == 0) : ?>
+                                                <?php if (is_null($rab['pembuat'])) : ?>
                                                     <a href="/daftar-rab/edit/<?= $rab['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
                                                     <a href="/daftar-rab/delete/<?= $rab['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
                                                     <a href="/daftar-rab/dibuat/<?= $rab['id']; ?>" class="btn btn-outline-success shadow btn-dibuat"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
-                                        <?php if (isset($role) && $role == "Kasi") : ?>
+                                        <?php if (isset($role) && $role == "Kasi" || $role == "Admin") : ?>
                                             <?php if (isset($filter) && $filter == "dibuat") : ?>
-                                                <?php if ($rab['pemeriksa'] == 0) : ?>
+                                                <?php if (is_null($rab['pemeriksa']) && !is_null($rab['pembuat'])) : ?>
                                                     <a href="/daftar-rab/diperiksa/<?= $rab['id']; ?>" class="btn btn-outline-success shadow btn-verifikasi"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
-                                        <?php if (isset($role) && $role == "Kabag") : ?>
+                                        <?php if (isset($role) && $role == "Kabag" || $role == "Admin") : ?>
                                             <?php if (isset($filter) && $filter == "diperiksa") : ?>
-                                                <?php if ($rab['disetujui'] == 0) : ?>
+                                                <?php if (is_null($rab['disetujui'])) : ?>
                                                     <a href="/daftar-rab/diverifikasi/<?= $rab['id']; ?>" class="btn btn-outline-success shadow btn-verifikasi"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
-                                        <?php if (isset($role) && $role == "Dirtek") : ?>
+                                        <?php if (isset($role) && $role == "Dirtek" || $role == "Admin") : ?>
                                             <?php if (isset($filter) && $filter == "diverifikasi") : ?>
-                                                <?php if ($rab['mengetahui'] == 0) : ?>
+                                                <?php if (is_null($rab['mengetahui'])) : ?>
                                                     <a href="/daftar-rab/disetujui/<?= $rab['id']; ?>" class="btn btn-outline-success shadow btn-verifikasi"><i class="fas fa-check"></i></a>
                                                 <?php endif; ?>
                                             <?php endif; ?>

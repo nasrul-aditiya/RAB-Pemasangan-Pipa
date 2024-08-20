@@ -40,4 +40,14 @@ class UserModel extends Model
         // Update data pengguna berdasarkan ID
         return $this->update($id, $data);
     }
+    public function countUsersThisMonth()
+    {
+        return $this->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
+            ->countAllResults();
+    }
+    public function countAllUsers()
+    {
+        return $this->countAllResults();
+    }
 }

@@ -20,7 +20,7 @@
                     <!-- Search Bar -->
                     <div class="col-md-3 text-md-end">
                         <form action="/daftar-pekerjaan" method="GET" class="form-inline">
-                            <div class="input-group">
+                            <div class="input-group shadow">
                                 <input type="text" name="keyword" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2" value="<?= esc($keyword); ?>">
                                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
                             </div>
@@ -29,7 +29,7 @@
                     <div class="row mb-3 mt-3 align-items-center">
                         <div class="col-md-1 text-md-start">
                             <form action="/daftar-pekerjaan" method="GET" class="form-inline">
-                                <div class="input-group">
+                                <div class="input-group shadow">
                                     <select class="form-select" name="per_page" id="perPageSelect" onchange="this.form.submit()">
                                         <option value="5" <?= ($perPage == 5) ? 'selected' : ''; ?>>5</option>
                                         <option value="10" <?= ($perPage == 10) ? 'selected' : ''; ?>>10</option>

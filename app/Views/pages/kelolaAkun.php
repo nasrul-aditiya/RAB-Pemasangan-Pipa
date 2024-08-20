@@ -49,16 +49,11 @@
                             <input type="hidden" name="role" value="<?= esc($user['role']); ?>">
                             <input type="hidden" name="avatar" value="<?= esc($user['avatar']); ?>">
                             <input type="hidden" name="jabatan" value="<?= esc($user['jabatan']); ?>">
+                            <input type="hidden" name="nama" value="<?= esc($user['nama']); ?>">
                             <div class="mb-3 row">
                                 <label for="username" class="col-sm-2 col-form-label">Username</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="username" name="username" value="<?= esc($user['username']); ?>">
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label for="nama" class="col-sm-2 col-form-label">Nama</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="nama" name="nama" value="<?= esc($user['nama']); ?>">
                                 </div>
                             </div>
                             <div class="mb-3 row">
