@@ -62,7 +62,7 @@
                             <?php foreach ($materials['material'] as $material) : ?>
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
-                                    <td><?= esc($material['nama_material']); ?></td>
+                                    <td><?= esc($material['kode']); ?> <?= esc($material['nama_material']); ?></td>
                                     <td><?= esc($material['satuan_nama']); ?></td>
                                     <td>Rp. <?= esc(number_format($material['harga'], 2, ',', '.')); ?></td>
                                     <td>

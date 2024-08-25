@@ -42,7 +42,7 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="profit" class="form-label">Overhead & Profit (%)</label>
+                        <label for="profit" class="form-label">Overhead & Profit (%) <span class="opsi">(Opsional)</span></label>
                         <input type="number" class="form-control" id="profit" name="profit" value="<?= esc($pekerjaan['profit']); ?>" step="0.01" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>

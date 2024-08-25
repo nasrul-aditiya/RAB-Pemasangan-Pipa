@@ -323,3 +323,6 @@ html[data-bs-theme="light"] .theme-toggle .fa-sun {
   align-items: center;
   gap: 0.6rem;
 }
+.opsi {
+  color: #696969;
+}

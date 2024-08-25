@@ -40,7 +40,7 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="profit" class="form-label">Overhead & Profit (%)</label>
+                        <label for="profit" class="form-label">Overhead & Profit (%) <span class="opsi">(Opsional)</span></label>
                         <input type="number" class="form-control" id="profit" name="profit">
                     </div>
                     <button type="submit" class="btn btn-primary">Tambah</button>

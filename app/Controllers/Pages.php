@@ -3,12 +3,10 @@
 namespace App\Controllers;
 
 use IntlDateFormatter;
-use App\Models\ChartModel;
 use App\Models\ItemModel;
 use App\Models\UserModel;
 use App\Models\SatuanModel;
 use App\Models\PekerjaanModel;
-use App\Models\JenisPekerjaanModel;
 use App\Models\PekerjaanDetailModel;
 use App\Models\RabModel;
 use App\Models\RabDetailModel;
@@ -60,7 +58,6 @@ class Pages extends BaseController
         $allUser = $userModel->countAllUsers();
         $usersThisMonth = $userModel->countUsersThisMonth();
 
-        $model = new ChartModel();
         $data = [
             'title' => "Dashboard",
             'nama' => $session->get('nama'),
@@ -126,6 +123,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $satuanModel = new SatuanModel();
         $data = [
@@ -145,16 +145,20 @@ class Pages extends BaseController
             return redirect()->to('/login');
         }
 
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+
         $model = new ItemModel();
         // Retrieve form input
         $nama = $this->request->getVar('nama');
-        $kode = $this->request->getVar('kode');
+        $kode = $this->request->getVar('kode') ?: null;
         $satuan = $this->request->getVar('satuan');
         $harga = $this->request->getVar('harga');
         $koefisien = $this->request->getVar('koefisien');
 
-        // Check if the kode already exists
-        if ($model->where('kode', $kode)->first()) {
+        // Check if the kode is not null and already exists
+        if (!is_null($kode) && $model->where('kode', $kode)->first()) {
             $session->setFlashdata('error', 'Kode material sudah ada, silakan gunakan kode lain.');
             return redirect()->to('/daftar-material/tambah')->withInput();
         }
@@ -185,6 +189,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new ItemModel();
         $material = $model->find($id);
@@ -211,23 +218,30 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new ItemModel();
         $data = [
             'nama' => $this->request->getPost('nama'),
-            'kode' => $this->request->getPost('kode'),
+            'kode' => $this->request->getPost('kode') ?: null, // Set to null if empty
             'harga' => $this->request->getPost('harga'),
             'satuan' => $this->request->getPost('satuan'),
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'material', // Tetap 'material'
         ];
-        // Check if the kode already exists
-        $existingData = $model->where('kode', $data['kode'])->first();
 
-        if ($existingData && $existingData['id'] != $id) {
-            $session->setFlashdata('error', 'Kode material sudah ada, silakan gunakan kode lain.');
-            return redirect()->to('/daftar-material/edit/' . $id)->withInput();
+        // Check if the kode already exists, and only perform this check if 'kode' is not null
+        if (!is_null($data['kode'])) {
+            $existingData = $model->where('kode', $data['kode'])->first();
+
+            if ($existingData && $existingData['id'] != $id) {
+                $session->setFlashdata('error', 'Kode material sudah ada, silakan gunakan kode lain.');
+                return redirect()->to('/daftar-material/edit/' . $id)->withInput();
+            }
         }
+
         try {
             $model->update($id, $data);
             $session->setFlashdata('success', 'Material berhasil diubah.');
@@ -238,11 +252,15 @@ class Pages extends BaseController
         return redirect()->to('/daftar-material');
     }
 
+
     public function deleteMaterial($id)
     {
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $model = new ItemModel();
@@ -288,6 +306,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $satuanModel = new SatuanModel();
         $data = [
@@ -306,18 +327,21 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new ItemModel();
         $data = [
             'nama' => $this->request->getPost('nama'),
-            'kode' => $this->request->getPost('kode'),
+            'kode' => $this->request->getPost('kode') ?: null,
             'harga' => $this->request->getPost('harga'),
             'satuan' => $this->request->getPost('satuan'),
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'upah',
         ];
         // Check if the kode already exists
-        if ($model->where('kode', $data['kode'])->first()) {
+        if (!is_null($data['kode']) && $model->where('kode', $data['kode'])->first()) {
             $session->setFlashdata('error', 'Kode upah sudah ada, silakan gunakan kode lain.');
             return redirect()->to('/daftar-upah/tambah')->withInput();
         }
@@ -336,6 +360,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $model = new ItemModel();
@@ -363,21 +390,26 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new ItemModel();
         $data = [
             'nama' => $this->request->getPost('nama'),
-            'kode' => $this->request->getPost('kode'),
+            'kode' => $this->request->getPost('kode') ?: null,
             'harga' => $this->request->getPost('harga'),
             'satuan' => $this->request->getPost('satuan'),
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'upah',
         ];
-        $existingData = $model->where('kode', $data['kode'])->first();
+        if (!is_null($data['kode'])) {
+            $existingData = $model->where('kode', $data['kode'])->first();
 
-        if ($existingData && $existingData['id'] != $id) {
-            $session->setFlashdata('error', 'Kode upah sudah ada, silakan gunakan kode lain.');
-            return redirect()->to('/daftar-upah/edit/' . $id)->withInput();
+            if ($existingData && $existingData['id'] != $id) {
+                $session->setFlashdata('error', 'Kode upah sudah ada, silakan gunakan kode lain.');
+                return redirect()->to('/daftar-upah/edit/' . $id)->withInput();
+            }
         }
         try {
             $model->update($id, $data);
@@ -394,6 +426,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $model = new ItemModel();
@@ -434,6 +469,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $satuanModel = new SatuanModel();
         $data = [
@@ -452,18 +490,21 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new ItemModel();
         $data = [
             'nama' => $this->request->getPost('nama'),
-            'kode' => $this->request->getPost('kode'),
+            'kode' => $this->request->getPost('kode') ?: null,
             'harga' => $this->request->getPost('harga'),
             'satuan' => $this->request->getPost('satuan'),
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'alat',
         ];
         // Check if the kode already exists
-        if ($model->where('kode', $data['kode'])->first()) {
+        if (!is_null($data['kode']) && $model->where('kode', $data['kode'])->first()) {
             $session->setFlashdata('error', 'Kode alat sudah ada, silakan gunakan kode lain.');
             return redirect()->to('/daftar-alat/tambah')->withInput();
         }
@@ -482,6 +523,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $model = new ItemModel();
@@ -509,21 +553,26 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new ItemModel();
         $data = [
             'nama' => $this->request->getPost('nama'),
-            'kode' => $this->request->getPost('kode'),
+            'kode' => $this->request->getPost('kode') ?: null,
             'harga' => $this->request->getPost('harga'),
             'satuan' => $this->request->getPost('satuan'),
             'koefisien' => $this->request->getPost('koefisien'),
             'jenis' => 'alat',
         ];
-        $existingData = $model->where('kode', $data['kode'])->first();
+        if (!is_null($data['kode'])) {
+            $existingData = $model->where('kode', $data['kode'])->first();
 
-        if ($existingData && $existingData['id'] != $id) {
-            $session->setFlashdata('error', 'Kode alat sudah ada, silakan gunakan kode lain.');
-            return redirect()->to('/daftar-alat/edit/' . $id)->withInput();
+            if ($existingData && $existingData['id'] != $id) {
+                $session->setFlashdata('error', 'Kode alat sudah ada, silakan gunakan kode lain.');
+                return redirect()->to('/daftar-alat/edit/' . $id)->withInput();
+            }
         }
         try {
             $model->update($id, $data);
@@ -540,6 +589,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $model = new ItemModel();
@@ -583,6 +635,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $satuanModel = new SatuanModel();
         $pekerjaanModel = new PekerjaanModel();
@@ -621,6 +676,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new PekerjaanModel();
         $data = [
@@ -646,6 +704,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $model = new PekerjaanModel();
@@ -691,6 +752,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new PekerjaanModel();
         $data = [
@@ -716,6 +780,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $model = new PekerjaanModel();
@@ -757,6 +824,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $pekerjaanModel = new PekerjaanModel();
         $itemModel = new ItemModel();
@@ -779,6 +849,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
@@ -803,6 +876,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
@@ -844,6 +920,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
 
@@ -866,6 +945,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $pekerjaanDetailModel = new PekerjaanDetailModel();
@@ -1072,6 +1154,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
         $data = [
             'title' => "Tambah RAB"
         ];
@@ -1083,8 +1168,17 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new RabModel();
+        $id_rab = $this->request->getVar('id_rab');
+
+        if ($model->where('id_rab', $id_rab)->first()) {
+            $session->setFlashdata('error', 'Nomor RAB sudah ada, silakan gunakan nomor RAB lain.');
+            return redirect()->to('/daftar-rab/tambah')->withInput();
+        }
 
         $data = [
             'id_rab'     => $this->request->getVar('id_rab'),
@@ -1107,6 +1201,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $model = new RabModel();
@@ -1133,6 +1230,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new RabModel();
         $data = [
@@ -1156,6 +1256,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $model = new RabModel();
         $rab = $model->find($id);
@@ -1177,21 +1280,19 @@ class Pages extends BaseController
         $rabModel = new RabDetailModel();
         $model = new RabModel();
         $rabs = $model->find($id);
+
         $rabDetails = $rabModel->getRabDetailsWithTotal($id);
         $mengetahui = $model->getRabWithMengetahui($id);
-        // dd($rabDetails);
 
-        // Group the results by id_rab and jenis_pekerjaan
+
         $groupedRabDetails = [];
         foreach ($rabDetails as $rab) {
-            // Ensure $rab is an array
             if (is_array($rab)) {
                 $rabId = $rab['id_rab'];
                 $jenisPekerjaan = $rab['jenis'];
                 $subJenis = $rab['sub_jenis'];
                 $pekerjaanName = $rab['pekerjaan_name'];
 
-                // Initialize the RAB grouping if not already set
                 if (!isset($groupedRabDetails[$rabId])) {
                     $groupedRabDetails[$rabId] = [
                         'id_rab' => $rab['id_rab'],
@@ -1200,29 +1301,23 @@ class Pages extends BaseController
                         'jenis_pekerjaan' => [],
                         'jenis' => $rab['jenis'],
                         'administrasi' => $rab['administrasi'],
-                        'total_biaya' => 0,
                     ];
                 }
-
-                // Initialize the jenis_pekerjaan grouping if not already set
                 if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan])) {
                     $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan] = [
                         'jenis' => $jenisPekerjaan,
                         'jenis_pekerjaan' => $rab['jenis'],
                         'sub_jenis' => $rab['sub_jenis'],
-                        'total_biaya_jenis' => 0,
                         'sub_pekerjaan' => [],
                     ];
                 }
-
-                // Initialize the pekerjaan grouping if not already set
                 if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis])) {
                     $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis] = [
                         'sub_jenis' => $subJenis,
                         'pekerjaan' => [],
                     ];
                 }
-                // Initialize the pekerjaan grouping if not already set
+
                 if (!isset($groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName])) {
                     $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName] = [
                         'id' => $rab['id'],
@@ -1231,14 +1326,9 @@ class Pages extends BaseController
                         'volume_rab' => $rab['volume_rab'],
                         'nama_satuan' => $rab['nama_satuan'],
                         'items' => [],
-                        'total_biaya_pekerjaan' => 0,
                     ];
                 }
 
-                // Calculate total biaya for each item
-                $totalBiayaItem = $rab['volume_rab'] * $rab['harga'];
-
-                // Add item details with total biaya
                 $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName]['items'][] = [
                     'item_name' => $rab['item_name'],
                     'nama_satuan' => $rab['nama_satuan'],
@@ -1247,22 +1337,13 @@ class Pages extends BaseController
                     'profit' => $rab['profit'],
                     'volume_rab' => $rab['volume_rab'],
                     'volume_pekerjaan' => $rab['volume_pekerjaan'],
-                    'total_biaya' => $totalBiayaItem,
                 ];
-
-                // Add to total biaya for this pekerjaan
-                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['sub_pekerjaan'][$subJenis]['pekerjaan'][$pekerjaanName]['total_biaya_pekerjaan'] += $totalBiayaItem;
-
-                // Add to total biaya for this jenis pekerjaan
-                $groupedRabDetails[$rabId]['jenis_pekerjaan'][$jenisPekerjaan]['total_biaya_jenis'] += $totalBiayaItem;
-                // Add to total biaya for this RAB
-                $groupedRabDetails[$rabId]['total_biaya'] += $totalBiayaItem;
             } else {
-                // Handle the error if $rab is not an array
+
                 error_log('Unexpected data structure for $rab: ' . print_r($rab, true));
             }
         }
-        // dd($groupedRabDetails);
+
         $data = [
             'title' => "Detail RAB",
             'rab' => $rabs,
@@ -1273,7 +1354,6 @@ class Pages extends BaseController
             'role' => $session->get('role'),
             'avatar' => $session->get('avatar'),
         ];
-        // dd($data);
 
         return view('pages/rab/detailRab', $data);
     }
@@ -1284,6 +1364,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
         $rabModel = new RabModel();
         $rabDetailModel = new RabDetailModel();
@@ -1313,6 +1396,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $idRab = $this->request->getPost('id_rab');
         $idPekerjaan = $this->request->getPost('id_pekerjaan');
@@ -1340,6 +1426,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $rabModel = new RabModel();
@@ -1393,6 +1482,9 @@ class Pages extends BaseController
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
 
         $id = $this->request->getPost('id');
         $idRab = $this->request->getPost('id_rab');
@@ -1423,6 +1515,9 @@ class Pages extends BaseController
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
+        }
+        if ($session->get('role') !== 'Admin' && $session->get('role') !== 'Kepala Regu') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         $rabDetailModel = new RabDetailModel();
@@ -1677,6 +1772,6 @@ class Pages extends BaseController
             $session->setFlashdata('error', 'Akun gagal diperbarui. Silahkan coba lagi.');
         }
 
-        return redirect()->back();
+        return redirect()->to('/dashboard');
     }
 }

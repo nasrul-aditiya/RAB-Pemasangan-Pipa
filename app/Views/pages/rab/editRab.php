@@ -36,7 +36,7 @@
                         <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?= esc($rab['tanggal']); ?>">
                     </div>
                     <div class="mb-3">
-                        <label for="administrasi" class="form-label">Biaya Administrasi</label>
+                        <label for="administrasi" class="form-label">Biaya Administrasi <span class="opsi">(Opsional)</span></label>
                         <input type="number" class="form-control" id="administrasi" name="administrasi" value="<?= esc($rab['administrasi']); ?>">
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>

@@ -102,7 +102,7 @@
         </header>
         <div class="content">
             <div class="textBox">
-                <h2>Mudah Membuat RAB<br> Dengan <span>E-rab</span></h2>
+                <h2>Mudah Membuat RAB<br> Dengan <span>e-RAB</span></h2>
                 <p>Nikmati Kemudahan dan Kecepatan dalam Membuat Rencana Anggaran Biaya untuk Proyek Anda, dengan Fitur-Fitur yang Siap Membantu Anda Mengelola Setiap Detail dari Awal Hingga Akhir.</p>
                 <a href="/login">Mulai Sekarang</a>
             </div>

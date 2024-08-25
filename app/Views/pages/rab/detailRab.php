@@ -15,11 +15,13 @@
                     <!-- Button Add -->
                     <div class="col-md-9 text-md-start">
                         <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                            <a href="/daftar-rab/detail/tambah/<?= $rab['id']; ?>" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                            <?php if (is_null($rab['pembuat'])) : ?>
+                                <a href="/daftar-rab/detail/tambah/<?= $rab['id']; ?>" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                     <div class="col-md-3 text-md-end">
-                        <?php if (isset($rab) && $rab['mengetahui'] != "0") : ?>
+                        <?php if (isset($rab) && $rab['mengetahui'] !== null) : ?>
                             <a href="/daftar-rab/detail/cetak/<?= $id; ?>" target="_blank" class="btn btn-outline-danger shadow float-right ml-2">PDF<i class="fa-solid fa-file-pdf"></i></i></a>
                             <a href="/daftar-rab/detail/excel/<?= $id; ?>" target="_blank" class="btn btn-outline-success shadow float-right">Excel <i class="fa-solid fa-file-excel"></i></a>
                         <?php endif; ?>
@@ -35,7 +37,7 @@
                             <th scope="col">Harga</th>
                             <th scope="col">Jumlah Biaya</th>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th scope="col">Aksi</th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -64,7 +66,7 @@
                                     <th><?= $jenisPekerjaan['jenis']; ?></th>
                                     <td colspan="4"></td>
                                     <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                        <?php if (is_null($mengetahui)) : ?>
+                                        <?php if (is_null($rab['pembuat'])) : ?>
                                             <th></th>
                                         <?php endif; ?>
                                     <?php endif; ?>
@@ -77,7 +79,7 @@
                                         <th><?= $subPekerjaan['sub_jenis']; ?></th>
                                         <td colspan="4"></td>
                                         <?php if (isset($role) && $role == "Kepala Regu") : ?>
-                                            <?php if (is_null($mengetahui)) : ?>
+                                            <?php if (is_null($rab['pembuat'])) : ?>
                                                 <th></th>
                                             <?php endif; ?>
                                         <?php endif; ?>
@@ -116,7 +118,7 @@
                                             <td>Rp. <?= esc(number_format($totalHargaSatuan, 2, ',', '.')); ?></td>
                                             <td>Rp. <?= esc(number_format($totalBiayaPekerjaanIndividu, 2, ',', '.')); ?></td>
                                             <?php if (isset($role) && $role == "Kepala Regu"  || $role == "Admin") : ?>
-                                                <?php if (is_null($mengetahui)) : ?>
+                                                <?php if (is_null($rab['pembuat'])) : ?>
                                                     <td>
                                                         <a href="/daftar-rab/detail/edit/<?= $pekerjaan['id']; ?>" class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></a>
                                                         <a href="/daftar-rab/detail/delete/<?= $pekerjaan['id']; ?>" class="btn btn-danger btn-hapus"><i class="fa-solid fa-trash"></i></a>
@@ -133,7 +135,7 @@
                                         <th>Total</th>
                                         <th>Rp. <?= esc(number_format($totalBiayaSubPekerjaan, 2, ',', '.')); ?></th>
                                         <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                            <?php if (is_null($mengetahui)) : ?>
+                                            <?php if (is_null($rab['pembuat'])) : ?>
                                                 <th></th>
                                             <?php endif; ?>
                                         <?php endif; ?>
@@ -151,7 +153,7 @@
                                     <th colspan="3"></th>
                                     <th>Rp. <?= esc(number_format($totalBiayaPekerjaan, 2, ',', '.')); ?></th>
                                     <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                        <?php if (is_null($mengetahui)) : ?>
+                                        <?php if (is_null($rab['pembuat'])) : ?>
                                             <th></th>
                                         <?php endif; ?>
                                     <?php endif; ?>
@@ -173,7 +175,7 @@
                             <th>BIAYA LAIN-LAIN</th>
                             <td colspan="4"></td>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -188,7 +190,7 @@
                             <td>Rp. <?= esc(number_format($hargaSurvey, 2, ',', '.')); ?></td>
                             <td>Rp. <?= esc(number_format($hargaSurvey, 2, ',', '.')); ?></td>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -203,7 +205,7 @@
                             <td>Rp. <?= esc(number_format($hargaPengawasan, 2, ',', '.')); ?></td>
                             <td>Rp. <?= esc(number_format($hargaPengawasan, 2, ',', '.')); ?></td>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -213,13 +215,21 @@
                             <th>
                                 <span style="margin-left: 10px;">Biaya Administrasi</span>
                             </th>
-                            <td>ls</td>
-                            <td>1.00</td>
                             <?php foreach ($items as $item) : ?>
+                                <?php if (isset($item) && $item['administrasi'] != "0") : ?>
+                                    <td>ls</td>
+                                <?php else : ?>
+                                    <td></td>
+                                <?php endif; ?>
+                                <?php if (isset($item) && $item['administrasi'] != "0") : ?>
+                                    <td>1.00</td>
+                                <?php else : ?>
+                                    <td>0.00</td>
+                                <?php endif; ?>
                                 <td>Rp. <?= esc(number_format($item['administrasi'], 2, ',', '.')); ?></td>
                                 <td>Rp. <?= esc(number_format($item['administrasi'], 2, ',', '.')); ?></td>
                                 <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                    <?php if (is_null($mengetahui)) : ?>
+                                    <?php if (is_null($rab['pembuat'])) : ?>
                                         <th></th>
                                     <?php endif; ?>
                                 <?php endif; ?>
@@ -233,7 +243,7 @@
                             <th>Total</th>
                             <th>Rp. <?= esc(number_format($jumlahBiayaLain, 2, ',', '.')); ?></th>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -244,7 +254,7 @@
                             <th colspan="3"></th>
                             <th>Rp. <?= esc(number_format($jumlahBiayaLain, 2, ',', '.')); ?></th>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -263,7 +273,7 @@
                             <th colspan="3">Total Biaya</th>
                             <th>Rp. <?= esc(number_format($totalBiaya, 2, ',', '.')); ?></th>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -273,7 +283,7 @@
                             <th colspan="3">PPN 11%</th>
                             <th>Rp. <?= esc(number_format($ppn, 2, ',', '.')); ?></th>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -283,7 +293,7 @@
                             <th colspan="3">Total Keseluruhan</th>
                             <th>Rp. <?= esc(number_format($totalKeseluruhan, 2, ',', '.')); ?></th>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -293,7 +303,7 @@
                             <th colspan="3">Dibulatkan</th>
                             <th>Rp. <?= esc(number_format($bulatkan, 2, ',', '.')); ?></th>
                             <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                                <?php if (is_null($mengetahui)) : ?>
+                                <?php if (is_null($rab['pembuat'])) : ?>
                                     <th></th>
                                 <?php endif; ?>
                             <?php endif; ?>

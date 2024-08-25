@@ -17,7 +17,7 @@
             opacity: 1;
             margin: 0;
             background: #3c8dbc;
-            background: linear-gradient(to right, #3c8dbc, #5DB05C);
+            /* background: linear-gradient(to right, #3c8dbc, #5DB05C); */
         }
 
         .card {

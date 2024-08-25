@@ -65,8 +65,10 @@
                                     <td><?= $pekerjaan['profit']; ?>%</td>
                                     <td>
                                         <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-outline-info shadow"><i class="fa-solid fa-file"></i></a>
-                                        <a href="/daftar-pekerjaan/edit/<?= $pekerjaan['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="/daftar-pekerjaan/delete/<?= $pekerjaan['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                        <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
+                                            <a href="/daftar-pekerjaan/edit/<?= $pekerjaan['id']; ?>" class="btn btn-outline-warning shadow"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a href="/daftar-pekerjaan/delete/<?= $pekerjaan['id']; ?>" class="btn btn-outline-danger shadow btn-hapus"><i class="fa-solid fa-trash"></i></a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

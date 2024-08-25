@@ -14,9 +14,10 @@ class ItemModel extends Model
     // Method untuk mencari material berdasarkan keyword
     public function searchMaterials($num, $keyword)
     {
-        $this->select('item.id, item.nama AS nama_material, satuan.nama_satuan AS satuan_nama, item.harga')
+        $this->select('item.id, item.nama AS nama_material, satuan.nama_satuan AS satuan_nama, item.kode, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
-            ->where('item.jenis', 'material');
+            ->where('item.jenis', 'material')
+            ->orderBy('item.id', 'DESC');
         if ($keyword) {
             $this->groupStart()
                 ->like('item.nama', $keyword)
@@ -33,9 +34,10 @@ class ItemModel extends Model
     // Method untuk mendapatkan semua material
     public function getMaterials()
     {
-        return $this->select('item.id, item.nama AS nama_material, satuan.nama_satuan AS satuan_nama, item.harga')
+        return $this->select('item.id, item.nama AS nama_material, satuan.nama_satuan AS satuan_nama, item.kode, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
             ->where('item.jenis', 'material')
+            ->orderBy('item.id', 'DESC')
             ->findAll();
     }
     public function countAllMaterials()
@@ -63,9 +65,10 @@ class ItemModel extends Model
     // Method untuk mencari upah berdasarkan keyword
     public function searchUpah($num, $keyword)
     {
-        $this->select('item.id, item.nama AS nama_upah, satuan.nama_satuan AS satuan_nama, item.harga')
+        $this->select('item.id, item.nama AS nama_upah, satuan.nama_satuan AS satuan_nama, item.kode, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
-            ->where('item.jenis', 'upah');
+            ->where('item.jenis', 'upah')
+            ->orderBy('item.id', 'DESC');
         if ($keyword) {
             $this->groupStart()
                 ->like('item.nama', $keyword)
@@ -82,17 +85,19 @@ class ItemModel extends Model
     // Method untuk mendapatkan semua upah
     public function getUpah()
     {
-        return $this->select('item.id, item.nama AS nama_upah, satuan.nama_satuan AS satuan_nama, item.harga')
+        return $this->select('item.id, item.nama AS nama_upah, satuan.nama_satuan AS satuan_nama, item.kode, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
             ->where('item.jenis', 'upah')
+            ->orderBy('item.id', 'DESC')
             ->findAll();
     }
     // Method untuk mencari upah berdasarkan keyword
     public function searchAlat($num, $keyword)
     {
-        $this->select('item.id, item.nama AS nama_alat, satuan.nama_satuan AS satuan_nama, item.harga')
+        $this->select('item.id, item.nama AS nama_alat, satuan.nama_satuan AS satuan_nama, item.kode, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
-            ->where('item.jenis', 'alat');
+            ->where('item.jenis', 'alat')
+            ->orderBy('item.id', 'DESC');
         if ($keyword) {
             $this->groupStart()
                 ->like('item.nama', $keyword)
@@ -109,9 +114,10 @@ class ItemModel extends Model
     // Method untuk mendapatkan semua upah
     public function getAlat()
     {
-        return $this->select('item.id, item.nama AS nama_alat, satuan.nama_satuan AS satuan_nama, item.harga')
+        return $this->select('item.id, item.nama AS nama_alat, satuan.nama_satuan AS satuan_nama, item.kode, item.harga')
             ->join('satuan', 'item.satuan = satuan.id')
             ->where('item.jenis', 'alat')
+            ->orderBy('item.id', 'DESC')
             ->findAll();
     }
     public function countAlatsThisMonth()

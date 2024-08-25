@@ -62,7 +62,7 @@
                             <?php foreach ($alats['alat'] as $alat) : ?>
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
-                                    <td><?= esc($alat['nama_alat']); ?></td>
+                                    <td><?= esc($alat['kode']); ?> <?= esc($alat['nama_alat']); ?></td>
                                     <td><?= esc($alat['satuan_nama']); ?></td>
                                     <td>Rp. <?= esc(number_format($alat['harga'], 2, ',', '.')); ?></td>
                                     <td>

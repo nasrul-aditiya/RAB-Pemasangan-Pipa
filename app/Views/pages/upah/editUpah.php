@@ -19,8 +19,8 @@
                         <input type="text" class="form-control" id="nama" name="nama" value="<?= esc($upah['nama']); ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="kode" class="form-label">Kode</label>
-                        <input type="text" class="form-control" id="kode" name="kode" value="<?= esc($upah['kode']); ?>" required>
+                        <label for="kode" class="form-label">Kode <span class="opsi">(Opsional)</span></label>
+                        <input type="text" class="form-control" id="kode" name="kode" value="<?= esc($upah['kode']); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga</label>

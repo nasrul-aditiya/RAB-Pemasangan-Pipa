@@ -174,16 +174,11 @@
     document.addEventListener('DOMContentLoaded', (event) => {
         var ctx = document.getElementById('myChart').getContext('2d');
         var chartData = <?php echo json_encode($chartData); ?>;
-        var labels = [];
-        var data = [];
-
-        chartData.forEach(item => {
-            labels.push(item.bulan);
-            data.push(item.jumlah);
-        });
+        var labels = chartData.map(item => item.bulan);
+        var data = chartData.map(item => item.jumlah);
 
         var myChart = new Chart(ctx, {
-            type: 'line', // bisa juga 'line', 'pie', dll.
+            type: 'line', // bisa juga 'bar', 'pie', dll.
             data: {
                 labels: labels,
                 datasets: [{

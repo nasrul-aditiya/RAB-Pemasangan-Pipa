@@ -53,13 +53,13 @@
                             <div class="mb-3 row">
                                 <label for="username" class="col-sm-2 col-form-label">Username</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="username" name="username" value="<?= esc($user['username']); ?>">
+                                    <input type="text" class="form-control" id="username" name="username" value="<?= esc($user['username']); ?>" required>
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="password" class="col-sm-2 col-form-label">Password</label>
                                 <div class="col-sm-8">
-                                    <input type="password" class="form-control" id="password" name="password" value="<?= esc($user['password']); ?>">
+                                    <input type="password" class="form-control" id="password" name="password" value="<?= esc($user['password']); ?>" required>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Simpan</button>

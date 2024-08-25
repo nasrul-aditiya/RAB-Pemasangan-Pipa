@@ -52,7 +52,9 @@
                     <!-- Button Add -->
                     <div class="col-md-9 text-md-start">
                         <?php if (isset($role) && $role == "Kepala Regu" || $role == "Admin") : ?>
-                            <a href="/daftar-rab/tambah" class="btn btn-outline-primary shadow"><i class="fas fa-plus"></i></a>
+                            <?php if (isset($filter) && $filter == "dibuat") : ?>
+                                <a href="/daftar-rab/tambah" class="btn btn-outline-primary shadow"><i class="fas fa-plus"></i></a>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                     <!-- Search Bar -->

@@ -61,7 +61,7 @@
                             <?php foreach ($upah['upah'] as $item) : ?>
                                 <tr>
                                     <th scope="row"><?= $i++; ?></th>
-                                    <td><?= esc($item['nama_upah']); ?></td>
+                                    <td><?= esc($item['kode']); ?> <?= esc($item['nama_upah']); ?></td>
                                     <td><?= esc($item['satuan_nama']); ?></td>
                                     <td>Rp. <?= esc(number_format($item['harga'], 2, ',', '.')); ?></td>
                                     <td>

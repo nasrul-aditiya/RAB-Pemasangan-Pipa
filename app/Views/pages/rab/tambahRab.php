@@ -15,23 +15,23 @@
                     <?= csrf_field(); ?>
                     <div class="mb-3">
                         <label for="id_rab" class="form-label">ID RAB</label>
-                        <input type="text" class="form-control" id="id_rab" name="id_rab" required>
+                        <input type="text" class="form-control" id="id_rab" name="id_rab" value="<?= old('id_rab'); ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="nama_pekerjaan" class="form-label">Nama Pekerjaan</label>
-                        <input type="text" class="form-control" id="nama_pekerjaan" name="nama_pekerjaan" required>
+                        <input type="text" class="form-control" id="nama_pekerjaan" name="nama_pekerjaan" value="<?= old('nama_pekerjaan'); ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="lokasi" class="form-label">Lokasi</label>
-                        <textarea name="lokasi" id="" class="form-control my-4 py-2" placeholder="Lokasi"></textarea>
+                        <textarea name="lokasi" id="" class="form-control my-4 py-2"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="tanggal" class="form-label">Tanggal</label>
-                        <input type="date" name="tanggal" id="" class="form-control my-4 py-2" placeholder="Tanggal" />
+                        <input type="date" name="tanggal" id="" class="form-control my-4 py-2" value="<?= old('tanggal'); ?>" />
                     </div>
                     <div class="mb-3">
-                        <label for="administrasi" class="form-label">Biaya Administrasi</label>
-                        <input type="number" class="form-control" id="administrasi" name="administrasi">
+                        <label for="administrasi" class="form-label">Biaya Administrasi <span class="opsi">(Opsional)</span></label>
+                        <input type="number" class="form-control" id="administrasi" name="administrasi" value="<?= old('administrasi'); ?>">
                     </div>
                     <button type="submit" class="btn btn-primary">Tambah</button>
                     <a href="/daftar-rab" class="btn btn-secondary">Kembali</a>

@@ -206,20 +206,8 @@ class RabModel extends Model
     {
         $db = \Config\Database::connect();
         $query = $db->query("
-        SELECT CASE MONTH(created_at)
-            WHEN 1 THEN 'Januari'
-            WHEN 2 THEN 'Februari'
-            WHEN 3 THEN 'Maret'
-            WHEN 4 THEN 'April'
-            WHEN 5 THEN 'Mei'
-            WHEN 6 THEN 'Juni'
-            WHEN 7 THEN 'Juli'
-            WHEN 8 THEN 'Agustus'
-            WHEN 9 THEN 'September'
-            WHEN 10 THEN 'Oktober'
-            WHEN 11 THEN 'November'
-            WHEN 12 THEN 'Desember'
-            END as bulan, 
+        SELECT 
+            MONTH(created_at) as month, 
             COUNT(*) as jumlah
         FROM rab_profile
         WHERE YEAR(created_at) = YEAR(CURDATE())
@@ -227,6 +215,24 @@ class RabModel extends Model
         ORDER BY MONTH(created_at)
     ");
 
-        return $query->getResultArray();
+        $result = $query->getResultArray();
+        $bulanData = [];
+
+        // Inisialisasi semua bulan dengan nilai nol
+        $bulanList = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        foreach ($bulanList as $index => $bulan) {
+            $bulanData[$index + 1] = [
+                'bulan' => $bulan,
+                'jumlah' => 0
+            ];
+        }
+
+        // Mengisi data bulan yang ada di hasil query
+        foreach ($result as $row) {
+            $bulanData[$row['month']]['jumlah'] = $row['jumlah'];
+        }
+
+        // Konversi kembali ke array numerik
+        return array_values($bulanData);
     }
 }
