@@ -37,6 +37,7 @@
                         <input type="text" class="form-control" id="koefisien" name="koefisien" value="<?= esc($pekerjaanDetail['koefisien']); ?>" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
+                    <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
         </div>

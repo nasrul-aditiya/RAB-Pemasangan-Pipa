@@ -36,6 +36,7 @@
                         <input type="text" class="form-control" id="koefisien" name="koefisien" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
+                    <a href="/daftar-pekerjaan/detail/<?= $pekerjaan['id']; ?>" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
         </div>

@@ -100,6 +100,7 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <a href="/daftar-pekerjaan" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
     </div>

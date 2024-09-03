@@ -66,6 +66,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <a href="/daftar-rab/detail/<?= $rab['id']; ?>" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
         </div>

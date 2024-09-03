@@ -39,6 +39,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">Tambah</button>
+                    <a href="/kelola-pengguna" class="btn btn-secondary">Kembali</a>
 
                 </form>
             </div>

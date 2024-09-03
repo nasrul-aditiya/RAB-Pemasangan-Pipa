@@ -313,7 +313,18 @@
 
                     </tbody>
                 </table>
-
+                <?php if (in_array($rab['status'], ['Dibuat', 'Belum Ada Status', 'Ditolak'])) : ?>
+                    <a href="/daftar-rab" class="btn btn-secondary">Kembali</a>
+                <?php endif; ?>
+                <?php if ($rab['status'] === 'Diperiksa') : ?>
+                    <a href="/daftar-rab?filter=diperiksa" class="btn btn-secondary">Kembali</a>
+                <?php endif; ?>
+                <?php if ($rab['status'] === 'Disetujui') : ?>
+                    <a href="/daftar-rab?filter=diverifikasi" class="btn btn-secondary">Kembali</a>
+                <?php endif; ?>
+                <?php if ($rab['status'] === 'Mengetahui') : ?>
+                    <a href="/daftar-rab?filter=disetujui" class="btn btn-secondary">Kembali</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

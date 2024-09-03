@@ -1065,7 +1065,7 @@ class Pages extends BaseController
             $rab['pemeriksa'] = $session->get('id'); // Mengambil ID dari session
             $rab['status'] = 'Diperiksa';
             $rabModel->save($rab);
-            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
+            return redirect()->to('/daftar-rab?filter=diperiksa')->with('success', 'RAB berhasil diverifikasi');
         } else {
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
         }
@@ -1095,7 +1095,7 @@ class Pages extends BaseController
             $rab['disetujui'] = $session->get('id'); // Mengambil ID dari session
             $rab['status'] = 'Disetujui';
             $rabModel->save($rab);
-            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
+            return redirect()->to('/daftar-rab?filter=diverifikasi')->with('success', 'RAB berhasil diverifikasi');
         } else {
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
         }
@@ -1111,7 +1111,7 @@ class Pages extends BaseController
             $rab['disetujui'] = null;
             $rab['status'] = 'Ditolak';
             $rabModel->save($rab);
-            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil ditolak');
+            return redirect()->to('/daftar-rab?filter=diperiksa')->with('success', 'RAB berhasil ditolak');
         } else {
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
         }
@@ -1126,7 +1126,7 @@ class Pages extends BaseController
             $rab['mengetahui'] = $session->get('id'); // Mengambil ID dari session
             $rab['status'] = 'Mengetahui';
             $rabModel->save($rab);
-            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil diverifikasi');
+            return redirect()->to('/daftar-rab?filter=disetujui')->with('success', 'RAB berhasil diverifikasi');
         } else {
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
         }
@@ -1143,7 +1143,7 @@ class Pages extends BaseController
             $rab['mengetahui'] = null;
             $rab['status'] = 'Ditolak';
             $rabModel->save($rab);
-            return redirect()->to('/daftar-rab')->with('success', 'RAB berhasil ditolak');
+            return redirect()->to('/daftar-rab?filter=diverifikasi')->with('success', 'RAB berhasil ditolak');
         } else {
             return redirect()->to('/daftar-rab')->with('error', 'RAB tidak ditemukan');
         }
