@@ -1377,13 +1377,21 @@ class Pages extends BaseController
         // Ambil data jenis pekerjaan yang sudah dikelompokkan
         $jenis_pekerjaan = $pekerjaanModel->getGroupedJenisPekerjaan();
         $jenis_pekerjaan_rab = $rabDetailModel->getGroupedJenisPekerjaan();
-        // dd($jenis_pekerjaan_rab);
+
+        // Ambil semua pekerjaan beserta satuannya
+        $pekerjaan = $pekerjaanModel->getPekerjaanAll();
+
+        $satuanPekerjaan = [];
+        foreach ($pekerjaan as $p) {
+            $satuanPekerjaan[$p['id']] = $p['nama_satuan'];
+        }
 
         $data = [
             'title' => "Tambah Detail RAB",
             'rab' => $rab,
             'jenis_pekerjaan' => $jenis_pekerjaan,
             'jenis_pekerjaan_rab' => $jenis_pekerjaan_rab,
+            'satuan_pekerjaan' => $satuanPekerjaan,
             'nama' => $session->get('nama'),
             'role' => $session->get('role'),
             'avatar' => $session->get('avatar'),
@@ -1440,6 +1448,8 @@ class Pages extends BaseController
         $rab = $rabModel->find($detail['id_rab']);
         $jenisPekerjaan = $pekerjaanModel->getGroupedJenisPekerjaan();
         $jenis_pekerjaan_rab = $rabDetailModel->getGroupedJenisPekerjaan();
+        // dd($jenisPekerjaan['PENGADAAN PIPA DAN AKSESORIS']['pekerjaan']['6']);
+        // dd($jenisPekerjaan);
 
         if ($detail) {
             // Menentukan jenis dan sub jenis pekerjaan yang sudah dipilih

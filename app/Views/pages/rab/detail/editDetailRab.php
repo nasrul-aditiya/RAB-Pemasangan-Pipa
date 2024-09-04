@@ -61,7 +61,7 @@
                         <input type="text" class="form-control" id="nama_pekerjaan" name="nama_pekerjaan" value="<?= esc($detail['nama_pekerjaan']); ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="volume" class="form-label">Volume</label>
+                        <label for="volume" class="form-label">Volume <span id="unit-label"></span></label>
                         <input type="number" class="form-control" id="volume" name="volume" value="<?= esc($detail['volume']); ?>" required>
                     </div>
 
@@ -116,6 +116,11 @@
             const selectedJenis2 = $(this).val();
             updatePekerjaanSelect(selectedJenis2);
         });
+        // Event listener untuk perubahan pekerjaan
+        pekerjaanSelect.on('change', function() {
+            const selectedPekerjaanId = $(this).val();
+            updateUnitLabel(selectedPekerjaanId);
+        });
 
 
         // Fungsi untuk memperbarui sub jenis
@@ -134,6 +139,18 @@
 
             // Refresh select2 untuk sub jenis
             pekerjaanSelect.trigger('change');
+        }
+
+        // Fungsi untuk memperbarui label satuan di samping field volume
+        function updateUnitLabel(selectedPekerjaanId) {
+            const selectedJenis2 = jenis2Select.val(); // Ambil jenis pekerjaan yang dipilih
+
+            if (pekerjaanData[selectedJenis2] && pekerjaanData[selectedJenis2]['pekerjaan'][selectedPekerjaanId]) {
+                const satuan = pekerjaanData[selectedJenis2]['pekerjaan'][selectedPekerjaanId]['satuan'];
+                $('#unit-label').text(`(Dalam satuan ${satuan})`);
+            } else {
+                $('#unit-label').text('');
+            }
         }
 
         // Event listener untuk perubahan jenis pekerjaan

@@ -35,6 +35,12 @@ class PekerjaanModel extends Model
             ->join('satuan', 'pekerjaan.satuan = satuan.id')
             ->find($id);
     }
+    public function getPekerjaanAll()
+    {
+        return $this->select('pekerjaan.id, pekerjaan.nama, pekerjaan.jenis_pekerjaan, pekerjaan.volume, pekerjaan.profit, pekerjaan.created_at, pekerjaan.satuan, satuan.nama_satuan')
+            ->join('satuan', 'pekerjaan.satuan = satuan.id')
+            ->findAll();
+    }
 
     public function updatePekerjaanData($id, $data)
     {
@@ -74,7 +80,9 @@ class PekerjaanModel extends Model
     // Method untuk mengelompokkan data pekerjaan
     public function getGroupedJenisPekerjaan()
     {
-        $pekerjaans = $this->findAll();
+        $pekerjaans = $this->select('pekerjaan.id, pekerjaan.nama, pekerjaan.jenis_pekerjaan, pekerjaan.satuan, satuan.nama_satuan')
+            ->join('satuan', 'pekerjaan.satuan = satuan.id')
+            ->findAll();
 
         $groupedJenisPekerjaan = [];
         foreach ($pekerjaans as $p) {
@@ -93,6 +101,7 @@ class PekerjaanModel extends Model
                     $groupedJenisPekerjaan[$jenisPekerjaan]['pekerjaan'][$id] = [
                         'id' => $p['id'],
                         'nama' => $p['nama'],
+                        'satuan' => $p['nama_satuan'],
                     ];
                 }
             }
